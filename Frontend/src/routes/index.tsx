@@ -1,7 +1,6 @@
 import { Navigate, type RouteObject } from 'react-router'
-import MainLayout from '../layouts/MainLayout'
 import { lazy } from 'react'
-
+import { AuthenticatedLayout } from '@/layouts/AuthenticatedLayout';
 
 const Signin = lazy(() => import('@/site/signin'));
 const Projects = lazy(() => import('@/site/projects'));
@@ -18,7 +17,7 @@ const anonRoutes: RouteObject[] =[
 
 const authRoutes: RouteObject[] = [
   {
-    element: <MainLayout />,
+    element: <AuthenticatedLayout />,
     children: [
       {
         path: '/',

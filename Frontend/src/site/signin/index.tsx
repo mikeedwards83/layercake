@@ -1,11 +1,58 @@
 import AppLogo from '@/components/AppLogo'
 import { author, currentYear } from '@/helpers'
-import { Link } from 'react-router'
-import { Button, Card, Col, Form, FormControl, FormLabel, Row } from 'react-bootstrap'
-import { TbLockPassword, TbMail } from 'react-icons/tb'
+import { Link, useNavigate } from 'react-router'
+import { Card, Col, Row } from 'react-bootstrap'
 import PageMetaData from '@/components/PageMetaData'
+import { useEffect, useRef } from 'react'
+import { auth } from '@/firebase'
+import * as firebaseui from 'firebaseui'
+import { GoogleAuthProvider, EmailAuthProvider } from 'firebase/auth'
+import 'firebaseui/dist/firebaseui.css'
+import { Settings } from '@/Settings'
 
 const Page = () => {
+  const navigate = useNavigate()
+  const uiRef = useRef<firebaseui.auth.AuthUI | null>(null)
+
+  useEffect(() => {
+    // Initialize FirebaseUI
+    if (!uiRef.current) {
+      uiRef.current = new firebaseui.auth.AuthUI(auth)
+    }
+
+    const uiConfig: firebaseui.auth.Config = {
+      signInOptions: [
+        {
+          provider: EmailAuthProvider.PROVIDER_ID,
+          requireDisplayName: false,
+        },
+        {
+          provider: GoogleAuthProvider.PROVIDER_ID,
+          customParameters: {
+            prompt: 'select_account',
+          },
+        },
+      ],
+      signInSuccessUrl: Settings.signIn.successUrl,
+      callbacks: {
+        signInSuccessWithAuthResult: () => {
+          navigate(Settings.signIn.successUrl)
+          return false
+        },
+      },
+    }
+
+    // Start the FirebaseUI widget
+    uiRef.current.start('#firebaseui-auth-container', uiConfig)
+
+    // Cleanup
+    return () => {
+      if (uiRef.current) {
+        uiRef.current.reset()
+      }
+    }
+  }, [navigate])
+
   return (
     <div className="auth-box d-flex align-items-center">
       <PageMetaData title="Sign In" />
@@ -19,57 +66,14 @@ const Page = () => {
                     <div className="auth-brand text-center mb-4">
                       <AppLogo />
                       <h4 className="fw-bold mt-4">Welcome to IN+</h4>
-                      <p className="text-muted w-lg-75 mx-auto">Let’s get you signed in. Enter your email and password to continue.</p>
+                      <p className="text-muted w-lg-75 mx-auto">Let's get you signed in. Choose your preferred method to continue.</p>
                     </div>
 
-                    <Form action={'/actual/projects'}>
-                      <div className="mb-3">
-                        <FormLabel htmlFor="userEmail" className="form-label">
-                          Email address <span className="text-danger">*</span>
-                        </FormLabel>
-                        <div className="input-group">
-                          <span className="input-group-text bg-light">
-                            <TbMail className="text-muted fs-xl" />
-                          </span>
-                          <FormControl type="email" id="userEmail" placeholder="you@example.com" required />
-                        </div>
-                      </div>
-
-                      <div className="mb-3">
-                        <FormLabel htmlFor="userPassword" className="form-label">
-                          Password <span className="text-danger">*</span>
-                        </FormLabel>
-                        <div className="input-group">
-                          <span className="input-group-text bg-light">
-                            <TbLockPassword className="text-muted fs-xl" />
-                          </span>
-                          <FormControl type="password" id="userPassword" placeholder="••••••••" required />
-                        </div>
-                      </div>
-
-                      <div className="d-flex justify-content-between align-items-center mb-3">
-                        <div className="form-check">
-                          <input className="form-check-input form-check-input-light fs-14" type="checkbox" id="rememberMe" />
-                          <label className="form-check-label" htmlFor="rememberMe">
-                            Keep me signed in
-                          </label>
-                        </div>
-
-                        <Link to="/auth-2/reset-password" className="text-decoration-underline link-offset-3 text-muted">
-                          Forgot Password?
-                        </Link>
-                      </div>
-
-                      <div className="d-grid">
-                        <Button type="submit" className="btn btn-primary fw-semibold py-2">
-                          Sign In
-                        </Button>
-                      </div>
-                    </Form>
+                    <div id="firebaseui-auth-container"></div>
 
                     <p className="text-muted text-center mt-4 mb-0">
                       New here?{' '}
-                      <Link to="/auth-2/sign-up" className="text-decoration-underline link-offset-3 fw-semibold">
+                      <Link to="/signup" className="text-decoration-underline link-offset-3 fw-semibold">
                         Create an account
                       </Link>
                     </p>
