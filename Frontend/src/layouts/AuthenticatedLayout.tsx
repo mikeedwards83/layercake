@@ -1,6 +1,7 @@
 import { useAuth } from '@/context/useAuthContext'
-import { Navigate, Outlet } from 'react-router'
-import { Fragment } from 'react/jsx-runtime'
+import { Navigate } from 'react-router'
+import AdminLayout from './AdminLayout'
+import Loader from '@/components/Loader'
 
 export const AuthenticatedLayout = () => {
   const { userLoggedIn, loading } = useAuth()
@@ -11,14 +12,11 @@ export const AuthenticatedLayout = () => {
         <>
           {!userLoggedIn && <Navigate to="/signin" />}
           {userLoggedIn && (
-            <Fragment>
-              <Outlet />
-            </Fragment>
+            <AdminLayout />
           )}
         </>
       )}
-      {loading &&
-      <div> Loading...</div>}
+      {loading && <Loader />}
     </>
   )
 }

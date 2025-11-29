@@ -10,6 +10,13 @@ const AuthContext = createContext<UseAuthType>({
 });
 
 
+function getInitials(name:string){
+    const words = name.trim().split(/\s+/);
+    const firstInitial = words[0]?.[0]?.toUpperCase() || '';
+    const secondInitial = words[1]?.[0]?.toUpperCase() || '';
+    return firstInitial + secondInitial;
+}
+
 export function useAuth(){
     return useContext(AuthContext);
 }
@@ -21,13 +28,25 @@ export function AuthProvider({children}:ChildrenType) {
     const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
+        console.log("started")
         const unsubscribe = onAuthStateChanged(auth, initializeUser);
         return unsubscribe;
     },[])
 
     async function initializeUser(user:any){
+
+        console.log("here1")
         if(user){
-            setCurrentUser({...user})
+
+            var initials = getInitials(user.email[0]);
+            var displayName = user.email;
+
+            if(user.displayName){
+                initials=getInitials(user.displayName);
+                displayName = user.displayName;
+            }
+
+            setCurrentUser({...user, initials,displayName})
             setUserLoggedIn(true)
         }
         else{

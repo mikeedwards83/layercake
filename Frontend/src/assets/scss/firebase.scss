@@ -1,0 +1,32 @@
+#root {
+  .firebaseui-container {
+    background-color: var(--ins-card-bg);
+    box-shadow: none;
+    color: var(--ins-body-color);
+
+  }
+  .firebaseui-title {
+    color: var(--ins-heading-color);
+  }
+  .firebaseui-input {
+    color: var(--ins-body-color);
+  }
+  .firebaseui-label{
+    color: var(--ins-body-color);
+  }
+  .mdl-textfield__input{
+    border-bottom: 1px solid color-mix(in srgb, var(--ins-body-color) 12%, transparent);
+  }
+  .firebaseui-id-submit {
+    background-color:   var(--ins-primary);
+    color: #fff;
+    &:hover{
+        background-color: var(--ins-primary-text-emphasis);
+    }
+  }
+  .firebaseui-id-secondary-link{
+    color: #fff;
+  }
+
+}
+
