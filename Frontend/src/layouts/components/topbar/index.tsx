@@ -3,7 +3,6 @@ import LanguageDropdown from '@/layouts/components/topbar/components/LanguageDro
 import MegaMenu from '@/layouts/components/topbar/components/MegaMenu'
 import MessageDropdown from '@/layouts/components/topbar/components/MessageDropdown'
 import NotificationDropdown from '@/layouts/components/topbar/components/NotificationDropdown'
-import ThemeToggler from '@/layouts/components/topbar/components/ThemeToggler'
 import UserProfile from '@/layouts/components/topbar/components/UserProfile'
 import { Image } from 'react-bootstrap'
 import { Link } from 'react-router'
