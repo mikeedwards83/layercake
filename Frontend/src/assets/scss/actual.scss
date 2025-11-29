@@ -1,0 +1,11 @@
+.card-expandable {
+  .card-expandable-expander {
+    margin-left: -25px;
+    width: 30px;
+    font-size: 4rem;
+    &:hover {
+      background-color: rgba(var(--ins-dark), 1);
+      border-color:  rgba(var(--ins-topbar-item-hover-color),00) !important;
+    }
+  }
+}
