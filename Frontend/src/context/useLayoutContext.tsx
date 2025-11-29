@@ -20,7 +20,7 @@ import {
 
 const INIT_STATE: LayoutState = {
   skin: 'classic',
-  theme: 'light',
+  theme: 'dark',
   orientation: 'vertical',
   sidenav: {
     size: 'default',

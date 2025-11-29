@@ -1,4 +1,3 @@
-import Customizer from '@/layouts/components/customizer'
 import Footer from '@/layouts/components/footer'
 import Topbar from '@/layouts/components/topbar'
 import { type ChildrenType } from '@/types'
@@ -20,8 +19,6 @@ const HorizontalLayout = ({ children }: ChildrenType) => {
           <Footer />
         </div>
       </div>
-
-      <Customizer />
     </Fragment>
   )
 }
