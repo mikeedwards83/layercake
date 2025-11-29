@@ -4,8 +4,19 @@ import { lazy } from 'react'
 
 
 const Signin = lazy(() => import('@/site/signin'));
+const Projects = lazy(() => import('@/site/projects'));
 
-const allRoutes: RouteObject[] = [
+
+const anonRoutes: RouteObject[] =[
+  {
+    children:[
+      {path:"/signin", element: <Signin />}
+
+    ]
+  }
+]
+
+const authRoutes: RouteObject[] = [
   {
     element: <MainLayout />,
     children: [
@@ -13,8 +24,8 @@ const allRoutes: RouteObject[] = [
         path: '/',
         element: <Navigate to="/signin" replace />,
       },
-      {path:"/signin", element: <Signin />}
+      {path:"/projects", element: <Projects />}
     ],
   },
 ]
-export const routes: RouteObject[] = [...allRoutes]
+export const routes: RouteObject[] = [...authRoutes,...anonRoutes]
