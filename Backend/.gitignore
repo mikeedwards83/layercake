@@ -397,3 +397,8 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .idea/
+
+# Firebase credentials - DO NOT COMMIT
+**/firebase-credentials.json
+**/*firebase*.json
+!**/firebase.json
