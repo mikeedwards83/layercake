@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35506.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LayerCake.Kernel", "LayerCake.Kernel\LayerCake.Kernel.csproj", "{58DC1802-146A-493C-B1A1-A8792C7DFFF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LayerCake.Api", "LayerCake.Api\LayerCake.Api.csproj", "{6613AC88-B54B-4348-8ADB-80DA2B8C7D2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58DC1802-146A-493C-B1A1-A8792C7DFFF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58DC1802-146A-493C-B1A1-A8792C7DFFF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58DC1802-146A-493C-B1A1-A8792C7DFFF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58DC1802-146A-493C-B1A1-A8792C7DFFF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6613AC88-B54B-4348-8ADB-80DA2B8C7D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6613AC88-B54B-4348-8ADB-80DA2B8C7D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6613AC88-B54B-4348-8ADB-80DA2B8C7D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6613AC88-B54B-4348-8ADB-80DA2B8C7D2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
