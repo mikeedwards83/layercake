@@ -1,83 +1,89 @@
-import { useEffect, useState } from "react";
-import api from "@/services/api";
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
+import PageBreadcrumb from '@/components/PageBreadcrumb'
+import { Button, Col, Container, Row } from 'react-bootstrap'
+import { LuActivity, LuCalendarClock, LuLayoutGrid, LuList, LuSearch, LuUsers } from 'react-icons/lu'
+import { Link } from 'react-router'
+import ButtonAdd from '@/components/Buttons/ButtonAdd'
 
 const Page = () => {
-  const [weatherData, setWeatherData] = useState<WeatherForecast[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchWeatherData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await api.get<WeatherForecast[]>("/WeatherForecast");
-        setWeatherData(data);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch weather data");
-        console.error("Error fetching weather data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWeatherData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Weather Forecast</h1>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Weather Forecast</h1>
-        <div className="text-red-500">
-          <p>Error: {error}</p>
-          <p className="text-sm mt-2">
-            Make sure you are logged in and the backend API is running on http://localhost:5000
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Weather Forecast</h1>
-      {weatherData.length === 0 ? (
-        <p>No weather data available</p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {weatherData.map((forecast, index) => (
-            <div key={index} className="border rounded-lg p-4 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2">
-                {new Date(forecast.date).toLocaleDateString()}
-              </h3>
-              <p className="text-gray-600">
-                <span className="font-medium">Temperature:</span> {forecast.temperatureC}°C / {forecast.temperatureF}°F
-              </p>
-              <p className="text-gray-600">
-                <span className="font-medium">Summary:</span> {forecast.summary}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+    <Container fluid>
+      <PageBreadcrumb title="Projects" subtitle="" />
+      <Row className="mb-3">
+        <Col lg={12}>
+          <form className="bg-light-subtle rounded border p-3">
+            <Row className="gap-3">
+              <Col>
+                <Row className="gap-3">
+                  <Col lg={4}>
+                    <div className="app-search">
+                      <input type="text" className="form-control" placeholder="Search project name..." />
+                      <LuSearch className="app-search-icon text-muted" />
+                    </div>
+                  </Col>
+                  <Col xs="auto">
+                    <div className="d-flex flex-wrap align-items-center gap-2">
+                      <span className="me-2 fw-semibold">Filter By:</span>
 
-export default Page;
+                      <div className="app-search">
+                        <select className="form-select form-control my-1 my-md-0">
+                          <option>Status</option>
+                          <option value="On Track">On Track</option>
+                          <option value="Delayed">Delayed</option>
+                          <option value="At Risk">At Risk</option>
+                          <option value="Completed">Completed</option>
+                        </select>
+                        <LuActivity className="app-search-icon text-muted" />
+                      </div>
+
+                      <div className="app-search">
+                        <select className="form-select form-control my-1 my-md-0">
+                          <option>Team</option>
+                          <option value="Design">Design</option>
+                          <option value="Development">Development</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="QA">QA</option>
+                        </select>
+                        <LuUsers className="app-search-icon text-muted" />
+                      </div>
+
+                      <div className="app-search">
+                        <select className="form-select form-control my-1 my-md-0">
+                          <option>Deadline</option>
+                          <option value="This Week">This Week</option>
+                          <option value="This Month">This Month</option>
+                          <option value="Next Month">Next Month</option>
+                          <option value="No Deadline">No Deadline</option>
+                        </select>
+                        <LuCalendarClock className="app-search-icon text-muted" />
+                      </div>
+
+                      <Button variant="secondary" type="submit">
+                        Apply
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+
+              <Col xs="auto">
+                <Row>
+                  <div className="d-flex gap-1">
+                    <ButtonAdd title="Project" />
+                    <Link to="/projects" className="btn btn-primary btn-icon">
+                      <LuLayoutGrid className="fs-lg" />
+                    </Link>
+                    <Link to="/projects-list" className="btn btn-soft-primary btn-icon">
+                      <LuList className="fs-lg" />
+                    </Link>
+                  </div>
+                </Row>
+              </Col>
+            </Row>
+          </form>
+        </Col>
+      </Row>
+    </Container>
+  )
+}
+
+export default Page
