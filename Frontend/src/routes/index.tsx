@@ -4,6 +4,7 @@ import { AuthenticatedLayout } from '@/layouts/AuthenticatedLayout';
 
 const Signin = lazy(() => import('@/site/signin'));
 const Projects = lazy(() => import('@/site/projects'));
+const ProjectsAdd = lazy(() => import('@/site/projects/add'));
 
 
 const anonRoutes: RouteObject[] =[
@@ -23,7 +24,8 @@ const authRoutes: RouteObject[] = [
         path: '/',
         element: <Navigate to="/signin" replace />,
       },
-      {path:"/projects", element: <Projects />}
+      {path:"/projects", element: <Projects />},
+      {path:"/projects/add", element: <ProjectsAdd />}
     ],
   },
 ]

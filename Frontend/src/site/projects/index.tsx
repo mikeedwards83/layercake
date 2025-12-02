@@ -52,7 +52,6 @@ const Page = () => {
                           <option value="This Week">This Week</option>
                           <option value="This Month">This Month</option>
                           <option value="Next Month">Next Month</option>
-                          <option value="No Deadline">No Deadline</option>
                         </select>
                         <LuCalendarClock className="app-search-icon text-muted" />
                       </div>
@@ -68,7 +67,9 @@ const Page = () => {
               <Col xs="auto">
                 <Row>
                   <div className="d-flex gap-1">
-                    <ButtonAdd title="Project" />
+                    <Link to="/projects/add" >
+                      <ButtonAdd title="Project" />
+                    </Link>
                     <Link to="/projects" className="btn btn-primary btn-icon">
                       <LuLayoutGrid className="fs-lg" />
                     </Link>
