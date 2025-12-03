@@ -7,6 +7,7 @@ export type WorkflowStep = {
   title: string
   description: string
   content: ReactNode
+  onNext?: () => Promise<boolean> | boolean
 }
 
 type WorkflowProps = {
@@ -19,12 +20,25 @@ type WorkflowProps = {
 
 export const Workflow = ({ title, steps, onComplete, onCancel, completionButtonText = 'Complete' }: WorkflowProps) => {
   const [currentStep, setCurrentStep] = useState(1)
+  const [isValidating, setIsValidating] = useState(false)
 
   const totalSteps = steps.length
   const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100
 
-  const handleNext = () => {
-    if (currentStep < totalSteps) {
+  const handleNext = async () => {
+    const currentStepData = steps.find((step) => step.id === currentStep)
+
+    if (currentStepData?.onNext) {
+      setIsValidating(true)
+      try {
+        const isValid = await currentStepData.onNext()
+        if (isValid && currentStep < totalSteps) {
+          setCurrentStep(currentStep + 1)
+        }
+      } finally {
+        setIsValidating(false)
+      }
+    } else if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -56,23 +70,32 @@ export const Workflow = ({ title, steps, onComplete, onCancel, completionButtonT
             <hr className="my-4" />
 
             <div className="d-flex justify-content-between align-items-center">
-              <button className="btn btn-outline-secondary" onClick={onCancel}>
+              <button className="btn btn-outline-secondary" onClick={onCancel} disabled={isValidating}>
                 <TbX className="me-1" />
                 Cancel
               </button>
               <div className="d-flex gap-2">
                 {currentStep > 1 && (
-                  <button className="btn btn-outline-primary" onClick={handlePrevious}>
+                  <button className="btn btn-outline-primary" onClick={handlePrevious} disabled={isValidating}>
                     Previous
                   </button>
                 )}
                 {currentStep < totalSteps ? (
-                  <button className="btn btn-primary" onClick={handleNext}>
-                    Next
-                    <TbChevronRight className="ms-1" />
+                  <button className="btn btn-primary" onClick={handleNext} disabled={isValidating}>
+                    {isValidating ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                        Validating...
+                      </>
+                    ) : (
+                      <>
+                        Next
+                        <TbChevronRight className="ms-1" />
+                      </>
+                    )}
                   </button>
                 ) : (
-                  <button className="btn btn-success" onClick={onComplete}>
+                  <button className="btn btn-success" onClick={onComplete} disabled={isValidating}>
                     <TbCheck className="me-1" />
                     {completionButtonText}
                   </button>
