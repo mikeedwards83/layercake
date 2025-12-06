@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LayerCake.Kernel.Store
 {
-    public class Store<TRecord, TId>(IRepository<TRecord, TId> repository)  where TRecord :IRecord, new()
+    public class StoreBase<TRecord, TId>(IRepository<TRecord, TId> repository)  where TRecord :IRecord, new()
     {
 
         public async Task<TRecord> Get(TId id)

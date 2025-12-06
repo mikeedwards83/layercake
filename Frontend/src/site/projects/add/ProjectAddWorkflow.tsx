@@ -8,6 +8,7 @@ import { CompletionStep } from './steps/CompletionStep';
 
 interface ProjectData {
   name: string;
+  key: string;
   description: string;
   icon: string;
   color: string;
@@ -35,6 +36,11 @@ const step1Schema = Yup.object().shape({
     .trim()
     .required('Project name is required')
     .max(50, 'Project name must be 50 characters or less'),
+  key: Yup.string()
+    .trim()
+    .required('Project key is required')
+    .max(10, 'Project key must be 10 characters or less')
+    .matches(/^[A-Z0-9]+$/, 'Project key can only contain uppercase letters and numbers'),
   description: Yup.string()
     .trim()
     .required('Description is required')
@@ -50,6 +56,7 @@ const step2Schema = Yup.object().shape({
 export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowProps) => {
   const [projectData, setProjectData] = useState<ProjectData>({
     name: '',
+    key: '',
     description: '',
     icon: 'Folder',
     color: '#0d6efd',

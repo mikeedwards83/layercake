@@ -4,6 +4,7 @@ import { ColorPicker } from '@/components/ColorPicker'
 
 interface ProjectData {
   name: string
+  key: string
   description: string
   icon: string
   color: string
@@ -37,6 +38,30 @@ export const ProjectDetailsStep = ({ projectData, errors, updateProjectData }: P
               />
               <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               <Form.Text className="text-muted">{projectData.name.length}/50 characters</Form.Text>
+            </Form.Group>
+          </Col>
+
+          <Col md={12}>
+            <Form.Group>
+              <Form.Label>
+                Project Key <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter project key (max 10 characters, automatically capitalized)"
+                value={projectData.key}
+                onChange={(e) => {
+                  // Only allow letters and numbers, automatically capitalize
+                  const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
+                  updateProjectData('key', value)
+                }}
+                isInvalid={!!errors.key}
+                maxLength={10}
+              />
+              <Form.Control.Feedback type="invalid">{errors.key}</Form.Control.Feedback>
+              <Form.Text className="text-muted">
+                {projectData.key.length}/10 characters - Letters and numbers only (automatically capitalized)
+              </Form.Text>
             </Form.Group>
           </Col>
 
