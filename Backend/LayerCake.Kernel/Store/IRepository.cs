@@ -8,7 +8,7 @@ namespace LayerCake.Kernel.Store
     {
         Task Add(TRecord record) ;
         Task Delete(TRecord record);
-        Task<TRecord> Get(TId id);
+        Task<IEnumerable<TRecord>> Find(QueryParameters query);
         Task Update(TRecord record);
     }
 }

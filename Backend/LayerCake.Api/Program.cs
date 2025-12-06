@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using LayerCake.Kernel.Firebase.Authentication;
 using LayerCake.Kernel.Firebase;
+using LayerCake.Kernel.Firebase.Stores;
+using LayerCake.Kernel.Tenants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddFirebase(builder.Environment.IsDevelopment());
+builder.Services.AddTenantStores();
+builder.Services.AddFirestoreStores();
+
 
 var app = builder.Build();
 

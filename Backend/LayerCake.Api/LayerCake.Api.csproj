@@ -17,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LayerCake.Kernel.Firebase.Stores\LayerCake.Kernel.Firebase.Stores.csproj" />
     <ProjectReference Include="..\LayerCake.Kernel.Firebase\LayerCake.Kernel.Firebase.csproj" />
+    <ProjectReference Include="..\LayerCake.Kernel.Tenants\LayerCake.Kernel.Tenants.csproj" />
   </ItemGroup>
 
 </Project>
