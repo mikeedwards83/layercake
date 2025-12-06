@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using LayerCake.Kernel.Firebase.Authentication;
+using LayerCake.Kernel.Firebase;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options => { });
 
 builder.Services.AddAuthorization();
+builder.Services.AddFirebase(builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 
@@ -43,6 +45,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseFirebase();
 app.UseHttpsRedirection();
 
 app.UseCors();

@@ -27,19 +27,13 @@ export function AuthProvider({children}:ChildrenType) {
     const [userLoggedIn, setUserLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    useEffect(()=>{
-        console.log("started")
-        const unsubscribe = onAuthStateChanged(auth, initializeUser);
-        return unsubscribe;
-    },[])
-
+   
     async function initializeUser(user:any){
-
         console.log("here1")
         if(user){
 
-            var initials = getInitials(user.email[0]);
-            var displayName = user.email;
+            let initials = getInitials(user.email[0]);
+            let displayName = user.email;
 
             if(user.displayName){
                 initials=getInitials(user.displayName);
@@ -61,6 +55,13 @@ export function AuthProvider({children}:ChildrenType) {
         userLoggedIn,
         loading
     }
+
+     useEffect(()=>{
+        console.log("started")
+        const unsubscribe = onAuthStateChanged(auth, initializeUser);
+        return unsubscribe;
+    },[])
+
 
     return(
         <AuthContext.Provider value={value}>

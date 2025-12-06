@@ -3,6 +3,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap'
 import { LuActivity, LuCalendarClock, LuLayoutGrid, LuList, LuSearch, LuUsers } from 'react-icons/lu'
 import { Link } from 'react-router'
 import ButtonAdd from '@/components/Buttons/ButtonAdd'
+import WeatherComponent from './weather'
 
 const Page = () => {
   return (
@@ -83,7 +84,10 @@ const Page = () => {
           </form>
         </Col>
       </Row>
+    <WeatherComponent />
+
     </Container>
+
   )
 }
 

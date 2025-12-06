@@ -1,10 +1,11 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { connectAuthEmulator, getAuth } from 'firebase/auth'
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { connectStorageEmulator, getStorage } from 'firebase/storage';
 
 // Your web app's Firebase configuration
 // TODO: Replace with your actual Firebase config from Firebase Console
 const firebaseConfig = {
-
   apiKey: "AIzaSyBYPcyZBQF1jiwSy2g0cf8-aO24zG9FluI",
   authDomain: "archflow-3ca69.firebaseapp.com",
   projectId: "archflow-3ca69",
@@ -18,6 +19,17 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
+
+
+
 // Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app)
-export default app
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+if (process.env.NODE_ENV === 'development') {
+  connectAuthEmulator(auth, 'http://localhost:9099');
+  connectFirestoreEmulator(db, 'localhost', 8080);
+  connectStorageEmulator(storage, 'localhost', 9199);
+}
+export  {app, auth, db, storage}

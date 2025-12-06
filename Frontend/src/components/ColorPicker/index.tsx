@@ -1,26 +1,6 @@
 import { useState } from 'react'
-import { Form, Row, Col } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { HexColorPicker } from 'react-colorful'
-import { TbCheck } from 'react-icons/tb'
-
-const predefinedColors = [
-  { name: 'Primary Blue', value: '#0d6efd' },
-  { name: 'Success Green', value: '#198754' },
-  { name: 'Danger Red', value: '#dc3545' },
-  { name: 'Warning Yellow', value: '#ffc107' },
-  { name: 'Info Cyan', value: '#0dcaf0' },
-  { name: 'Purple', value: '#6f42c1' },
-  { name: 'Pink', value: '#d63384' },
-  { name: 'Orange', value: '#fd7e14' },
-  { name: 'Teal', value: '#20c997' },
-  { name: 'Indigo', value: '#6610f2' },
-  { name: 'Dark Blue', value: '#0b5ed7' },
-  { name: 'Dark Green', value: '#146c43' },
-  { name: 'Dark Red', value: '#b02a37' },
-  { name: 'Gray', value: '#6c757d' },
-  { name: 'Dark Gray', value: '#495057' },
-  { name: 'Light Gray', value: '#adb5bd' },
-]
 
 interface ColorPickerProps {
   value: string

@@ -13,69 +13,13 @@ namespace LayerCake.Kernel.Firebase.Authentication;
 
 public class FirebaseAuthenticationHandler : AuthenticationHandler<JwtBearerOptions>
 {
-    private readonly FirebaseApp _firebaseApp;
-    private readonly IConfiguration _configuration;
-
     public FirebaseAuthenticationHandler(
         IOptionsMonitor<JwtBearerOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder,
-        IConfiguration configuration) : base(options, logger, encoder)
+        UrlEncoder encoder
+       ) : base(options, logger, encoder)
     {
-        _configuration = configuration;
-
-        // Initialize Firebase Admin SDK if not already initialized
-        if (FirebaseApp.DefaultInstance == null)
-        {
-            var projectId = _configuration["Firebase:ProjectId"];
-            var credentialPath = _configuration["Firebase:CredentialPath"];
-
-            GoogleCredential credential;
-
-            // Try to load credentials from file path if specified
-            if (!string.IsNullOrEmpty(credentialPath) && File.Exists(credentialPath))
-            {
-                Logger.LogInformation($"Loading Firebase credentials from: {credentialPath}");
-                credential = GoogleCredential.FromFile(credentialPath);
-            }
-            // Try environment variable
-            else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS")))
-            {
-                var envPath = Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS");
-                Logger.LogInformation($"Loading Firebase credentials from environment variable: {envPath}");
-                credential = GoogleCredential.GetApplicationDefault();
-            }
-            // Try default location
-            else
-            {
-                try
-                {
-                    Logger.LogInformation("Attempting to load Firebase credentials from default location");
-                    credential = GoogleCredential.GetApplicationDefault();
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, "Failed to load Firebase credentials. Please set Firebase:CredentialPath in appsettings.json or GOOGLE_APPLICATION_CREDENTIALS environment variable.");
-                    throw new InvalidOperationException(
-                        "Firebase credentials not found. Please provide credentials via:\n" +
-                        "1. Set 'Firebase:CredentialPath' in appsettings.json to point to your service account key file\n" +
-                        "2. Set GOOGLE_APPLICATION_CREDENTIALS environment variable\n" +
-                        "3. Place credentials in the default application credentials location", ex);
-                }
-            }
-
-            _firebaseApp = FirebaseApp.Create(new AppOptions()
-            {
-                Credential = credential,
-                ProjectId = projectId
-            });
-
-            Logger.LogInformation($"Firebase Admin SDK initialized successfully for project: {projectId}");
-        }
-        else
-        {
-            _firebaseApp = FirebaseApp.DefaultInstance;
-        }
+        
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()

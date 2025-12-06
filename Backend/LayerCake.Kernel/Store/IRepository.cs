@@ -6,7 +6,8 @@ namespace LayerCake.Kernel.Store
 {
     public interface IRepository<TRecord, TId> where TRecord : IRecord
     {
-        Task Add<TRecord>(TRecord record) where TRecord : IRecord, new();
+        Task Add(TRecord record) ;
+        Task Delete(TRecord record);
         Task<TRecord> Get(TId id);
         Task Update(TRecord record);
     }

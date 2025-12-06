@@ -19,7 +19,7 @@ interface ProjectDetailsStepProps {
 export const ProjectDetailsStep = ({ projectData, errors, updateProjectData }: ProjectDetailsStepProps) => {
   return (
     <div>
-      <h5 className="mb-4">Project Details</h5>
+      <h3 className="mb-4">Project Details</h3>
       <Form>
         <Row className="g-3">
           <Col md={12}>
