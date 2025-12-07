@@ -9,6 +9,7 @@ public static class ServiceCollectionExtension
     public static void AddTenantStores(this IServiceCollection services)
     {
         services.AddTransient<ProjectsStore>();
+        services.AddSingleton<ITenantContext, FakeTenantContext>();
     }
     
 }

@@ -8,38 +8,34 @@ using System.Text;
 
 namespace LayerCake.Kernel.Firebase.Stores.Queries
 {
-    public abstract class FirestoreQueryBuilder()
+    public abstract class FirestoreQueryBuilderBase
     {
-        public Query BuildQuery(CollectionReference CollectionReference, QueryParameters parameters)
+        public abstract Query BuildQuery(CollectionReference collectionReference, QueryParameters parameters);
+    }
+    
+    
+    public abstract class FirestoreQueryBuilder<TParameters>() 
+        : FirestoreQueryBuilderBase  
+        where TParameters : QueryParameters
+    {
+        public override Query BuildQuery(CollectionReference collectionReference, QueryParameters parameters)
+        {
+            return BuildQuery(collectionReference, (TParameters)parameters);
+        }
+
+        public Query BuildQuery(CollectionReference collectionReference, TParameters parameters)
         {
             if (parameters.Take > 100 || parameters.Take < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(parameters), "Take must be between 1 and 100");
             }
-            var query = InternalBuildQuery(CollectionReference, parameters);
+            var query = InternalBuildQuery(collectionReference, parameters);
             query.Limit(parameters.Take);
             return query;
         }
 
-        protected abstract Query InternalBuildQuery(CollectionReference collection, QueryParameters parameters);
+        protected abstract Query InternalBuildQuery(CollectionReference collection, TParameters parameters);
     }
 
-    public abstract class TenantFirestoreQueryBuilder()
-        : FirestoreQueryBuilder()
-    {
-        protected override Query InternalBuildQuery(CollectionReference collection, QueryParameters parameters)
-        {
-            var tenantQueryParameters = parameters as TenantQueryParameters ??
-                                        throw new NotSupportedException("Parameters not of type TenantQueryParameters");
-
-            var query = collection
-                .WhereEqualTo("tenantId", tenantQueryParameters.TenantId);
-
-            InternalBuildQuery(query, tenantQueryParameters);
-
-            return query;
-        }
-
-        protected abstract void InternalBuildQuery(Query query, TenantQueryParameters parameters);
-    }
+  
 }

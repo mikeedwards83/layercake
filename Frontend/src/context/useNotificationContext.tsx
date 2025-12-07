@@ -13,7 +13,7 @@ type ShowNotificationType = {
 
 type ToastrProps = {
   show: boolean
-  onClose?: () => void
+  onClose: () => void
 } & ShowNotificationType
 
 type NotificationContextType = {
@@ -24,8 +24,8 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 
 function Toastr({ show, title, message, onClose, variant = 'light', delay }: Readonly<ToastrProps>) {
   return (
-    <ToastContainer className="m-3 position-fixed" position="top-end">
-      <Toast bg={variant} delay={delay} show={show} onClose={onClose} autohide>
+  
+      <Toast bg={variant} delay={delay} show={show} onClose={onClose} autohide animation >
         {title && (
           <ToastHeader className={`text-${variant}`}>
             <strong className="me-auto">{title}</strong>
@@ -33,7 +33,6 @@ function Toastr({ show, title, message, onClose, variant = 'light', delay }: Rea
         )}
         <ToastBody className={['dark', 'danger', 'success', 'primary'].includes(variant) ? 'text-white' : ''}>{message}</ToastBody>
       </Toast>
-    </ToastContainer>
   )
 }
 
@@ -46,36 +45,42 @@ export function useNotificationContext() {
 }
 
 export function NotificationProvider({ children }: ChildrenType) {
-  const defaultConfig = {
-    show: false,
-    message: '',
-    title: '',
-    delay: 2000,
-  }
 
-  const [config, setConfig] = useState<ToastrProps>(defaultConfig)
+
+  const [config, setConfig] = useState<ToastrProps[]>([])
   const hideNotification = () => {
     setConfig({ show: false, message: '', title: '' })
   }
 
   const showNotification = ({ title, message, variant, delay = 2000 }: ShowNotificationType) => {
-    setConfig({
+
+    const newNotification:ToastrProps =  {
       show: true,
       title,
       message,
       variant: variant ?? 'light',
-      onClose: hideNotification,
+      onClose: ()=>{},
       delay,
-    })
+    };
+
+    newNotification.onClose = ()=>{
+      newNotification.show = false;
+      const index = config.indexOf(newNotification);
+     setConfig(config.splice(index,1))
+    };
+
+    setConfig([...config, newNotification])
 
     setTimeout(() => {
-      setConfig(defaultConfig)
+        newNotification.onClose();
     }, delay)
   }
 
   return (
     <NotificationContext.Provider value={{ showNotification }}>
-      <Toastr {...config} />
+      <ToastContainer className="m-3 position-fixed" position="top-end">
+       {config.map(notification =><Toastr {...notification} />)}
+      </ToastContainer>
       {children}
     </NotificationContext.Provider>
   )

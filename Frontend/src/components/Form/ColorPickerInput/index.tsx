@@ -4,10 +4,11 @@ import { HexColorPicker } from 'react-colorful'
 
 interface ColorPickerProps {
   value: string
-  onChange: (color: string) => void
+  onChange: (color: string) => void,
+  label:string
 }
 
-export const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
+export const ColorPicker = ({ value, onChange, label }: ColorPickerProps) => {
   const [hexColor, setHexColor] = useState(value)
   const [isValid, setIsValid] = useState(true)
 
@@ -20,7 +21,7 @@ export const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
 
   return (
     <div>
-      <Form.Label>Project Color</Form.Label>
+      <Form.Label>{label}</Form.Label>
       <div className="d-flex gap-2">
         <HexColorPicker color={hexColor} onChange={handleColorChange} />
         <div

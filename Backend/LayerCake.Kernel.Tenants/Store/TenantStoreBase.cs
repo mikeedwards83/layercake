@@ -6,8 +6,18 @@ namespace LayerCake.Kernel.Tenants.Store
         ITenantContext tenantContext,
         IRepository<TRecord, TId> repository
         )
-        : StoreBase<TRecord, TId>(repository) where TRecord : IRecord, new()
+        : StoreBase<TRecord, TId>(repository) where TRecord : ITenantRecord, new()
     {
+        public override Task<TRecord> Add(Func<TRecord, Task> create)
+        {
+            return base.Add(async record =>
+            {
+                await create(record);
+                record.Id = Guid.NewGuid();
+                record.TenantId = tenantContext.TenantId;
+            });
+        }
+
         protected override void ExpandQueryParameters(QueryParameters queryParameters)
         {
             var tenantQueryParameters = queryParameters as TenantQueryParameters ?? throw new NotSupportedException("Must be of type TenantQueryParameters");

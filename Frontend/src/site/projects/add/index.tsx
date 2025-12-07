@@ -1,7 +1,7 @@
 import { Container, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
-import AddProjectWorkflow from './ProjectAddWorkflow'
+import AddProjectWorkflow from './ProjectAddWorkflow';
 
 interface ProjectData {
   name: string;

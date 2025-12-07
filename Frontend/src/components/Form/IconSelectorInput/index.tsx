@@ -1,73 +1,25 @@
+import { Icon } from '@/components/Icon'
+import { icons } from '@/components/Icon/icons'
 import { useState } from 'react'
-import { Form, Row, Col } from 'react-bootstrap'
-import {
-  LuFolder,
-  LuStar,
-  LuHeart,
-  LuZap,
-  LuTarget,
-  LuTrendingUp,
-  LuCode,
-  LuDatabase,
-  LuServer,
-  LuCloud,
-  LuShield,
-  LuLock,
-  LuUsers,
-  LuUser,
-  LuBriefcase,
-  LuCalendar,
-  LuClock,
-  LuBell,
-  LuMail,
-  LuPhone,
-  LuMapPin,
-  LuSettings,
-} from 'react-icons/lu'
+import { Form } from 'react-bootstrap'
 
-const availableIcons = [
-  { name: 'Folder', component: LuFolder },
-  { name: 'Star', component: LuStar },
-  { name: 'Heart', component: LuHeart },
-  { name: 'Zap', component: LuZap },
-  { name: 'Target', component: LuTarget },
-  { name: 'TrendingUp', component: LuTrendingUp },
-  { name: 'Code', component: LuCode },
-  { name: 'Database', component: LuDatabase },
-  { name: 'Server', component: LuServer },
-  { name: 'Cloud', component: LuCloud },
-  { name: 'Shield', component: LuShield },
-  { name: 'Lock', component: LuLock },
-  { name: 'Users', component: LuUsers },
-  { name: 'User', component: LuUser },
-  { name: 'Briefcase', component: LuBriefcase },
-  { name: 'Calendar', component: LuCalendar },
-  { name: 'Clock', component: LuClock },
-  { name: 'Bell', component: LuBell },
-  { name: 'Mail', component: LuMail },
-  { name: 'Phone', component: LuPhone },
-  { name: 'MapPin', component: LuMapPin },
-  { name: 'Settings', component: LuSettings },
-]
 
 interface IconSelectorProps {
   value: string
   onChange: (iconName: string) => void
-  color?: string
+  color?: string,
+  label:string
 }
 
-export const IconSelector = ({ value, onChange, color = '#000' }: IconSelectorProps) => {
+export const IconSelector = ({ value, onChange, color = '#000', label }: IconSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false)
-
-  const selectedIcon = availableIcons.find((icon) => icon.name === value)
-  const SelectedIconComponent = selectedIcon?.component || LuFolder
 
   return (
     <div>
-      <Form.Label>Project Icon</Form.Label>
+      <Form.Label onClick={() =>setIsOpen(true)}>{label}</Form.Label>
       <div className="position-relative">
         <div className="form-control d-flex align-items-center" style={{ cursor: 'pointer', height: '60px' }} onClick={() => setIsOpen(!isOpen)}>
-          <SelectedIconComponent size={32} style={{ color }} />
+          <Icon size={32} color={color} iconName={value} />
         </div>
 
         {isOpen && (
@@ -84,7 +36,7 @@ export const IconSelector = ({ value, onChange, color = '#000' }: IconSelectorPr
                 <button type="button" className="btn-close" onClick={() => setIsOpen(false)} />
               </div>
               <div className="d-grid gap-2" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(50px,50px))'}}>
-                {availableIcons.map((icon) => {
+                {icons.map((icon) => {
                   const IconComponent = icon.component
                   return (
                     <div key={icon.name} className='ratio ratio-1x1 d-flex justify-content-between align-items-center' style={{width:'50px'}}>

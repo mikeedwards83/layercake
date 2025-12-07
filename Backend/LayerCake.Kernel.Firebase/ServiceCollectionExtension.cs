@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Google.Api.Gax;
+using Google.Cloud.Firestore;
 
 namespace LayerCake.Kernel.Firebase
 {
@@ -19,6 +21,7 @@ namespace LayerCake.Kernel.Firebase
             }
             
             services.AddSingleton<FirebaseApp>(CreateFirebaseApp);
+            services.AddSingleton<FirestoreDb>(provider => CreateFirestoreDb(provider, useEmulator));
         }
 
         private static void EnableEmulator()
@@ -28,10 +31,23 @@ namespace LayerCake.Kernel.Firebase
             Environment.SetEnvironmentVariable("FIREBASE_STORAGE_EMULATOR_HOST", "localhost:9199");
         }
 
+        private static FirestoreDb CreateFirestoreDb(IServiceProvider serviceProvider, bool useEmulator)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<FirestoreDb>>();
+            
+            var firebaseApp =  serviceProvider.GetRequiredService<FirebaseApp>();
+            
+            FirestoreDb db = new FirestoreDbBuilder { 
+                ProjectId =  firebaseApp.Options.ProjectId,
+                EmulatorDetection = useEmulator ? EmulatorDetection.EmulatorOnly : EmulatorDetection.None,
+            }.Build();
+
+            return db;
+        }
+
         private static FirebaseApp CreateFirebaseApp(IServiceProvider provider)
         {
-            var loggerFactory  = provider.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger<FirebaseApp>();
+            var logger = provider.GetRequiredService<ILogger<FirebaseApp>>();
             var configuration = provider.GetRequiredService<IConfiguration>();
 
             var projectId = configuration["Firebase:ProjectId"];

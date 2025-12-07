@@ -1,4 +1,5 @@
-﻿using LayerCake.Kernel.Firebase.Stores.Queries;
+﻿using LayerCake.Kernel.Firebase.Stores.Projects;
+using LayerCake.Kernel.Firebase.Stores.Queries;
 using LayerCake.Kernel.Store;
 using LayerCake.Kernel.Tenants.Projects;
 using Microsoft.Extensions.DependencyInjection;

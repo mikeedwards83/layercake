@@ -6,14 +6,19 @@ namespace LayerCake.Kernel.Firebase.Stores.Queries
 {
     public class QueryFactory : IQueryFactory
     {
-        Dictionary<string, FirestoreQueryBuilder> _builders = new Dictionary<string, FirestoreQueryBuilder>
+        Dictionary<string, FirestoreQueryBuilderBase> _builders = new Dictionary<string, FirestoreQueryBuilderBase>
         {
-            { nameof(GetQueryParameters), new GetQueryBuilder() }
+            {
+                nameof(GetQueryParameters), new GetQueryBuilder()
+            },
+            {
+                nameof(ProjectByKeyFirebaseQueryBuilder), new ProjectByKeyFirebaseQueryBuilder()
+            }
         };
 
         public  Query Build(CollectionReference collectionReference, QueryParameters queryParameters)
         {
-            var builder = _builders[queryParameters.Name];
+            var builder = _builders[queryParameters.QueryName];
             return builder.BuildQuery(collectionReference, queryParameters);
         }
     }

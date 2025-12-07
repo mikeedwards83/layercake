@@ -14,10 +14,10 @@
 
         protected abstract QueryParameters GetGetQueryParameters(TId id);
 
-        public async Task<TRecord> Add(Func<TRecord, Task> create)
+        public virtual async Task<TRecord> Add(Func<TRecord, Task> create)
         {
             var record = new TRecord();
-
+            
             await create(record);
 
             record.Validate();
@@ -27,7 +27,7 @@
             return record;
         }
 
-        public async Task<TRecord> Update(TRecord record, Func<TRecord, Task> update)
+        public virtual async Task<TRecord> Update(TRecord record, Func<TRecord, Task> update)
         {
             await update(record);
 

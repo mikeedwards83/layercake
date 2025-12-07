@@ -9,11 +9,10 @@ namespace LayerCake.Kernel.Firebase.Stores.Queries;
 /// Firestore query implementation for retrieving a single record by Id and TenantId
 /// </summary>
 public class GetQueryBuilder:
-    TenantFirestoreQueryBuilder
+    TenantFirestoreQueryBuilder<GetQueryParameters>
 {
-    protected override void InternalBuildQuery(Query query, TenantQueryParameters parameters)
+    protected override void InternalBuildQuery(Query query, GetQueryParameters parameters)
     {
-        var queryParams = parameters as GetQueryParameters ?? throw new NotSupportedException();
-        query.WhereEqualTo("id", queryParams.Id.ToString());
+        query.WhereEqualTo("id", parameters.Id.ToString());
     }
 }
