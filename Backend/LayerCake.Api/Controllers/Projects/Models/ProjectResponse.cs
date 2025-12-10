@@ -13,7 +13,7 @@ public class ProjectResponse
     public required string? Color { get; init; }
     public required string? OwnerId { get; init; }
 
-    public static ProjectResponse Map(Project project)
+    public static ProjectResponse Map(Kernel.Tenants.Projects.Project project)
     {
         return new ProjectResponse
         {

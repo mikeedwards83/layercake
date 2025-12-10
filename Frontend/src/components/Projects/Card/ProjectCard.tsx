@@ -7,14 +7,14 @@ import { fakeUsers } from '@/components/Form/UserSelectorInput/data'
 
 interface IProjectCard {
     name:string
-    key:string
+    projectKey:string
     description: string,
     ownerId?: string,
     icon?:string, 
     color?:string
 }
 
-export const ProjectCard  = ({ name, key, description, ownerId, icon, color }:IProjectCard) => {
+export const ProjectCard  = ({ name,projectKey, description, ownerId, icon, color }:IProjectCard) => {
   return (
     <Card>
       <CardBody>
@@ -26,7 +26,7 @@ export const ProjectCard  = ({ name, key, description, ownerId, icon, color }:IP
           </div>
           <div>
             <h5 className="mb-1 d-flex align-items-center">
-              <Link to={`/projects/${key}`} className="link-reset">
+              <Link to={`/projects/${projectKey}`} className="link-reset">
                 {name}
               </Link>
             </h5>

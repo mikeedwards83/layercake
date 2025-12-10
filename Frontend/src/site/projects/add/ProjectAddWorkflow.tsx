@@ -8,6 +8,7 @@ import { ProjectAddStep3 } from './steps/step3'
 import { ProjectsApiClient, type IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 import type { WorkflowStep } from '@/components/Workflow/types'
 import { Workflow } from '@/components/Workflow/workflow'
+import { useNavigate } from 'react-router'
 
 interface AddProjectWorkflowProps {
   onComplete?: (data: IProjectsPostRequest) => void
@@ -15,6 +16,7 @@ interface AddProjectWorkflowProps {
 }
 
 export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowProps) => {
+  const navigate = useNavigate()
 
   const [projectData, setProjectData] = useState<IProjectsPostRequest>({
     name: '',
@@ -28,7 +30,7 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
   const [errors, setErrors] = useState<Partial<Record<keyof IProjectsPostRequest, string>>>({})
   const [serverValidationErrors, setServerValidationErrors] = useState<Record<string, string[]>>({})
 
-  const updateProjectData = (field: keyof IProjectsPostRequest, value: string|undefined) => {
+  const updateProjectData = (field: keyof IProjectsPostRequest, value: string | undefined) => {
     setProjectData((prev) => ({ ...prev, [field]: value }))
     // Clear error when user starts typing
     if (errors[field]) {
@@ -36,7 +38,7 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
     }
   }
 
-   const step1Next = async () => {
+  const step1Next = async () => {
     try {
       await step1Schema.validate(projectData, { abortEarly: false })
       setErrors({})
@@ -56,8 +58,8 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
   }
 
   const step2Previous = async () => {
-    setServerValidationErrors({});
-    return true;
+    setServerValidationErrors({})
+    return true
   }
 
   const step2Next = async () => {
@@ -65,18 +67,17 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
     setServerValidationErrors({})
 
     try {
-      const client = new ProjectsApiClient();
-      const createdProject = await client.post(projectData);
+      const client = new ProjectsApiClient()
+      const createdProject = await client.post(projectData)
 
       console.log('Project created successfully:', createdProject)
 
-      if(onComplete){
-          onComplete(projectData);
+      if (onComplete) {
+        onComplete(projectData)
       }
 
-      return true;
+      return true
     } catch (error: unknown) {
-
       console.error('Error creating project:', error)
 
       // Handle validation errors from the server
@@ -93,9 +94,9 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
     }
   }
 
-  const step3Next = async ()=>{
-
-    return true;
+  const step3Next = async () => {
+    navigate('/projects')
+    return true
   }
 
   const steps: WorkflowStep[] = [
@@ -111,22 +112,21 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
       title: 'Review & Summary',
       description: 'Review your project details',
       content: <ProjectAddStep2 projectData={projectData} users={fakeUsers} validationErrors={serverValidationErrors} />,
-      nextButtonText:"Create Project",
+      nextButtonText: 'Create Project',
       onNext: step2Next,
-      onPrevious: step2Previous
-
+      onPrevious: step2Previous,
     },
     {
       id: 3,
       title: 'Completed',
       description: 'Project created successfully',
       content: <ProjectAddStep3 projectData={projectData} users={fakeUsers} />,
-      nextButtonText:"Finish",
-      onNext:step3Next
+      nextButtonText: 'Finish',
+      onNext: step3Next,
     },
   ]
 
-  return <Workflow title="Add New Project" steps={steps}  onCancel={onCancel} />
+  return <Workflow title="Add New Project" steps={steps} onCancel={onCancel} />
 }
 
 export default AddProjectWorkflow

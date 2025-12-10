@@ -64,7 +64,7 @@ const Page = () => {
               <Col key={project.id} xs={12} md={6} lg={4}>
                 <ProjectCard
                   name={project.name}
-                  key={project.key}
+                  projectKey={project.key}
                   description={project.description}
                   ownerId={project.ownerId}
                   icon={project.icon}

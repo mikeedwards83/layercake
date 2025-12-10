@@ -31,7 +31,7 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ProjectPostResponse>> Post([FromBody] ProjectsPostRequest request)
+    public async Task<ActionResult<ProjectsPostResponse>> Post([FromBody] ProjectsPostRequest request)
     {
         try
         {
@@ -56,7 +56,7 @@ public class ProjectsController : ControllerBase
                     await Task.CompletedTask;
                 });
 
-                var response = new ProjectPostResponse
+                var response = new ProjectsPostResponse
                 {
                    Project = ProjectResponse.Map(project)
                 };
@@ -85,13 +85,13 @@ public class ProjectsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IEnumerable<ProjectPostResponse>>> GetAllProjects()
+    public async Task<ActionResult<IEnumerable<ProjectsPostResponse>>> GetAllProjects()
     {
         try
         {
             var projects = await _projectsStore.Find(new GetAllProjectsQuery(0, 100));
 
-            var response = new ProjectGetResponse
+            var response = new ProjectsGetResponse
             {
                 Projects = projects.Select(ProjectResponse.Map).ToList()
             };
@@ -113,7 +113,7 @@ public class ProjectsController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProjectPostResponse>> GetProject(Guid id)
+    public async Task<ActionResult<ProjectsPostResponse>> GetProject(Guid id)
     {
         try
         {
@@ -124,7 +124,7 @@ public class ProjectsController : ControllerBase
                 return NotFound(new { message = $"Project with ID {id} not found" });
             }
 
-            var response = new ProjectPostResponse
+            var response = new ProjectsPostResponse
             {
                 Project =  ProjectResponse.Map(project)
             };
