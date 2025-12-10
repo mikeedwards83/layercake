@@ -1,8 +1,8 @@
 ﻿using Google.Cloud.Firestore;
-using LayerCake.Kernel.Store;
+using LayerCake.Kernel.Firebase.Stores.Queries;
 using LayerCake.Kernel.Tenants.Projects.Queries;
 
-namespace LayerCake.Kernel.Firebase.Stores.Queries;
+namespace LayerCake.Kernel.Firebase.Stores.Projects.Queries;
 
 public class ProjectByKeyFirebaseQueryBuilder: TenantFirestoreQueryBuilder<ProjectByKeyQuery>
 {

@@ -9,7 +9,8 @@ namespace LayerCake.Kernel.Tenants.Projects;
 /// </summary>
 public class Project : ITenantRecord
 {
-
+    private string _key = string.Empty;
+    
     public Guid Id { get; set; }
     /// <summary>
     /// Gets or sets the project name
@@ -19,7 +20,10 @@ public class Project : ITenantRecord
     /// <summary>
     /// Gets or sets the project key (unique identifier, max 10 characters, uppercase alphanumeric)
     /// </summary>
-    public string Key { get; set; } = string.Empty;
+    public string Key { 
+        get => _key;
+        set => _key = value.ToUpperInvariant();
+    } 
 
     /// <summary>
     /// Gets or sets the project description
@@ -42,12 +46,5 @@ public class Project : ITenantRecord
     public string OwnerId { get; set; } = string.Empty;
 
     public Guid TenantId { get; set; }
-
-    public ValidationResult Validate()
-    {
-        var validator = new ProjectValidator();
-
-        return validator.Validate(this);
-    }
   
 }

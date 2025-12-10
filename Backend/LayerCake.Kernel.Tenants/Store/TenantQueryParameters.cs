@@ -2,7 +2,7 @@
 
 namespace LayerCake.Kernel.Tenants
 {
-    public abstract class TenantQueryParameters(string queryName, int skip, int take) : QueryParameters(queryName, skip, take)
+    public abstract class TenantQueryParameters(int skip, int take) : QueryParameters(skip, take)
     {
         public Guid TenantId { get; set; }
     }

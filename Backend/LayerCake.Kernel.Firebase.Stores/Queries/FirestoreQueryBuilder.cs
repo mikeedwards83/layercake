@@ -10,14 +10,20 @@ namespace LayerCake.Kernel.Firebase.Stores.Queries
 {
     public abstract class FirestoreQueryBuilderBase
     {
+        public Type QueryParameterType { get; protected set; }
         public abstract Query BuildQuery(CollectionReference collectionReference, QueryParameters parameters);
     }
     
     
-    public abstract class FirestoreQueryBuilder<TParameters>() 
+    public abstract class FirestoreQueryBuilder<TParameters>
         : FirestoreQueryBuilderBase  
         where TParameters : QueryParameters
     {
+        public FirestoreQueryBuilder()
+        {
+            QueryParameterType = typeof(TParameters);
+        }
+        
         public override Query BuildQuery(CollectionReference collectionReference, QueryParameters parameters)
         {
             return BuildQuery(collectionReference, (TParameters)parameters);

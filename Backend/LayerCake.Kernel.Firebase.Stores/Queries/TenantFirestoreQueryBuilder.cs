@@ -10,7 +10,7 @@ public abstract class TenantFirestoreQueryBuilder<TParameters>()
     protected override Query InternalBuildQuery(CollectionReference collection, TParameters parameters)
     {
         var query = collection
-            .WhereEqualTo("tenantId", parameters.TenantId);
+            .WhereEqualTo("tenantId", parameters.TenantId.ToString());
 
         InternalBuildQuery(query, parameters);
         return query;

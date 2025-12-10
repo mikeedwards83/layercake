@@ -1,9 +1,12 @@
-﻿namespace LayerCake.Kernel.Store
+﻿using FluentValidation;
+
+namespace LayerCake.Kernel.Store
 {
     public abstract class StoreBase<TRecord, TId>(
-            IRepository<TRecord, TId> repository
+            IRepository<TRecord, TId> repository,
+            AbstractValidator<TRecord> validator
         )  
-        where TRecord :IRecord, new()
+        where TRecord :IRecord, new()  
     {
         public async Task<TRecord?> Get(TId id)
         {
@@ -14,13 +17,22 @@
 
         protected abstract QueryParameters GetGetQueryParameters(TId id);
 
+
+        private async Task Validate(TRecord record)
+        {
+            var results= await validator.ValidateAsync(record);
+            if (!results.IsValid)
+            {
+                throw new ValidationException(results.Errors);
+            }
+        }
         public virtual async Task<TRecord> Add(Func<TRecord, Task> create)
         {
             var record = new TRecord();
             
             await create(record);
 
-            record.Validate();
+            await Validate(record);
 
             await repository.Add(record);
 
@@ -31,7 +43,7 @@
         {
             await update(record);
 
-            record.Validate();
+            await Validate(record);
 
             await repository.Update(record);
 

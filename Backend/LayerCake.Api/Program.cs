@@ -4,12 +4,19 @@ using LayerCake.Kernel.Firebase.Authentication;
 using LayerCake.Kernel.Firebase;
 using LayerCake.Kernel.Firebase.Stores;
 using LayerCake.Kernel.Tenants;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// Add FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

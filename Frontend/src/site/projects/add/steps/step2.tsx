@@ -24,6 +24,7 @@ export const ProjectAddStep2 = ({ projectData, users }: ProjectAddStep1Props) =>
                 <Col md={6}>
                   <TextReview label="Name" value={projectData.name} />
                   <TextReview label="Description" value={projectData.description} />
+                  <TextReview label="Key" value={projectData.key} />
                 </Col>
                 <Col md={6}>
                   <IconReview label="Icon" value={projectData.icon} color={projectData.color} />

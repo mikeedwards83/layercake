@@ -1,9 +1,6 @@
 ﻿using LayerCake.Kernel.Store;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace LayerCake.Kernel.Tenants
+namespace LayerCake.Kernel.Tenants.Store
 {
     public interface ITenantRecord : IRecord
     {

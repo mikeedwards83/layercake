@@ -8,6 +8,5 @@ namespace LayerCake.Kernel.Store
     public interface IRecord
     {
         public Guid Id { get; set; }
-        ValidationResult Validate();
     }
 }

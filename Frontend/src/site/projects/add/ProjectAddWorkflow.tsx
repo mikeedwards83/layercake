@@ -56,8 +56,6 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
 
   const step2Next = async () => {
 
-      return true;
-
     try {
 
       const client = new ProjectsApiClient();

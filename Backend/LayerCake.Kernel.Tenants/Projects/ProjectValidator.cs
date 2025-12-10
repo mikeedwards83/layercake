@@ -1,4 +1,6 @@
 using FluentValidation;
+using LayerCake.Kernel.Tenants.Projects.Queries;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LayerCake.Kernel.Tenants.Projects;
 
@@ -7,7 +9,7 @@ namespace LayerCake.Kernel.Tenants.Projects;
 /// </summary>
 public class ProjectValidator : TenantRecordValidator<Project>
 {
-    public ProjectValidator()
+    public ProjectValidator(IServiceProvider serviceProvider)
     {
         RuleFor(p => p.Name)
             .NotEmpty()
@@ -21,7 +23,9 @@ public class ProjectValidator : TenantRecordValidator<Project>
             .MaximumLength(10)
             .WithMessage(ProjectValidationMessages.KeyMaxLength)
             .Matches(@"^[A-Z0-9]+$")
-            .WithMessage(ProjectValidationMessages.KeyInvalidFormat);
+            .WithMessage(ProjectValidationMessages.KeyInvalidFormat)
+            .WhenAsync(async (x, cancellationToken) => !(await IsUniqueKey(serviceProvider.GetRequiredService<IProjectsStore>(), x.Key!)))
+            .WithMessage("Project key must be unique");
 
         RuleFor(p => p.Description)
             .NotEmpty()
@@ -42,5 +46,16 @@ public class ProjectValidator : TenantRecordValidator<Project>
         RuleFor(p => p.OwnerId)
             .NotEmpty()
             .WithMessage(ProjectValidationMessages.OwnerIdRequired);
+    }
+    
+    public static async Task<bool> IsUniqueKey(IProjectsStore projectsService, string? key)
+    {
+        if (string.IsNullOrEmpty(key))
+        {
+            return false;
+        }
+        
+        var results = await projectsService.Find(new ProjectByKeyQuery(key, 0, 1));
+        return !results.Any();
     }
 }

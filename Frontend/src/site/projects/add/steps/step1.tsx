@@ -27,6 +27,7 @@ export const ProjectAddStep1 = ({ projectData, errors, updateProjectData }: Proj
               maxChars={50}
               onChange={(value) => updateProjectData('name', value)}
               error={errors.name}
+              value={projectData.name}
               required
             />
           </Col>
@@ -52,6 +53,7 @@ export const ProjectAddStep1 = ({ projectData, errors, updateProjectData }: Proj
               maxChars={300}
               onChange={(value) => updateProjectData('description', value)}
               error={errors.description}
+              value={projectData.description}
               required
             />
           </Col>
@@ -69,7 +71,7 @@ export const ProjectAddStep1 = ({ projectData, errors, updateProjectData }: Proj
           </Col>
           <FormDivider />
           <Col md={12}>
-            <IconSelector label='Icon' value={projectData.icon} onChange={(icon) => updateProjectData('icon', icon)} color={projectData.color} />
+            <IconSelector label='Icon' value={projectData.icon} onChange={(icon) => updateProjectData('icon', icon)} color={projectData.color}  />
           </Col>
           <Col md={12}>
             <ColorPicker label="Colour" value={projectData.color} onChange={(color) => updateProjectData('color', color)} />

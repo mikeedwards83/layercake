@@ -6,15 +6,12 @@ namespace LayerCake.Kernel.Tenants.Projects;
 /// <summary>
 /// Store for managing Project entities
 /// </summary>
-public class ProjectsStore : TenantStoreBase<Project, Guid>
+public class ProjectsStore(
+    ITenantContext tenantContext,
+    IProjectsRepository repository,
+    ProjectValidator validator)
+    : TenantStoreBase<Project, Guid>(tenantContext, repository, validator), IProjectsStore
 {
-    public ProjectsStore(
-        ITenantContext tenantContext,
-        IProjectsRepository repository
-        ) : base(tenantContext, repository)
-    {
-    }
-
     protected override QueryParameters GetGetQueryParameters(Guid id)
     {
         return new GetQueryParameters(id);

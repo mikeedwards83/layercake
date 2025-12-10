@@ -1,5 +1,6 @@
 using LayerCake.Api.Controllers.Projects.Models;
 using LayerCake.Kernel.Tenants.Projects;
+using LayerCake.Kernel.Tenants.Projects.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +11,11 @@ namespace LayerCake.Api.Controllers.Projects;
 [Authorize]
 public class ProjectsController : ControllerBase
 {
-    private readonly ProjectsStore _projectsStore;
+    private readonly IProjectsStore _projectsStore;
     private readonly ILogger<ProjectsController> _logger;
 
     public ProjectsController(
-        ProjectsStore projectsStore,
+        IProjectsStore projectsStore,
         ILogger<ProjectsController> logger)
     {
         _projectsStore = projectsStore ?? throw new ArgumentNullException(nameof(projectsStore));
@@ -34,40 +35,53 @@ public class ProjectsController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Creating new project with key: {ProjectKey}", request.Key);
-
-            var project = await _projectsStore.Add(async (p) =>
+            if (request.Key != null && !await ProjectValidator.IsUniqueKey(_projectsStore, request.Key))
             {
-                p.Id = Guid.NewGuid();
-                p.Name = request.Name;
-                p.Key = request.Key;
-                p.Description = request.Description;
-                p.Icon = request.Icon;
-                p.Color = request.Color;
-                p.OwnerId = request.OwnerId;
-                await Task.CompletedTask;
-            });
+                ModelState.AddModelError(nameof(request.Key), $"The key {request.Key} must be unique");
+            }
 
-            var response = new ProjectPostResponse
+            if (ModelState.IsValid)
             {
-                Id = project.Id,
-                TenantId = project.TenantId,
-                Name = project.Name,
-                Key = project.Key,
-                Description = project.Description,
-                Icon = project.Icon,
-                Color = project.Color,
-                OwnerId = project.OwnerId
-            };
+                _logger.LogInformation("Creating new project with key: {ProjectKey}", request.Key);
 
-            _logger.LogInformation("Successfully created project with ID: {ProjectId}", project.Id);
+                var project = await _projectsStore.Add(async (p) =>
+                {
+                    p.Id = Guid.NewGuid();
+                    p.Name = request.Name;
+                    p.Key = request.Key;
+                    p.Description = request.Description;
+                    p.Icon = request.Icon;
+                    p.Color = request.Color;
+                    p.OwnerId = request.OwnerId;
+                    await Task.CompletedTask;
+                });
 
-            return CreatedAtAction(nameof(GetProject), new { id = project.Id }, response);
+                var response = new ProjectPostResponse
+                {
+                    Id = project.Id,
+                    TenantId = project.TenantId,
+                    Name = project.Name,
+                    Key = project.Key,
+                    Description = project.Description,
+                    Icon = project.Icon,
+                    Color = project.Color,
+                    OwnerId = project.OwnerId
+                };
+
+                _logger.LogInformation("Successfully created project with ID: {ProjectId}", project.Id);
+
+                return CreatedAtAction(nameof(GetProject), new { id = project.Id }, response);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating project with key: {ProjectKey}", request.Key);
-            return StatusCode(500, new { message = "An error occurred while creating the project", error = ex.Message });
+            return StatusCode(500,
+                new { message = "An error occurred while creating the project", error = ex.Message });
         }
     }
 
@@ -111,6 +125,3 @@ public class ProjectsController : ControllerBase
         }
     }
 }
-
-
-

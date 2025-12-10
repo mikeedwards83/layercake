@@ -21,10 +21,6 @@ public abstract class RepositoryBase<TRecord>(
         if (record == null)
             throw new ArgumentNullException(nameof(record));
 
-        var validationResult = record.Validate();
-        if (!validationResult.IsValid)
-            throw new InvalidOperationException($"Project validation failed: {string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage))}");
-
         var docRef = _collection.Document(record.Id.ToString());
 
         var data = MapAdd(record);
@@ -60,10 +56,6 @@ public abstract class RepositoryBase<TRecord>(
     {
         if (record == null)
             throw new ArgumentNullException(nameof(record));
-
-        var validationResult = record.Validate();
-        if (!validationResult.IsValid)
-            throw new InvalidOperationException($"Type: {typeof(TRecord).Name} validation failed: {string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage))}");
 
         var docRef = _collection.Document(record.Id.ToString());
 
