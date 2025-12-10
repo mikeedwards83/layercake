@@ -6,16 +6,22 @@ import { ColorReview } from '@/components/Review/ColorReview'
 import { UsersReview } from '@/components/Review/UsersReview'
 import { Notice } from '@/components/Notice'
 import type { ProjectsPostRequest } from '@/services/projects/projectsApiClient'
+import { ValidationSummary } from '@/components/Form/ValidationSummary/validationSummary'
 
 interface ProjectAddStep1Props {
   projectData: ProjectsPostRequest
   users: User[]
+  validationErrors?:Record<string, string[]>
 }
 
-export const ProjectAddStep2 = ({ projectData, users }: ProjectAddStep1Props) => {
+export const ProjectAddStep2 = ({ projectData, users, validationErrors = {} }: ProjectAddStep1Props) => {
+
   return (
     <div>
       <Row className="g-4">
+          <Col md={12}>
+            <ValidationSummary errors={validationErrors} />
+          </Col>
         <Col md={12}>
           <Card className="border">
             <Card.Body>
@@ -37,13 +43,13 @@ export const ProjectAddStep2 = ({ projectData, users }: ProjectAddStep1Props) =>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={12}>
-          <Notice heading="Ready to Create?" variant="info">
-            <p className="mb-0">
-              Click "Create Project" below to finalize and create your new project. You can click "Previous" to make any changes.
-            </p>
-          </Notice>
-        </Col>
+          <Col md={12}>
+            <Notice heading="Ready to Create?" variant="info">
+              <p className="mb-0">
+                Click "Create Project" below to finalize and create your new project. You can click "Previous" to make any changes.
+              </p>
+            </Notice>
+          </Col>
       </Row>
     </div>
   )

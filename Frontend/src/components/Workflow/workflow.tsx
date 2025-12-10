@@ -4,8 +4,6 @@ import { useState } from 'react'
 import type { WorkflowStep } from './types'
 import { WorkflowSidebar } from './workflowSidebar'
 
-
-
 type WorkflowProps = {
   title: string
   steps: WorkflowStep[]
@@ -17,7 +15,7 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
   const [isValidating, setIsValidating] = useState(false)
 
   const totalSteps = steps.length
-  const progressPercentage = ((currentStepIndex) / (totalSteps - 1)) * 100
+  const progressPercentage = (currentStepIndex / (totalSteps - 1)) * 100
 
   const handleNext = async () => {
     const currentStepData = steps[currentStepIndex]
@@ -37,7 +35,13 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
     }
   }
 
-  const handlePrevious = () => {
+  const handlePrevious = async () => {
+    const currentStepData = steps[currentStepIndex]
+    if (currentStepData?.onPrevious) {
+      const isValid = await currentStepData.onPrevious()
+      if (!isValid) return
+    }
+
     if (currentStepIndex > 0) {
       setCurrentStepIndex(currentStepIndex - 1)
     }
@@ -67,13 +71,15 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
           </CardBody>
           <CardFooter>
             <div className="d-flex justify-content-between align-items-center">
-             {currentStepIndex != steps.length-1 && (<button className="btn btn-outline-secondary" onClick={onCancel} disabled={isValidating}>
-                <TbX className="me-1" />
-                Cancel
-              </button>)}
-              {currentStepIndex == steps.length-1 && <div></div>}
+              {currentStepIndex != steps.length - 1 && (
+                <button className="btn btn-outline-secondary" onClick={onCancel} disabled={isValidating}>
+                  <TbX className="me-1" />
+                  Cancel
+                </button>
+              )}
+              {currentStepIndex == steps.length - 1 && <div></div>}
               <div className="d-flex gap-2">
-                {currentStepIndex > 0 && currentStepIndex < (steps.length-1) && (
+                {currentStepIndex > 0 && currentStepIndex < steps.length - 1 && (
                   <button className="btn btn-outline-primary" onClick={handlePrevious} disabled={isValidating}>
                     Previous
                   </button>
@@ -99,5 +105,3 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
     </Row>
   )
 }
-
-

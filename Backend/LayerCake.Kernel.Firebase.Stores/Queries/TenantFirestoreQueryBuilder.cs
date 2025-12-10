@@ -12,9 +12,8 @@ public abstract class TenantFirestoreQueryBuilder<TParameters>()
         var query = collection
             .WhereEqualTo("tenantId", parameters.TenantId.ToString());
 
-        InternalBuildQuery(query, parameters);
-        return query;
+        return InternalBuildQuery(query, parameters);
     }
 
-    protected abstract void InternalBuildQuery(Query query, TParameters parameters);
+    protected abstract Query InternalBuildQuery(Query query, TParameters parameters);
 }

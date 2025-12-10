@@ -11,8 +11,8 @@ namespace LayerCake.Kernel.Firebase.Stores.Queries;
 public class GetQueryBuilder:
     TenantFirestoreQueryBuilder<GetQueryParameters>
 {
-    protected override void InternalBuildQuery(Query query, GetQueryParameters parameters)
+    protected override Query InternalBuildQuery(Query query, GetQueryParameters parameters)
     {
-        query.WhereEqualTo("id", parameters.Id.ToString());
+        return query.WhereEqualTo("id", parameters.Id.ToString());
     }
 }

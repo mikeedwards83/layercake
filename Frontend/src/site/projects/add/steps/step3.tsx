@@ -13,7 +13,7 @@ interface ProjectAddStep3Props {
 
 export const ProjectAddStep3 = ({ projectData }: ProjectAddStep3Props) => {
   return (
-    <WorkflowSuccess title={`Project Created - ${projectData.name}`}>
+    <WorkflowSuccess title={`Project Created - ${projectData.name} (${projectData.key})`}>
         <Button variant="primary" size="lg" href={`/projects/${projectData.key}`}>
             Go to Project
             <LuArrowRight className="ms-2" />

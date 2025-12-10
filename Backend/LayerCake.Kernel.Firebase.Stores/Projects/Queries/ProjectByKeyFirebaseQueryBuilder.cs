@@ -6,8 +6,8 @@ namespace LayerCake.Kernel.Firebase.Stores.Projects.Queries;
 
 public class ProjectByKeyFirebaseQueryBuilder: TenantFirestoreQueryBuilder<ProjectByKeyQuery>
 {
-    protected override void InternalBuildQuery(Query query, ProjectByKeyQuery parameters)
+    protected override Query InternalBuildQuery(Query query, ProjectByKeyQuery parameters)
     {
-        query.WhereEqualTo("key", parameters.ProjectKey);
+       return query.WhereEqualTo("key", parameters.ProjectKey);
     }
 }

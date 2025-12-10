@@ -10,7 +10,7 @@ import type { WorkflowStep } from '@/components/Workflow/types'
 import { Workflow } from '@/components/Workflow/workflow'
 
 interface AddProjectWorkflowProps {
-  onComplete: (data: ProjectsPostRequest) => void
+  onComplete?: (data: ProjectsPostRequest) => void
   onCancel: () => void
 }
 
@@ -26,6 +26,7 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof ProjectsPostRequest, string>>>({})
+  const [serverValidationErrors, setServerValidationErrors] = useState<Record<string, string[]>>({})
 
   const updateProjectData = (field: keyof ProjectsPostRequest, value: string|undefined) => {
     setProjectData((prev) => ({ ...prev, [field]: value }))
@@ -54,20 +55,40 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
     }
   }
 
+  const step2Previous = async () => {
+    setServerValidationErrors({});
+    return true;
+  }
+
   const step2Next = async () => {
+    // Clear previous server validation errors
+    setServerValidationErrors({})
 
     try {
-
       const client = new ProjectsApiClient();
       const createdProject = await client.post(projectData);
 
       console.log('Project created successfully:', createdProject)
 
-      onComplete(projectData)
+      if(onComplete){
+          onComplete(projectData);
+      }
+
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
+
       console.error('Error creating project:', error)
-      // You might want to show an error message to the user here
+
+      // Handle validation errors from the server
+      if (error instanceof Error && 'status' in error && error.status == 400) {
+        const validationError = error as Error & { status: number; validationErrors: Record<string, string[]> }
+        if (validationError.status === 400 && validationError.validationErrors) {
+          setServerValidationErrors(validationError.validationErrors)
+          return false
+        }
+      }
+
+      // For other errors, re-throw
       throw error
     }
   }
@@ -89,9 +110,10 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
       id: 2,
       title: 'Review & Summary',
       description: 'Review your project details',
-      content: <ProjectAddStep2 projectData={projectData} users={fakeUsers} />,
+      content: <ProjectAddStep2 projectData={projectData} users={fakeUsers} validationErrors={serverValidationErrors} />,
       nextButtonText:"Create Project",
-      onNext: step2Next
+      onNext: step2Next,
+      onPrevious: step2Previous
 
     },
     {
