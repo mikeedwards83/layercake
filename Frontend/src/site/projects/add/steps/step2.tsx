@@ -5,11 +5,11 @@ import { IconReview } from '@/components/Review/IconReview'
 import { ColorReview } from '@/components/Review/ColorReview'
 import { UsersReview } from '@/components/Review/UsersReview'
 import { Notice } from '@/components/Notice'
-import type { ProjectsPostRequest } from '@/services/projects/projectsApiClient'
+import type { IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 import { ValidationSummary } from '@/components/Form/ValidationSummary/validationSummary'
 
 interface ProjectAddStep1Props {
-  projectData: ProjectsPostRequest
+  projectData: IProjectsPostRequest
   users: User[]
   validationErrors?:Record<string, string[]>
 }

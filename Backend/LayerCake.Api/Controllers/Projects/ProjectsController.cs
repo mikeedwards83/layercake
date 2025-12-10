@@ -58,14 +58,7 @@ public class ProjectsController : ControllerBase
 
                 var response = new ProjectPostResponse
                 {
-                    Id = project.Id,
-                    TenantId = project.TenantId,
-                    Name = project.Name,
-                    Key = project.Key,
-                    Description = project.Description,
-                    Icon = project.Icon,
-                    Color = project.Color,
-                    OwnerId = project.OwnerId
+                   Project = ProjectResponse.Map(project)
                 };
 
                 _logger.LogInformation("Successfully created project with ID: {ProjectId}", project.Id);
@@ -82,6 +75,33 @@ public class ProjectsController : ControllerBase
             _logger.LogError(ex, "Error creating project with key: {ProjectKey}", request.Key);
             return StatusCode(500,
                 new { message = "An error occurred while creating the project", error = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Gets all projects
+    /// </summary>
+    /// <returns>List of all projects</returns>
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<ProjectPostResponse>>> GetAllProjects()
+    {
+        try
+        {
+            var projects = await _projectsStore.Find(new GetAllProjectsQuery(0, 100));
+
+            var response = new ProjectGetResponse
+            {
+                Projects = projects.Select(ProjectResponse.Map).ToList()
+            };
+            
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving projects");
+            return StatusCode(500, new { message = "An error occurred while retrieving projects" });
         }
     }
 
@@ -106,14 +126,7 @@ public class ProjectsController : ControllerBase
 
             var response = new ProjectPostResponse
             {
-                Id = project.Id,
-                TenantId = project.TenantId,
-                Name = project.Name,
-                Key = project.Key,
-                Description = project.Description,
-                Icon = project.Icon,
-                Color = project.Color,
-                OwnerId = project.OwnerId
+                Project =  ProjectResponse.Map(project)
             };
 
             return Ok(response);

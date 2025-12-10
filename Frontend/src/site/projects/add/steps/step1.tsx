@@ -7,12 +7,12 @@ import { fakeUsers } from '@/components/Form/UserSelectorInput/data'
 import { FormDivider } from '@/components/Form/FormDivider'
 import { TextInput } from '@/components/Form/TextInput'
 import { TextAreaInput } from '@/components/Form/TextAreaInput'
-import type { ProjectsPostRequest } from '@/services/projects/projectsApiClient'
+import type { IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 
 interface ProjectAddStep1Props {
-  projectData: ProjectsPostRequest
-  errors: Partial<Record<keyof ProjectsPostRequest, string>>
-  updateProjectData: (field: keyof ProjectsPostRequest, value: string | undefined) => void
+  projectData: IProjectsPostRequest
+  errors: Partial<Record<keyof IProjectsPostRequest, string>>
+  updateProjectData: (field: keyof IProjectsPostRequest, value: string | undefined) => void
 }
 
 export const ProjectAddStep1 = ({ projectData, errors, updateProjectData }: ProjectAddStep1Props) => {

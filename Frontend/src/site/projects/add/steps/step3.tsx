@@ -3,11 +3,11 @@ import {
   LuArrowRight,
 } from 'react-icons/lu'
 import type { User } from '@/types/user'
-import type { ProjectsPostRequest } from '@/services/projects/projectsApiClient'
+import type { IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 import { WorkflowSuccess } from '@/components/Workflow/workflowSuccess'
 
 interface ProjectAddStep3Props {
-  projectData: ProjectsPostRequest
+  projectData: IProjectsPostRequest
   users: User[]
 }
 

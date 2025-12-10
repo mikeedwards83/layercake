@@ -1,15 +1,8 @@
 import { Container, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
-import AddProjectWorkflow from './ProjectAddWorkflow';
+import AddProjectWorkflow from './projectAddWorkflow'
 
-interface ProjectData {
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-  ownerId: string;
-}
 
 const Page = () => {
   const navigate = useNavigate()

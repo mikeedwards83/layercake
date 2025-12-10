@@ -5,18 +5,18 @@ import { step1Schema } from './steps/validations'
 import { ProjectAddStep1 } from './steps/step1'
 import { ProjectAddStep2 } from './steps/step2'
 import { ProjectAddStep3 } from './steps/step3'
-import { ProjectsApiClient, type ProjectsPostRequest } from '@/services/projects/projectsApiClient'
+import { ProjectsApiClient, type IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 import type { WorkflowStep } from '@/components/Workflow/types'
 import { Workflow } from '@/components/Workflow/workflow'
 
 interface AddProjectWorkflowProps {
-  onComplete?: (data: ProjectsPostRequest) => void
+  onComplete?: (data: IProjectsPostRequest) => void
   onCancel: () => void
 }
 
 export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowProps) => {
 
-  const [projectData, setProjectData] = useState<ProjectsPostRequest>({
+  const [projectData, setProjectData] = useState<IProjectsPostRequest>({
     name: '',
     key: '',
     description: '',
@@ -25,10 +25,10 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
     ownerId: '',
   })
 
-  const [errors, setErrors] = useState<Partial<Record<keyof ProjectsPostRequest, string>>>({})
+  const [errors, setErrors] = useState<Partial<Record<keyof IProjectsPostRequest, string>>>({})
   const [serverValidationErrors, setServerValidationErrors] = useState<Record<string, string[]>>({})
 
-  const updateProjectData = (field: keyof ProjectsPostRequest, value: string|undefined) => {
+  const updateProjectData = (field: keyof IProjectsPostRequest, value: string|undefined) => {
     setProjectData((prev) => ({ ...prev, [field]: value }))
     // Clear error when user starts typing
     if (errors[field]) {
@@ -43,10 +43,10 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
       return true
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
-        const validationErrors: Partial<Record<keyof ProjectsPostRequest, string>> = {}
+        const validationErrors: Partial<Record<keyof IProjectsPostRequest, string>> = {}
         err.inner.forEach((error) => {
           if (error.path) {
-            validationErrors[error.path as keyof ProjectsPostRequest] = error.message
+            validationErrors[error.path as keyof IProjectsPostRequest] = error.message
           }
         })
         setErrors(validationErrors)

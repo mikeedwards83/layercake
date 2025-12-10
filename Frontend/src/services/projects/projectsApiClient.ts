@@ -1,13 +1,18 @@
 import api from '../api'
 
 export class ProjectsApiClient {
-  async post(request: ProjectsPostRequest): Promise<ProjectsPostResponse> {
-    const createdProject = await api.post<ProjectsPostResponse>('/api/projects', request)
+  async getAll(): Promise<IProjectsGetResponse> {
+    const projects = await api.get<IProjectsGetResponse>('/api/projects')
+    return projects
+  }
+
+  async post(request: IProjectsPostRequest): Promise<IProjectsPostResponse> {
+    const createdProject = await api.post<IProjectsPostResponse>('/api/projects', request)
     return createdProject
   }
 }
 
-export interface ProjectsPostRequest {
+export interface IProjectsPostRequest {
   name: string
   key: string
   description: string
@@ -16,7 +21,15 @@ export interface ProjectsPostRequest {
   ownerId?: string
 }
 
-export interface ProjectsPostResponse {
+export interface IProjectsPostResponse {
+  project: IProjectResponse
+}
+
+export interface IProjectsGetResponse{
+  projects: IProjectResponse[]
+}
+
+export interface IProjectResponse{
   id:string
   name: string
   key: string

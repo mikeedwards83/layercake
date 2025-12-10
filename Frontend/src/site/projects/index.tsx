@@ -1,93 +1,81 @@
+import { useState, useEffect } from 'react'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
-import { Button, Col, Container, Row } from 'react-bootstrap'
-import { LuActivity, LuCalendarClock, LuLayoutGrid, LuList, LuSearch, LuUsers } from 'react-icons/lu'
-import { Link } from 'react-router'
-import ButtonAdd from '@/components/Buttons/ButtonAdd'
-import WeatherComponent from './weather'
+import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap'
+import { ProjectsTopBar } from './components/projectsTopBar'
+import { ProjectCard } from '@/components/Projects/Card/ProjectCard'
+import { ProjectsApiClient, type IProjectsGetResponse } from '@/services/projects/projectsApiClient'
+import { Notice } from '@/components/Notice'
 
 const Page = () => {
+  const [projectsResponse, setProjectsResponse] = useState<IProjectsGetResponse|undefined>(undefined)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        setLoading(true)
+        const client = new ProjectsApiClient()
+        const data = await client.getAll()
+        setProjectsResponse(data)
+        setError(null)
+      } catch (err) {
+        console.error('Error loading projects:', err)
+        setError('Failed to load projects. Please try again later.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProjects()
+  }, [])
+
   return (
     <Container fluid>
       <PageBreadcrumb title="Projects" subtitle="" />
-      <Row className="mb-3">
-        <Col lg={12}>
-          <form className="bg-light-subtle rounded border p-3">
-            <Row className="gap-3">
-              <Col>
-                <Row className="gap-3">
-                  <Col lg={4}>
-                    <div className="app-search">
-                      <input type="text" className="form-control" placeholder="Search project name..." />
-                      <LuSearch className="app-search-icon text-muted" />
-                    </div>
-                  </Col>
-                  <Col xs="auto">
-                    <div className="d-flex flex-wrap align-items-center gap-2">
-                      <span className="me-2 fw-semibold">Filter By:</span>
+      <ProjectsTopBar />
 
-                      <div className="app-search">
-                        <select className="form-select form-control my-1 my-md-0">
-                          <option>Status</option>
-                          <option value="On Track">On Track</option>
-                          <option value="Delayed">Delayed</option>
-                          <option value="At Risk">At Risk</option>
-                          <option value="Completed">Completed</option>
-                        </select>
-                        <LuActivity className="app-search-icon text-muted" />
-                      </div>
+      {loading && (
+        <div className="text-center my-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      )}
 
-                      <div className="app-search">
-                        <select className="form-select form-control my-1 my-md-0">
-                          <option>Team</option>
-                          <option value="Design">Design</option>
-                          <option value="Development">Development</option>
-                          <option value="Marketing">Marketing</option>
-                          <option value="QA">QA</option>
-                        </select>
-                        <LuUsers className="app-search-icon text-muted" />
-                      </div>
+      {error && (
+        <Alert variant="danger" className="my-3">
+          {error}
+        </Alert>
+      )}
 
-                      <div className="app-search">
-                        <select className="form-select form-control my-1 my-md-0">
-                          <option>Deadline</option>
-                          <option value="This Week">This Week</option>
-                          <option value="This Month">This Month</option>
-                          <option value="Next Month">Next Month</option>
-                        </select>
-                        <LuCalendarClock className="app-search-icon text-muted" />
-                      </div>
-
-                      <Button variant="secondary" type="submit">
-                        Apply
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
+      {!loading && !error && projectsResponse && (
+        <Row className="g-3">
+          {projectsResponse.projects.length === 0 ? (
+            <Col xs={12}>
+              <Notice heading="No Projects Found" variant="info">
+                <p className="mb-0">
+                  You haven't created any projects yet. Click the "Add New Project" button above to create your first project and get started!
+                </p>
+              </Notice>
+            </Col>
+          ) : (
+            projectsResponse.projects.map((project) => (
+              <Col key={project.id} xs={12} md={6} lg={4}>
+                <ProjectCard
+                  name={project.name}
+                  key={project.key}
+                  description={project.description}
+                  ownerId={project.ownerId}
+                  icon={project.icon}
+                  color={project.color}
+                />
               </Col>
-
-              <Col xs="auto">
-                <Row>
-                  <div className="d-flex gap-1">
-                    <Link to="/projects/add" >
-                      <ButtonAdd title="Project" />
-                    </Link>
-                    <Link to="/projects" className="btn btn-primary btn-icon">
-                      <LuLayoutGrid className="fs-lg" />
-                    </Link>
-                    <Link to="/projects-list" className="btn btn-soft-primary btn-icon">
-                      <LuList className="fs-lg" />
-                    </Link>
-                  </div>
-                </Row>
-              </Col>
-            </Row>
-          </form>
-        </Col>
-      </Row>
-    <WeatherComponent />
-
+            ))
+          )}
+        </Row>
+      )}
     </Container>
-
   )
 }
 
