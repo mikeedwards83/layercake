@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
-import { Container, Spinner, Alert } from 'react-bootstrap'
+import { Container, Spinner, Alert, Tab, Nav } from 'react-bootstrap'
 import { ProjectApiClient, type IProjectGetByKeyResponse } from '@/services/project/projectApiClient'
 
 const ProjectPage = () => {
@@ -66,6 +66,59 @@ const ProjectPage = () => {
           <p>
             <strong>ID:</strong> {projectResponse.project.id}
           </p>
+
+          <Tab.Container defaultActiveKey="overview">
+            <Nav variant="tabs" className="mb-3">
+              <Nav.Item>
+                <Nav.Link eventKey="overview">Overview</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="documentation">Documentation</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="logical">Logical</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="containers">Containers</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="physical">Physical</Nav.Link>
+              </Nav.Item>
+            </Nav>
+
+            <Tab.Content>
+              <Tab.Pane eventKey="overview">
+                <div className="p-3">
+                  <h4>Overview</h4>
+                  <p>Overview content goes here</p>
+                </div>
+              </Tab.Pane>
+              <Tab.Pane eventKey="documentation">
+                <div className="p-3">
+                  <h4>Documentation</h4>
+                  <p>Documentation content goes here</p>
+                </div>
+              </Tab.Pane>
+              <Tab.Pane eventKey="logical">
+                <div className="p-3">
+                  <h4>Logical</h4>
+                  <p>Logical content goes here</p>
+                </div>
+              </Tab.Pane>
+              <Tab.Pane eventKey="containers">
+                <div className="p-3">
+                  <h4>Containers</h4>
+                  <p>Containers content goes here</p>
+                </div>
+              </Tab.Pane>
+              <Tab.Pane eventKey="physical">
+                <div className="p-3">
+                  <h4>Physical</h4>
+                  <p>Physical content goes here</p>
+                </div>
+              </Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
         </div>
       )}
     </Container>
