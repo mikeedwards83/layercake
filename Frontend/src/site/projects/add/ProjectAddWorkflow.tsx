@@ -101,14 +101,12 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
 
   const steps: WorkflowStep[] = [
     {
-      id: 1,
       title: 'Project Details',
       description: 'Basic information about your project',
       onNext: step1Next,
       content: <ProjectAddStep1 projectData={projectData} errors={errors} updateProjectData={updateProjectData} />,
     },
     {
-      id: 2,
       title: 'Review & Summary',
       description: 'Review your project details',
       content: <ProjectAddStep2 projectData={projectData} users={fakeUsers} validationErrors={serverValidationErrors} />,
@@ -117,7 +115,6 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
       onPrevious: step2Previous,
     },
     {
-      id: 3,
       title: 'Completed',
       description: 'Project created successfully',
       content: <ProjectAddStep3 projectData={projectData} users={fakeUsers} />,

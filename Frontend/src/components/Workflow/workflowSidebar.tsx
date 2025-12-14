@@ -11,6 +11,8 @@ type WorkflowSidebarProps = {
 }
 
 export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage, setCurrentStep }: WorkflowSidebarProps) => {
+
+  console.log(steps, currentStep)
   return (
     <Card className="card-h-100 rounded-0 rounded-start">
       <CardBody className="p-4">
@@ -28,12 +30,12 @@ export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage,
         <div className="workflow-steps">
           {steps.map((step, index) => {
             const isCompleted = index < currentStep 
-            const isCurrent = step.id === currentStep
+            const isCurrent = index === currentStep
             const isClickable = index < currentStep - 1
 
             return (
               <div
-                key={step.id}
+                key={index}
                 className={`workflow-step mb-3 ${isCurrent ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
                 style={{ cursor: isClickable ? 'pointer' : 'default' }}
                 onClick={() => isClickable && setCurrentStep(step.id)}>
@@ -53,7 +55,7 @@ export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage,
                       fontSize: '14px',
                       fontWeight: '600',
                     }}>
-                    {isCompleted ? <TbCheck size={18} /> : step.id}
+                    {isCompleted ? <TbCheck size={18} /> : index+1}
                   </div>
                   <div>
                     <h4 className={`mb-0 ${isCurrent ? 'text-primary' : ''}`}>{step.title}</h4>

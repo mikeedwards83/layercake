@@ -6,7 +6,7 @@ import type { User } from '@/types/user'
 import { fakeUsers } from '@/components/Form/UserSelectorInput/data'
 import { FormDivider } from '@/components/Form/FormDivider'
 import { TextInput } from '@/components/Form/TextInput'
-import { TextAreaInput } from '@/components/Form/TextAreaInput'
+import { RichTextInput } from '@/components/Form/RichTextInput'
 import type { IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 
 interface ProjectAddStep1Props {
@@ -47,14 +47,14 @@ export const ProjectAddStep1 = ({ projectData, errors, updateProjectData }: Proj
             />
           </Col>
           <Col md={12}>
-            <TextAreaInput
+            <RichTextInput
               label="Description"
               placeholder="Enter project description"
-              maxChars={300}
               onChange={(value) => updateProjectData('description', value)}
               error={errors.description}
               value={projectData.description}
               required
+              hint="Use the toolbar to format your text"
             />
           </Col>
           <FormDivider />

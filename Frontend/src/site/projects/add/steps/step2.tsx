@@ -1,9 +1,10 @@
 import { Row, Col, Card } from 'react-bootstrap'
 import type { User } from '@/types/user'
 import { TextReview } from '@/components/Review/TextReview'
+import { RichTextReview } from '@/components/Review/RichTextReview/RichTextReview'
 import { IconReview } from '@/components/Review/IconReview'
 import { ColorReview } from '@/components/Review/ColorReview'
-import { UsersReview } from '@/components/Review/UsersReview'
+import { UsersReview } from '@/components/Review/UsersReview/UsersReview'
 import { Notice } from '@/components/Notice'
 import type { IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 import { ValidationSummary } from '@/components/Form/ValidationSummary/validationSummary'
@@ -29,7 +30,7 @@ export const ProjectAddStep2 = ({ projectData, users, validationErrors = {} }: P
               <Row>
                 <Col md={6}>
                   <TextReview label="Name" value={projectData.name} />
-                  <TextReview label="Description" value={projectData.description} />
+                  <RichTextReview label="Description" value={projectData.description} />
                   <TextReview label="Key" value={projectData.key} />
                 </Col>
                 <Col md={6}>

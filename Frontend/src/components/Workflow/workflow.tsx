@@ -15,7 +15,7 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
   const [isValidating, setIsValidating] = useState(false)
 
   const totalSteps = steps.length
-  const progressPercentage = (currentStepIndex / (totalSteps - 1)) * 100
+  const progressPercentage = (currentStepIndex / (totalSteps)) * 100
 
   const handleNext = async () => {
     const currentStepData = steps[currentStepIndex]
