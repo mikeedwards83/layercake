@@ -6,6 +6,8 @@ import { ProjectApiClient, type IProjectGetByKeyResponse } from '@/services/proj
 import { Icon } from '@/components/Icon'
 import { RichTextReview } from '@/components/Review/RichTextReview/RichTextReview'
 import { TbHome } from 'react-icons/tb'
+import { ProjectOverview } from './components/projectOverview'
+import { ProjectDocumentation } from './components/projectDocumentation'
 
 const ProjectPage = () => {
   const { key } = useParams<{ key: string }>()
@@ -86,31 +88,10 @@ const ProjectPage = () => {
 
                 <TabContent>
                   <TabPane eventKey="overview">
-                    <Card className="card-h-100 rounded-0 rounded-start">
-                      <CardHeader className="align-items-start p-4">
-                        <div className="d-flex align-items-center gap-3 ">
-                          <div
-                            className="rounded d-flex align-items-center justify-content-center"
-                            style={{
-                              width: '40px',
-                              height: '40px',
-                              backgroundColor: projectResponse.project.color,
-                            }}>
-                            <Icon size={24} color="#fff" iconName={projectResponse.project.icon} />
-                          </div>
-                          <h3 className="mb-0">{projectResponse.project.name}</h3>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="px-4">
-                        <RichTextReview label="Description" value={projectResponse.project.description} />
-                      </CardBody>
-                    </Card>
+                      <ProjectOverview projectResponse={projectResponse} />
                   </TabPane>
                   <Tab.Pane eventKey="documentation">
-                    <div className="p-3">
-                      <h4>Documentation</h4>
-                      <p>Documentation content goes here</p>
-                    </div>
+                      <ProjectDocumentation projectResponse={projectResponse} />
                   </Tab.Pane>
                   <Tab.Pane eventKey="logical">
                     <div className="p-3">
