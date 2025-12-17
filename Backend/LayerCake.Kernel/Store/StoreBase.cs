@@ -2,8 +2,8 @@
 
 namespace LayerCake.Kernel.Store
 {
-    public abstract class StoreBase<TRecord, TId>(
-            IRepository<TRecord, TId> repository,
+    public abstract class StoreBase<TRecord,TId>(
+            IRepository<TRecord> repository,
             AbstractValidator<TRecord> validator
         )  
         where TRecord :IRecord, new()  

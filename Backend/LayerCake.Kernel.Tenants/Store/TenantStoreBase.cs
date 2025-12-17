@@ -5,7 +5,7 @@ namespace LayerCake.Kernel.Tenants.Store
 {
     public abstract class TenantStoreBase<TRecord, TId>(
         ITenantContext tenantContext,
-        IRepository<TRecord, TId> repository,
+        IRepository<TRecord> repository,
         AbstractValidator<TRecord> validator)
         : StoreBase<TRecord, TId>(repository,validator) where TRecord : ITenantRecord, new()
     {

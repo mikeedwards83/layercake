@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LayerCake.Kernel.Store
 {
-    public interface IRepository<TRecord, TId> where TRecord : IRecord
+    public interface IRepository<TRecord> where TRecord : IRecord
     {
         Task Add(TRecord record) ;
         Task Delete(TRecord record);
