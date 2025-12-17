@@ -25,11 +25,14 @@ export const ProjectCard  = ({ name,projectKey, description, ownerId, icon, colo
             </span>
           </div>
           <div>
-            <h5 className="mb-1 d-flex align-items-center">
+            <h4 className="mb-1 d-flex align-items-center">
               <Link to={`/projects/${projectKey}`} className="link-reset">
                 {name}
               </Link>
-            </h5>
+            </h4>
+            <p>
+              [{projectKey}]
+            </p>
           </div>
           <div className="ms-auto">
             <Dropdown>

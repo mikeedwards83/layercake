@@ -6,6 +6,9 @@ using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Wikis;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using LayerCake.Kernel.Firebase.Stores.Projects.Tasks;
+using LayerCake.Kernel.Firebase.Stores.Wikis.Tasks;
+using LayerCake.Kernel.Store.Tasks;
 
 namespace LayerCake.Kernel.Firebase.Stores;
 
@@ -16,6 +19,10 @@ public static class ServiceCollectionExtension
         services.AddTransient<IProjectsRepository, ProjectsRepository>();
         services.AddTransient<IWikiPageRepository, WikiPageRepository>();
         services.AddSingleton<IQueryFactory, QueryFactory>();
+
+        services.AddTransient<IRecordTask<Project>, ProjectWikiTask>();
+        services.AddTransient<IRecordTask<WikiPage>, WikiPageKeyTask>();
+
 
         // Scan and register all FirestoreQueryBuilderBase implementations as singletons
         var assembly = typeof(FirestoreQueryBuilderBase).Assembly;

@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
                 "http://localhost:5174",      // Vite dev server (HTTP)
                 "https://localhost:5174",     // Vite dev server (HTTPS)
                 "http://localhost:3000",      // Alternative frontend port
-                "https://localhost:7131"      // Backend HTTPS (for same-origin scenarios)
+                "https://localhost:7131"     // Backend HTTPS (for same-origin scenarios)
               )
               .AllowAnyHeader()
               .AllowAnyMethod()

@@ -1,4 +1,6 @@
+using LayerCake.Kernel.Authentication;
 using LayerCake.Kernel.Store;
+using LayerCake.Kernel.Store.Tasks;
 using LayerCake.Kernel.Tenants.Store;
 
 namespace LayerCake.Kernel.Tenants.Projects;
@@ -9,8 +11,11 @@ namespace LayerCake.Kernel.Tenants.Projects;
 public class ProjectsStore(
     ITenantContext tenantContext,
     IProjectsRepository repository,
-    ProjectValidator validator)
-    : TenantStoreBase<Project, Guid>(tenantContext, repository, validator), IProjectsStore
+    ProjectValidator validator,
+    IEnumerable<IRecordTask<Project>> tasks,
+    ICurrentUserContext currentUserContext
+)
+    : TenantStoreBase<Project, Guid>(tenantContext, repository, validator, tasks, currentUserContext), IProjectsStore
 {
     protected override QueryParameters GetGetQueryParameters(Guid id)
     {

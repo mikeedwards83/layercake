@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
+using LayerCake.Kernel.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -13,13 +14,16 @@ namespace LayerCake.Kernel.Firebase.Authentication;
 
 public class FirebaseAuthenticationHandler : AuthenticationHandler<JwtBearerOptions>
 {
+    private readonly ICurrentUserContext _currentUserContext;
+
     public FirebaseAuthenticationHandler(
         IOptionsMonitor<JwtBearerOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder
+        UrlEncoder encoder,
+        ICurrentUserContext  currentUserContext
        ) : base(options, logger, encoder)
     {
-        
+        _currentUserContext = currentUserContext;
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -84,6 +88,7 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<JwtBearerOpti
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
+            SetAuthenticatedUser(principal);
 
             return AuthenticateResult.Success(ticket);
         }
@@ -97,5 +102,13 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<JwtBearerOpti
             Logger.LogError(ex, "Authentication error");
             return AuthenticateResult.Fail($"Authentication error: {ex.Message}");
         }
+    }
+
+    private void SetAuthenticatedUser(ClaimsPrincipal principal)
+    {
+        //TODO: need to read this from the database
+        var fakeGuid = new Guid("00000000-0000-1111-0000-000000000000");
+        var firebaseContext = (FirebaseCurrentUserContext)_currentUserContext;
+        firebaseContext.SetUser(principal, fakeGuid);
     }
 }

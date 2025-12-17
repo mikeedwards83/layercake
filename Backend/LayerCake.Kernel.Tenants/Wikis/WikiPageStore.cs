@@ -1,4 +1,6 @@
+using LayerCake.Kernel.Authentication;
 using LayerCake.Kernel.Store;
+using LayerCake.Kernel.Store.Tasks;
 using LayerCake.Kernel.Tenants.Store;
 
 namespace LayerCake.Kernel.Tenants.Wikis;
@@ -9,8 +11,11 @@ namespace LayerCake.Kernel.Tenants.Wikis;
 public class WikiPageStore(
     ITenantContext tenantContext,
     IWikiPageRepository repository,
-    WikiPageValidator validator)
-    : TenantStoreBase<WikiPage, Guid>(tenantContext, repository, validator), IWikiPageStore
+    WikiPageValidator validator,
+    IEnumerable<IRecordTask<WikiPage>> tasks,
+    ICurrentUserContext currentUserContext
+)
+    : TenantStoreBase<WikiPage, Guid>(tenantContext, repository, validator, tasks, currentUserContext), IWikiPageStore
 {
     protected override QueryParameters GetGetQueryParameters(Guid id)
     {

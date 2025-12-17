@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Text;
 using Google.Api.Gax;
 using Google.Cloud.Firestore;
+using LayerCake.Kernel.Authentication;
+using LayerCake.Kernel.Firebase.Authentication;
 
 namespace LayerCake.Kernel.Firebase
 {
@@ -22,6 +24,7 @@ namespace LayerCake.Kernel.Firebase
             
             services.AddSingleton<FirebaseApp>(CreateFirebaseApp);
             services.AddSingleton<FirestoreDb>(provider => CreateFirestoreDb(provider, useEmulator));
+            services.AddScoped<ICurrentUserContext, FirebaseCurrentUserContext>();
         }
 
         private static void EnableEmulator()

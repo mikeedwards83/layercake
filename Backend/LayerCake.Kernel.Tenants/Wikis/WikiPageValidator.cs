@@ -1,4 +1,6 @@
 using FluentValidation;
+using LayerCake.Kernel.Tenants.Projects;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LayerCake.Kernel.Tenants.Wikis;
 
@@ -7,7 +9,7 @@ namespace LayerCake.Kernel.Tenants.Wikis;
 /// </summary>
 public class WikiPageValidator : TenantRecordValidator<WikiPage>
 {
-    public WikiPageValidator()
+    public WikiPageValidator(IServiceProvider serviceProvider)
     {
         RuleFor(x => x.Title)
             .NotEmpty()
@@ -21,7 +23,9 @@ public class WikiPageValidator : TenantRecordValidator<WikiPage>
             .MaximumLength(50)
             .WithMessage("WikiPage key must not exceed 50 characters")
             .Matches("^[a-z0-9-]+$")
-            .WithMessage("WikiPage key can only contain lowercase letters, numbers, and hyphens");
+            .WithMessage("WikiPage key can only contain lowercase letters, numbers, and hyphens")
+            .WhenAsync(async (x, cancellationToken) => !await IsUniqueKey(serviceProvider.GetRequiredService<IWikiPageStore>(), x))
+            .WithMessage("Project key must be unique");
 
         RuleFor(x => x.Contents)
             .NotEmpty()
@@ -45,15 +49,15 @@ public class WikiPageValidator : TenantRecordValidator<WikiPage>
     /// <summary>
     /// Validates if a wiki page key is unique within a reference
     /// </summary>
-    public static async Task<bool> IsUniqueKey(IWikiPageStore wikiPageStore, string key, Guid referenceId, Guid? excludeId = null)
+    public static async Task<bool> IsUniqueKey(IWikiPageStore wikiPageStore,WikiPage wikiPage)
     {
-        var wikiPages = await wikiPageStore.Find(new Queries.WikiPageByKeyAndReferenceQuery(key, referenceId, 0, 1));
+        var wikiPages = await wikiPageStore.Find(new Queries.WikiPageByKeyAndReferenceQuery(wikiPage.Key, wikiPage.ReferenceId, 0, 1));
         var existing = wikiPages.FirstOrDefault();
 
         if (existing == null)
             return true;
 
         // If we're updating and it's the same record, it's valid
-        return excludeId.HasValue && existing.Id == excludeId.Value;
+        return wikiPage.Id == existing.Id;
     }
 }

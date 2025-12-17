@@ -1,13 +1,18 @@
 ﻿using FluentValidation;
+using LayerCake.Kernel.Authentication;
 using LayerCake.Kernel.Store;
+using LayerCake.Kernel.Store.Tasks;
 
 namespace LayerCake.Kernel.Tenants.Store
 {
     public abstract class TenantStoreBase<TRecord, TId>(
         ITenantContext tenantContext,
         IRepository<TRecord> repository,
-        AbstractValidator<TRecord> validator)
-        : StoreBase<TRecord, TId>(repository,validator) where TRecord : ITenantRecord, new()
+        AbstractValidator<TRecord> validator,
+        IEnumerable<IRecordTask<TRecord>> tasks,
+        ICurrentUserContext currentUserContext
+        )
+        : StoreBase<TRecord, TId>(repository,validator, tasks, currentUserContext) where TRecord : ITenantRecord, new()
     {
         public override Task<TRecord> Add(Func<TRecord, Task> create)
         {

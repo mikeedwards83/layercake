@@ -12,6 +12,11 @@ public class Project : ITenantRecord
     private string _key = string.Empty;
     
     public Guid Id { get; set; }
+    public Guid CreatedBy { get; set; }
+    public Guid UpdatedBy { get; set; }
+    public DateTime Created { get; set; }
+    public DateTime Updated { get; set; }
+
     /// <summary>
     /// Gets or sets the project name
     /// </summary>

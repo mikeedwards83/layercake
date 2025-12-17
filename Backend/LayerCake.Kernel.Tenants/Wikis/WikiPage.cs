@@ -7,6 +7,8 @@ namespace LayerCake.Kernel.Tenants.Wikis;
 /// </summary>
 public class WikiPage : ITenantRecord
 {
+    public static Guid RootParentId { get; } = Guid.Empty;
+    
     private string _key = string.Empty;
 
     public Guid Id { get; set; }
