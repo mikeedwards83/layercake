@@ -16,7 +16,7 @@ const EMPTY_GUID = '00000000-0000-0000-0000-000000000000'
 
 export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocumentationProps) => {
   const navigate = useNavigate()
-  const { key: projectKey } = useParams<{ key: string }>()
+  const { key: projectKey, wikipage: wikiPageKey } = useParams<{ key: string; wikipage?: string }>()
   const [wikiPage, setWikiPage] = useState<IWikiPage | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -35,16 +35,22 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
         setLoading(true)
         const client = new WikiPageApiClient()
 
-        // Request the root wiki page (parentId = empty Guid)
-        const response = await client.getByReferenceAndParent(projectResponse.project.id, EMPTY_GUID)
+        let response
+        if (wikiPageKey) {
+          // Load specific page by key from URL
+          response = await client.getByKeyAndReference(projectResponse.project.id, wikiPageKey)
+        } else {
+          // Load root wiki page (parentId = empty Guid)
+          response = await client.getByReferenceAndParent(projectResponse.project.id, EMPTY_GUID)
+
+          // Update URL to include wiki key
+          if (response.wikiPage.key && projectKey) {
+            navigate(`/projects/${projectKey}/documentation/${response.wikiPage.key}`, { replace: true })
+          }
+        }
 
         setWikiPage(response.wikiPage)
         setError(null)
-
-        // Update URL to include wiki key
-        if (response.wikiPage.key && projectKey) {
-          navigate(`/projects/${projectKey}/documentation/${response.wikiPage.key}`, { replace: true })
-        }
       } catch (err) {
         console.error('Error loading wiki page:', err)
         setError('No documentation found for this project.')
@@ -57,7 +63,7 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
     if (isActive) {
       loadWikiPage()
     }
-  }, [projectResponse?.project.id, projectKey, navigate, isActive])
+  }, [projectResponse?.project.id, projectKey, wikiPageKey, navigate, isActive])
 
   const handleEdit = () => {
     setIsEditMode(true)
