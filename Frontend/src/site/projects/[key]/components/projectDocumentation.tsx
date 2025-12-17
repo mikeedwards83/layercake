@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import type { IProjectGetByKeyResponse } from '@/services/project/projectApiClient'
 import { WikiPageApiClient, type IWikiPage } from '@/services/wikipage/wikiPageApiClient'
-import { Spinner, Alert } from 'react-bootstrap'
+import { Spinner, Alert, Row, Col } from 'react-bootstrap'
 import { ProjectDocumentationView } from './projectDocumentationView'
 import { ProjectDocumentationEdit } from './projectDocumentationEdit'
 import { ProjectDocumentationNew } from './projectDocumentationNew'
+import { ProjectDocumentationNav } from './projectDocumentationNav'
 
 interface IProjectDocumentationProps {
   projectResponse: IProjectGetByKeyResponse
@@ -18,6 +19,7 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
   const navigate = useNavigate()
   const { key: projectKey, wikipage: wikiPageKey } = useParams<{ key: string; wikipage?: string }>()
   const [wikiPage, setWikiPage] = useState<IWikiPage | null>(null)
+  const [allPages, setAllPages] = useState<IWikiPage[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -34,6 +36,10 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
       try {
         setLoading(true)
         const client = new WikiPageApiClient()
+
+        // Load all pages for navigation
+        const allPagesResponse = await client.getByReference(projectResponse.project.id)
+        setAllPages(allPagesResponse.wikiPages)
 
         let response
         if (wikiPageKey) {
@@ -102,6 +108,12 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
     setError(errorMessage)
   }
 
+  const handleNavigate = (pageKey: string) => {
+    if (projectKey) {
+      navigate(`/projects/${projectKey}/documentation/${pageKey}`)
+    }
+  }
+
   if (loading) {
     return (
       <div className="p-3 text-center">
@@ -128,8 +140,10 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
     )
   }
 
+  // Render content area based on mode
+  let contentArea: React.ReactElement
   if (isNewPageMode) {
-    return (
+    contentArea = (
       <ProjectDocumentationNew
         parentPage={wikiPage}
         onSave={handleNewPageSave}
@@ -137,10 +151,8 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
         onError={handleError}
       />
     )
-  }
-
-  if (isEditMode) {
-    return (
+  } else if (isEditMode) {
+    contentArea = (
       <ProjectDocumentationEdit
         wikiPage={wikiPage}
         onSave={handleSave}
@@ -148,7 +160,18 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
         onError={handleError}
       />
     )
+  } else {
+    contentArea = <ProjectDocumentationView wikiPage={wikiPage} onEdit={handleEdit} onNewPage={handleNewPage} />
   }
 
-  return <ProjectDocumentationView wikiPage={wikiPage} onEdit={handleEdit} onNewPage={handleNewPage} />
+  return (
+    <Row className="g-0 h-100">
+      <Col xs={3} className="h-100">
+        <ProjectDocumentationNav pages={allPages} currentPageId={wikiPage.id} onNavigate={handleNavigate} />
+      </Col>
+      <Col xs={9} className="h-100 overflow-auto">
+        <div className="p-3">{contentArea}</div>
+      </Col>
+    </Row>
+  )
 }
