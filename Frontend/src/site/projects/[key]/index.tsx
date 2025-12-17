@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router'
+import { useParams, useNavigate, useLocation } from 'react-router'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
-import { Container, Spinner, Alert, Tab, Nav, TabContainer, Row, Col, TabPane, TabContent, CardBody, CardHeader, Card } from 'react-bootstrap'
+import { Container, Spinner, Alert, Tab, Nav, TabContainer, Row, Col, TabPane, TabContent } from 'react-bootstrap'
 import { ProjectApiClient, type IProjectGetByKeyResponse } from '@/services/project/projectApiClient'
-import { Icon } from '@/components/Icon'
-import { RichTextReview } from '@/components/Review/RichTextReview/RichTextReview'
 import { TbHome } from 'react-icons/tb'
 import { ProjectOverview } from './components/projectOverview'
 import { ProjectDocumentation } from './components/projectDocumentation'
 
 const ProjectPage = () => {
   const { key } = useParams<{ key: string }>()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [projectResponse, setProjectResponse] = useState<IProjectGetByKeyResponse | undefined>(undefined)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<string>('overview')
 
   useEffect(() => {
     const loadProject = async () => {
@@ -40,6 +41,31 @@ const ProjectPage = () => {
     loadProject()
   }, [key])
 
+  // Sync active tab with URL
+  useEffect(() => {
+    const pathParts = location.pathname.split('/')
+    const lastPart = pathParts[pathParts.length - 1]
+
+    if (lastPart && ['overview', 'documentation', 'logical', 'containers', 'physical'].includes(lastPart)) {
+      setActiveTab(lastPart)
+    } else if (pathParts.includes('documentation')) {
+      setActiveTab('documentation')
+    } else {
+      setActiveTab('overview')
+    }
+  }, [location])
+
+  const handleTabSelect = (tab: string | null) => {
+    if (!tab || !key) return
+    setActiveTab(tab)
+
+    if (tab === 'overview') {
+      navigate(`/projects/${key}`)
+    } else {
+      navigate(`/projects/${key}/${tab}`)
+    }
+  }
+
   return (
     <Container fluid>
       <PageBreadcrumb title={projectResponse?.project.name || 'Project'} subtitle={projectResponse?.project.description || ''} />
@@ -62,7 +88,7 @@ const ProjectPage = () => {
         <div className="my-3">
           <Row className="justify-content-center">
             <Col xxl={10}>
-              <TabContainer defaultActiveKey="overview">
+              <TabContainer activeKey={activeTab} onSelect={handleTabSelect}>
                 <Nav className="nav-tabs nav-bordered nav-bordered-secondary">
                   <Nav.Item>
                     <Nav.Link eventKey="overview">
@@ -88,10 +114,10 @@ const ProjectPage = () => {
 
                 <TabContent>
                   <TabPane eventKey="overview">
-                      <ProjectOverview projectResponse={projectResponse} />
+                      <ProjectOverview projectResponse={projectResponse}  isActive={activeTab === "overview"}/>
                   </TabPane>
-                  <Tab.Pane eventKey="documentation">
-                      <ProjectDocumentation projectResponse={projectResponse} />
+                  <Tab.Pane eventKey="documentation"  >
+                      <ProjectDocumentation projectResponse={projectResponse}  isActive={activeTab === "documentation"}  />
                   </Tab.Pane>
                   <Tab.Pane eventKey="logical">
                     <div className="p-3">

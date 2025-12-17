@@ -13,6 +13,7 @@ public class GetQueryBuilder:
 {
     protected override Query InternalBuildQuery(Query query, GetQueryParameters parameters)
     {
-        return query.WhereEqualTo("id", parameters.Id.ToString());
+        // Use FieldPath.DocumentId to query by the document ID, not a field called "id"
+        return query.WhereEqualTo(FieldPath.DocumentId, parameters.Id.ToString());
     }
 }

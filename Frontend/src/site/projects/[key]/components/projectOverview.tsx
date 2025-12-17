@@ -1,13 +1,14 @@
-import { Icon } from "@/components/Icon"
-import { RichTextReview } from "@/components/Review"
-import type { IProjectGetByKeyResponse } from "@/services/project/projectApiClient"
-import { Card, CardBody, CardHeader } from "react-bootstrap"
+import { Icon } from '@/components/Icon'
+import { RichTextReview } from '@/components/Review'
+import type { IProjectGetByKeyResponse } from '@/services/project/projectApiClient'
+import { Card, CardBody, CardHeader } from 'react-bootstrap'
 
-interface IProjectOverviewProps{
-    projectResponse: IProjectGetByKeyResponse
+interface IProjectOverviewProps {
+  projectResponse: IProjectGetByKeyResponse
+  isActive: boolean
 }
 
-export const ProjectOverview = ({projectResponse}: IProjectOverviewProps) => {
+export const ProjectOverview = ({ projectResponse }: IProjectOverviewProps) => {
   return (
     <Card className="card-h-100 rounded-0 rounded-start">
       <CardHeader className="align-items-start p-4">

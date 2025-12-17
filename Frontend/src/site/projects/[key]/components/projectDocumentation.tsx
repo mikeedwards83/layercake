@@ -1,17 +1,148 @@
-import { Icon } from '@/components/Icon'
-import { RichTextReview } from '@/components/Review'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router'
 import type { IProjectGetByKeyResponse } from '@/services/project/projectApiClient'
-import { Card, CardBody, CardHeader } from 'react-bootstrap'
+import { WikiPageApiClient, type IWikiPage } from '@/services/wikipage/wikiPageApiClient'
+import { Spinner, Alert } from 'react-bootstrap'
+import { ProjectDocumentationView } from './projectDocumentationView'
+import { ProjectDocumentationEdit } from './projectDocumentationEdit'
+import { ProjectDocumentationNew } from './projectDocumentationNew'
 
 interface IProjectDocumentationProps {
   projectResponse: IProjectGetByKeyResponse
+  isActive: boolean
 }
 
-export const ProjectDocumentation = ({ projectResponse }: IProjectDocumentationProps) => {
-  return (
-    <div className="p-3">
-      <h4>Documentation</h4>
-      <p>Documentation content goes here</p>
-    </div>
-  )
+const EMPTY_GUID = '00000000-0000-0000-0000-000000000000'
+
+export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocumentationProps) => {
+  const navigate = useNavigate()
+  const { key: projectKey } = useParams<{ key: string }>()
+  const [wikiPage, setWikiPage] = useState<IWikiPage | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [isNewPageMode, setIsNewPageMode] = useState(false)
+
+  useEffect(() => {
+    const loadWikiPage = async () => {
+      if (!projectResponse?.project.id) {
+        setError('Project ID is missing')
+        setLoading(false)
+        return
+      }
+
+      try {
+        setLoading(true)
+        const client = new WikiPageApiClient()
+
+        // Request the root wiki page (parentId = empty Guid)
+        const response = await client.getByReferenceAndParent(projectResponse.project.id, EMPTY_GUID)
+
+        setWikiPage(response.wikiPage)
+        setError(null)
+
+        // Update URL to include wiki key
+        if (response.wikiPage.key && projectKey) {
+          navigate(`/projects/${projectKey}/documentation/${response.wikiPage.key}`, { replace: true })
+        }
+      } catch (err) {
+        console.error('Error loading wiki page:', err)
+        setError('No documentation found for this project.')
+        setWikiPage(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (isActive) {
+      loadWikiPage()
+    }
+  }, [projectResponse?.project.id, projectKey, navigate, isActive])
+
+  const handleEdit = () => {
+    setIsEditMode(true)
+    setIsNewPageMode(false)
+  }
+
+  const handleNewPage = () => {
+    setIsNewPageMode(true)
+    setIsEditMode(false)
+  }
+
+  const handleCancel = () => {
+    setIsEditMode(false)
+    setIsNewPageMode(false)
+  }
+
+  const handleSave = (updatedWikiPage: IWikiPage) => {
+    setWikiPage(updatedWikiPage)
+    setIsEditMode(false)
+    setIsNewPageMode(false)
+    setError(null)
+  }
+
+  const handleNewPageSave = (newWikiPage: IWikiPage) => {
+    setWikiPage(newWikiPage)
+    setIsNewPageMode(false)
+    setError(null)
+
+    // Update URL to the new page
+    if (newWikiPage.key && projectKey) {
+      navigate(`/projects/${projectKey}/documentation/${newWikiPage.key}`, { replace: true })
+    }
+  }
+
+  const handleError = (errorMessage: string) => {
+    setError(errorMessage)
+  }
+
+  if (loading) {
+    return (
+      <div className="p-3 text-center">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading documentation...</span>
+        </Spinner>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Alert variant="info">{error}</Alert>
+      </div>
+    )
+  }
+
+  if (!wikiPage) {
+    return (
+      <div>
+        <Alert variant="info">No documentation available for this project.</Alert>
+      </div>
+    )
+  }
+
+  if (isNewPageMode) {
+    return (
+      <ProjectDocumentationNew
+        parentPage={wikiPage}
+        onSave={handleNewPageSave}
+        onCancel={handleCancel}
+        onError={handleError}
+      />
+    )
+  }
+
+  if (isEditMode) {
+    return (
+      <ProjectDocumentationEdit
+        wikiPage={wikiPage}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        onError={handleError}
+      />
+    )
+  }
+
+  return <ProjectDocumentationView wikiPage={wikiPage} onEdit={handleEdit} onNewPage={handleNewPage} />
 }

@@ -27,7 +27,9 @@ const authRoutes: RouteObject[] = [
       },
       {path:"/projects", element: <Projects />},
       {path:"/projects/add", element: <ProjectsAdd />},
-      {path:"/projects/:key", element: <Project />}
+      {path:"/projects/:key", element: <Project />},
+      {path:"/projects/:key/:tab", element: <Project />},
+      {path:"/projects/:key/documentation/:wikipage", element: <Project />}
     ],
   },
 ]
