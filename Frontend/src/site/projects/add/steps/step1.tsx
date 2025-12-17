@@ -6,7 +6,7 @@ import type { User } from '@/types/user'
 import { fakeUsers } from '@/components/Form/UserSelectorInput/data'
 import { FormDivider } from '@/components/Form/FormDivider'
 import { TextInput } from '@/components/Form/TextInput'
-import { RichTextInput } from '@/components/Form/RichTextInput'
+import { RichTextInput } from '@/components/Form/RichTextInput/RichTextInput'
 import type { IProjectsPostRequest } from '@/services/projects/projectsApiClient'
 
 interface ProjectAddStep1Props {

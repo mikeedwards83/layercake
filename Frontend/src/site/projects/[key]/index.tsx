@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
-import { Container, Spinner, Alert, Tab, Nav } from 'react-bootstrap'
+import { Container, Spinner, Alert, Tab, Nav, TabContainer, Row, Col, TabPane, TabContent, CardBody, CardHeader, Card } from 'react-bootstrap'
 import { ProjectApiClient, type IProjectGetByKeyResponse } from '@/services/project/projectApiClient'
+import { Icon } from '@/components/Icon'
+import { RichTextReview } from '@/components/Review/RichTextReview/RichTextReview'
+import { TbHome } from 'react-icons/tb'
 
 const ProjectPage = () => {
   const { key } = useParams<{ key: string }>()
@@ -37,10 +40,7 @@ const ProjectPage = () => {
 
   return (
     <Container fluid>
-      <PageBreadcrumb
-        title={projectResponse?.project.name || 'Project'}
-        subtitle={projectResponse?.project.description || ''}
-      />
+      <PageBreadcrumb title={projectResponse?.project.name || 'Project'} subtitle={projectResponse?.project.description || ''} />
 
       {loading && (
         <div className="text-center my-5">
@@ -58,67 +58,82 @@ const ProjectPage = () => {
 
       {!loading && !error && projectResponse && (
         <div className="my-3">
-          <h2>{projectResponse.project.name}</h2>
-          <p className="text-muted">{projectResponse.project.description}</p>
-          <p>
-            <strong>Key:</strong> {projectResponse.project.key}
-          </p>
-          <p>
-            <strong>ID:</strong> {projectResponse.project.id}
-          </p>
+          <Row className="justify-content-center">
+            <Col xxl={10}>
+              <TabContainer defaultActiveKey="overview">
+                <Nav className="nav-tabs nav-bordered nav-bordered-secondary">
+                  <Nav.Item>
+                    <Nav.Link eventKey="overview">
+                      <span className="d-none d-md-block">
+                        <TbHome className="fs-lg me-md-1 align-middle" />
+                        Overview
+                      </span>
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="documentation">Documentation</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="logical">Logical</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="containers">Containers</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="physical">Physical</Nav.Link>
+                  </Nav.Item>
+                </Nav>
 
-          <Tab.Container defaultActiveKey="overview">
-            <Nav variant="tabs" className="mb-3">
-              <Nav.Item>
-                <Nav.Link eventKey="overview">Overview</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="documentation">Documentation</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="logical">Logical</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="containers">Containers</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="physical">Physical</Nav.Link>
-              </Nav.Item>
-            </Nav>
-
-            <Tab.Content>
-              <Tab.Pane eventKey="overview">
-                <div className="p-3">
-                  <h4>Overview</h4>
-                  <p>Overview content goes here</p>
-                </div>
-              </Tab.Pane>
-              <Tab.Pane eventKey="documentation">
-                <div className="p-3">
-                  <h4>Documentation</h4>
-                  <p>Documentation content goes here</p>
-                </div>
-              </Tab.Pane>
-              <Tab.Pane eventKey="logical">
-                <div className="p-3">
-                  <h4>Logical</h4>
-                  <p>Logical content goes here</p>
-                </div>
-              </Tab.Pane>
-              <Tab.Pane eventKey="containers">
-                <div className="p-3">
-                  <h4>Containers</h4>
-                  <p>Containers content goes here</p>
-                </div>
-              </Tab.Pane>
-              <Tab.Pane eventKey="physical">
-                <div className="p-3">
-                  <h4>Physical</h4>
-                  <p>Physical content goes here</p>
-                </div>
-              </Tab.Pane>
-            </Tab.Content>
-          </Tab.Container>
+                <TabContent>
+                  <TabPane eventKey="overview">
+                    <Card className="card-h-100 rounded-0 rounded-start">
+                      <CardHeader className="align-items-start p-4">
+                        <div className="d-flex align-items-center gap-3 ">
+                          <div
+                            className="rounded d-flex align-items-center justify-content-center"
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              backgroundColor: projectResponse.project.color,
+                            }}>
+                            <Icon size={24} color="#fff" iconName={projectResponse.project.icon} />
+                          </div>
+                          <h3 className="mb-0">{projectResponse.project.name}</h3>
+                        </div>
+                      </CardHeader>
+                      <CardBody className="px-4">
+                        <RichTextReview label="Description" value={projectResponse.project.description} />
+                      </CardBody>
+                    </Card>
+                  </TabPane>
+                  <Tab.Pane eventKey="documentation">
+                    <div className="p-3">
+                      <h4>Documentation</h4>
+                      <p>Documentation content goes here</p>
+                    </div>
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="logical">
+                    <div className="p-3">
+                      <h4>Logical</h4>
+                      <p>Logical content goes here</p>
+                    </div>
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="containers">
+                    <div className="p-3">
+                      <h4>Containers</h4>
+                      <p>Containers content goes here</p>
+                    </div>
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="physical">
+                    <div className="p-3">
+                      <h4>Physical</h4>
+                      <p>Physical content goes here</p>
+                    </div>
+                  </Tab.Pane>
+                </TabContent>
+              </TabContainer>
+            </Col>
+          </Row>
         </div>
       )}
     </Container>
