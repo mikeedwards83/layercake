@@ -161,16 +161,16 @@ export const ProjectDocumentation = ({ projectResponse, isActive }: IProjectDocu
       />
     )
   } else {
-    contentArea = <ProjectDocumentationView wikiPage={wikiPage} onEdit={handleEdit} onNewPage={handleNewPage} />
+    contentArea = <ProjectDocumentationView wikiPage={wikiPage} projectKey={projectKey || ''} onEdit={handleEdit} onNewPage={handleNewPage} />
   }
 
   return (
-    <Row className="g-0 h-100">
-      <Col xs={3} className="h-100">
+    <Row className="g-0">
+      <Col xs={3}>
         <ProjectDocumentationNav pages={allPages} currentPageId={wikiPage.id} onNavigate={handleNavigate} />
       </Col>
-      <Col xs={9} className="h-100 overflow-auto">
-        <div className="p-3">{contentArea}</div>
+      <Col xs={9}>
+        {contentArea}
       </Col>
     </Row>
   )

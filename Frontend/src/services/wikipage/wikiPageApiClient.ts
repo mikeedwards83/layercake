@@ -37,10 +37,26 @@ export interface IWikiPageCreateRequest {
 
 export class WikiPageApiClient {
   /**
+   * Get a wiki page by ID
+   */
+  async getById(id: string): Promise<IWikiPageGetResponse> {
+    const response = await api.get<IWikiPageGetResponse>(`/api/wikipage/${id}`)
+    return response
+  }
+
+  /**
+   * Get multiple wiki pages by IDs in a single request
+   */
+  async getByIds(ids: string[]): Promise<IWikiPagesGetResponse> {
+    const response = await api.post<IWikiPagesGetResponse>('/api/wikipage/batch', { ids })
+    return response
+  }
+
+  /**
    * Get a wiki page by key and reference ID
    */
   async getByKeyAndReference(referenceId: string, key: string): Promise<IWikiPageGetResponse> {
-    const response = await api.get<IWikiPageGetResponse>(`/api/wikipage/${referenceId}/${key}`)
+    const response = await api.get<IWikiPageGetResponse>(`/api/wikipage/reference/${referenceId}/${key}`)
     return response
   }
 
@@ -48,15 +64,16 @@ export class WikiPageApiClient {
    * Get a wiki page by reference ID and parent ID (use '00000000-0000-0000-0000-000000000000' for root)
    */
   async getByReferenceAndParent(referenceId: string, parentId: string): Promise<IWikiPageGetResponse> {
-    const response = await api.get<IWikiPageGetResponse>(`/api/wikipage/${referenceId}/parent/${parentId}`)
+    const response = await api.get<IWikiPageGetResponse>(`/api/wikipage/reference/${referenceId}/parent/${parentId}`)
     return response
   }
 
   /**
-   * Get all wiki pages for a reference ID
+   * Get all wiki pages for a reference ID, optionally filtered by title search
    */
-  async getByReference(referenceId: string): Promise<IWikiPagesGetResponse> {
-    const response = await api.get<IWikiPagesGetResponse>(`/api/wikipage/${referenceId}`)
+  async getByReference(referenceId: string, title?: string): Promise<IWikiPagesGetResponse> {
+    const params = title ? { title } : undefined
+    const response = await api.get<IWikiPagesGetResponse>(`/api/wikipage/reference/${referenceId}`, { params })
     return response
   }
 

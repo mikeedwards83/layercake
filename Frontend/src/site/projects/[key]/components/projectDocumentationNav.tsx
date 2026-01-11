@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Nav } from 'react-bootstrap'
+import { useState, type JSX } from 'react'
+import { Card, CardBody, CardHeader, Nav } from 'react-bootstrap'
 import { TbChevronRight, TbChevronDown, TbFile } from 'react-icons/tb'
 import type { IWikiPage } from '@/services/wikipage/wikiPageApiClient'
 
@@ -109,11 +109,13 @@ export const ProjectDocumentationNav = ({ pages, currentPageId, onNavigate }: IP
   const tree = buildTree()
 
   return (
-    <div className="h-100 overflow-auto" style={{ borderRight: '1px solid #dee2e6' }}>
-      <div className="p-3">
-        <h6 className="text-muted mb-3">Pages</h6>
+    <Card className='rounded-end-0 rounded-top-0 h-100'>
+      <CardHeader>
+        <h4 className="text-muted">Pages</h4>
+      </CardHeader>
+      <CardBody>
         <Nav className="flex-column">{tree.map((node) => renderNode(node))}</Nav>
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   )
 }

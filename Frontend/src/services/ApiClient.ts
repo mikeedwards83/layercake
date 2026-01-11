@@ -63,11 +63,37 @@ class ApiClient {
     return await response.json();
   }
 
-  async get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
+  async get<T>(endpoint: string, params?:object, options?: RequestOptions): Promise<T> {
+    
+    endpoint = this.createUrl(endpoint, params);
+    
     return this.request<T>(endpoint, {
       ...options,
       method: "GET",
     });
+  }
+
+  createUrl(endpoint:string, params?:any):string{
+
+    if(!params){
+      return endpoint;
+    }
+
+    const keys = Object.keys(params);
+
+    let seperator = "?";
+   
+    if(endpoint.indexOf("?") > 0){
+      seperator = "&";
+    }
+
+    for(let i =0; i< keys.length; i++){
+      const key=keys[i];
+      endpoint = `${endpoint}${seperator}${encodeURIComponent(key)}=${encodeURIComponent(params[key] as string)}`;
+      seperator = "&";
+    }
+
+    return endpoint;
   }
 
   async post<T>(
