@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Wikis;
+using LayerCake.Kernel.Tenants.LogicalApplications;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -12,6 +13,7 @@ public static class ServiceCollectionExtension
     {
         services.AddTransient<IProjectsStore, ProjectsStore>();
         services.AddTransient<IWikiPageStore, WikiPageStore>();
+        services.AddTransient<ILogicalApplicationsStore, LogicalApplicationsStore>();
         services.AddSingleton<ITenantContext, FakeTenantContext>();
 
         AddValidators(services);

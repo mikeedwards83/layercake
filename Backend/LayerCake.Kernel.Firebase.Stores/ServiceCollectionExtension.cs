@@ -1,9 +1,11 @@
 ﻿using LayerCake.Kernel.Firebase.Stores.Projects;
 using LayerCake.Kernel.Firebase.Stores.Queries;
 using LayerCake.Kernel.Firebase.Stores.Wikis;
+using LayerCake.Kernel.Firebase.Stores.LogicalApplications;
 using LayerCake.Kernel.Store;
 using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Wikis;
+using LayerCake.Kernel.Tenants.LogicalApplications;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using LayerCake.Kernel.Firebase.Stores.Projects.Tasks;
@@ -18,6 +20,7 @@ public static class ServiceCollectionExtension
     {
         services.AddTransient<IProjectsRepository, ProjectsRepository>();
         services.AddTransient<IWikiPageRepository, WikiPageRepository>();
+        services.AddTransient<ILogicalApplicationsRepository, LogicalApplicationsRepository>();
         services.AddSingleton<IQueryFactory, QueryFactory>();
 
         services.AddTransient<IRecordTask<Project>, ProjectWikiTask>();

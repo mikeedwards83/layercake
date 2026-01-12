@@ -37,3 +37,19 @@ The Project entity is a core domain object in the LayerCake system that represen
 | `UpdatedBy` | Guid | Yes | The ID of the user who last updated the page. |
 | `Created` | DateTime | Yes | THe date and time the page was created. |
 | `CreatedBy` | Guid | Yes | The ID of the user who created the page. |
+
+## Logical Application
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `Id` | `Guid` | Yes | Unique identifier for the project. |
+| `TenantId` | `Guid` | Yes | Identifier for the tenant that owns this project. |
+| `Name` | string | Yes | The name of the logical application. (max 100 characters) |
+| `ProjectId` | Guid | Yes | The ID of the project that this logical application belongs to. |
+| `Description` | `string` | No | Detailed description of the project (max 500 characters, supports markdown) |
+| `OwnerId` | `string` | No | User ID of the project owner (max 128 characters) |
+| `Updated` | DateTime | Yes | The date and time the page was last updated |
+| `UpdatedBy` | Guid | Yes | The ID of the user who last updated the page. |
+| `Created` | DateTime | Yes | THe date and time the page was created. |
+| `CreatedBy` | Guid | Yes | The ID of the user who created the page. |
+

@@ -6,6 +6,7 @@ import { ProjectApiClient, type IProjectGetByKeyResponse } from '@/services/proj
 import { TbHome } from 'react-icons/tb'
 import { ProjectOverview } from './components/projectOverview'
 import { ProjectDocumentation } from './components/projectDocumentation'
+import { ProjectLogical } from './components/projectLogical'
 
 const ProjectPage = () => {
   const { key } = useParams<{ key: string }>()
@@ -120,10 +121,7 @@ const ProjectPage = () => {
                       <ProjectDocumentation projectResponse={projectResponse}  isActive={activeTab === "documentation"}  />
                   </Tab.Pane>
                   <Tab.Pane eventKey="logical">
-                    <div className="p-3">
-                      <h4>Logical</h4>
-                      <p>Logical content goes here</p>
-                    </div>
+                    <ProjectLogical projectResponse={projectResponse} isActive={activeTab === "logical"} />
                   </Tab.Pane>
                   <Tab.Pane eventKey="containers">
                     <div className="p-3">
