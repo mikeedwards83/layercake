@@ -1,3 +1,4 @@
+using Frontend;
 using LayerCake.Api.Controllers.LogicalApplications.Models;
 using LayerCake.Kernel.Tenants.LogicalApplications;
 using LayerCake.Kernel.Tenants.LogicalApplications.Queries;
@@ -9,8 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LayerCake.Api.Controllers.LogicalApplications;
 
+[Area(ApiConstants.Areas.Projects.Name)]
 [ApiController]
-[Route("api/project/{key}/logical")]
+[Route("api/[area]/{key}/logical")]
 [Authorize]
 public class LogicalApplicationsController : ControllerBase
 {

@@ -1,3 +1,4 @@
+using Frontend;
 using LayerCake.Api.Controllers.Projects.Models;
 using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Projects.Queries;
@@ -6,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LayerCake.Api.Controllers.Projects;
 
+[Area(ApiConstants.Areas.Projects.Name)]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[area]")]
 [Authorize]
 public class ProjectsController : ControllerBase
 {
