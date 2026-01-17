@@ -103,6 +103,7 @@ export const userDropdownItems: UserDropdownItemType[] = [
 
 export const menuItems: MenuItemType[] = [
   { key: 'menu', label: 'Menu', isTitle: true },
+  { key: 'admin-dashboard', label: 'Admin Dashboard', icon: TbLayoutDashboard, url: '/admin/dashboard' },
   {
     key: 'dashboards',
     label: 'Dashboards',
