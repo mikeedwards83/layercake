@@ -48,7 +48,7 @@ public class Project : ITenantRecord
     /// <summary>
     /// Gets or sets the owner ID of the project
     /// </summary>
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid OwnerId { get; set; }
 
     public Guid TenantId { get; set; }
   

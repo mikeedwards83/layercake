@@ -16,18 +16,18 @@ const Page = () => {
   const projectKey = projectId || ''
 
   return (
-    <Container fluid>
-      <PageBreadcrumb title="Add New Logical Application" subtitle="Create a new logical application" />
-      <Row>
-        <Col>
-          <AddLogicalApplicationWorkflow
-            projectKey={projectKey}
-            projectId={projectKey}
-            onCancel={handleCancel}
-          />
-        </Col>
-      </Row>
-    </Container>
+      <Container fluid>
+        <PageBreadcrumb title="Add New Logical Application" subtitle="Create a new logical application" />
+        <Row>
+          <Col>
+            <AddLogicalApplicationWorkflow
+              projectKey={projectKey}
+              projectId={projectKey}
+              onCancel={handleCancel}
+            />
+          </Col>
+        </Row>
+      </Container>
   )
 }
 

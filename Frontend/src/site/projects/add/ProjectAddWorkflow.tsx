@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import * as Yup from 'yup'
 import { fakeUsers } from '@/components/Form/UserSelectorInput/data'
 import { step1Schema } from './steps/validations'
 import { ProjectAddStep1 } from './steps/step1'
@@ -9,6 +8,7 @@ import { ProjectsApiClient, type IProjectsPostRequest } from '@/services/project
 import type { WorkflowStep } from '@/components/Workflow/types'
 import { Workflow } from '@/components/Workflow/workflow'
 import { useNavigate } from 'react-router'
+import { clientValidationHandler, serverPostValidationHandler } from '@/helpers/form'
 
 interface AddProjectWorkflowProps {
   onComplete?: (data: IProjectsPostRequest) => void
@@ -24,7 +24,7 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
     description: '',
     icon: 'Folder',
     color: '#0d6efd',
-    ownerId: '',
+    ownerId: undefined,
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof IProjectsPostRequest, string>>>({})
@@ -44,16 +44,7 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
       setErrors({})
       return true
     } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const validationErrors: Partial<Record<keyof IProjectsPostRequest, string>> = {}
-        err.inner.forEach((error) => {
-          if (error.path) {
-            validationErrors[error.path as keyof IProjectsPostRequest] = error.message
-          }
-        })
-        setErrors(validationErrors)
-      }
-      return false
+      return clientValidationHandler<IProjectsPostRequest>(err, setErrors)
     }
   }
 
@@ -78,19 +69,7 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
 
       return true
     } catch (error: unknown) {
-      console.error('Error creating project:', error)
-
-      // Handle validation errors from the server
-      if (error instanceof Error && 'status' in error && error.status == 400) {
-        const validationError = error as Error & { status: number; validationErrors: Record<string, string[]> }
-        if (validationError.status === 400 && validationError.validationErrors) {
-          setServerValidationErrors(validationError.validationErrors)
-          return false
-        }
-      }
-
-      // For other errors, re-throw
-      throw error
+      return serverPostValidationHandler(error, setServerValidationErrors)
     }
   }
 

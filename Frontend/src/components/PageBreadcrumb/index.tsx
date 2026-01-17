@@ -23,9 +23,9 @@ const PageBreadcrumb = ({ title, subtitle, icon }: PageBreadcrumbProps) => {
           <div className="breadcrumb m-0 py-0 d-flex align-items-center gap-1">
             <BreadcrumbItem>Blackbird Dev</BreadcrumbItem> <TbChevronRight />
             {subtitles && subtitles.map( (subtitle, index) =>
-              <>
-                <BreadcrumbItem key={index}>{subtitle}</BreadcrumbItem> <TbChevronRight />
-              </>
+              <div key={index}>
+                <BreadcrumbItem >{subtitle}</BreadcrumbItem> <TbChevronRight />
+              </div>
             )}
             <BreadcrumbItem active>{title}</BreadcrumbItem>
           </div>

@@ -18,7 +18,8 @@ public class LogicalApplicationsRepository(FirestoreDb firestoreDb, IQueryFactor
             { "name", record.Name },
             { "projectId", record.ProjectId.ToString() },
             { "description", record.Description },
-            { "ownerId", record.OwnerId },
+            { "ownerId", record.OwnerId.ToString() },
+            { "applicationTypeId", record.ApplicationTypeId.ToString()},
             { "createdAt", FieldValue.ServerTimestamp },
             { "updatedAt", FieldValue.ServerTimestamp }
         };
@@ -30,7 +31,8 @@ public class LogicalApplicationsRepository(FirestoreDb firestoreDb, IQueryFactor
         {
             { "name", record.Name },
             { "description", record.Description },
-            { "ownerId", record.OwnerId },
+            { "ownerId", record.OwnerId.ToString()},
+            { "applicationTypeId", record.ApplicationTypeId.ToString()  },
             { "updatedAt", FieldValue.ServerTimestamp }
         };
     }
@@ -38,6 +40,8 @@ public class LogicalApplicationsRepository(FirestoreDb firestoreDb, IQueryFactor
     protected override LogicalApplication MapToObject(DocumentSnapshot document)
     {
         var data = document.ToDictionary();
+        var applicationTypeIdStr = data.GetValueOrDefault("applicationTypeId")?.ToString();
+        var ownerIdStr = data.GetValueOrDefault("ownerId")?.ToString();
 
         return new LogicalApplication
         {
@@ -46,7 +50,8 @@ public class LogicalApplicationsRepository(FirestoreDb firestoreDb, IQueryFactor
             Name = data.GetValueOrDefault("name")?.ToString() ?? string.Empty,
             ProjectId = Guid.Parse(data.GetValueOrDefault("projectId")?.ToString() ?? Guid.Empty.ToString()),
             Description = data.GetValueOrDefault("description")?.ToString() ?? string.Empty,
-            OwnerId = data.GetValueOrDefault("ownerId")?.ToString() ?? string.Empty
+            OwnerId = !string.IsNullOrEmpty(ownerIdStr) && Guid.TryParse(ownerIdStr, out var ownerId) ? ownerId : Guid.Empty,
+            ApplicationTypeId = !string.IsNullOrEmpty(applicationTypeIdStr) && Guid.TryParse(applicationTypeIdStr, out var typeId) ? typeId : Guid.Empty
         };
     }
 }

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import * as Yup from 'yup'
 import { fakeUsers } from '@/components/Form/UserSelectorInput/data'
 import { step1Schema } from './steps/validations'
 import { LogicalApplicationAddStep1 } from './steps/step1'
@@ -9,6 +8,7 @@ import { LogicalApplicationsApiClient, type ILogicalApplicationsPostRequest } fr
 import type { WorkflowStep } from '@/components/Workflow/types'
 import { Workflow } from '@/components/Workflow/workflow'
 import { useNavigate } from 'react-router'
+import { clientValidationHandler, serverPostValidationHandler } from '@/helpers/form'
 
 interface AddLogicalApplicationWorkflowProps {
   projectKey: string
@@ -17,14 +17,13 @@ interface AddLogicalApplicationWorkflowProps {
   onCancel: () => void
 }
 
-export const AddLogicalApplicationWorkflow = ({ projectKey, projectId, onComplete, onCancel }: AddLogicalApplicationWorkflowProps) => {
+export const AddLogicalApplicationWorkflow = ({ projectKey, onComplete, onCancel }: AddLogicalApplicationWorkflowProps) => {
   const navigate = useNavigate()
 
   const [logicalApplicationData, setLogicalApplicationData] = useState<ILogicalApplicationsPostRequest>({
     name: '',
-    projectId: projectId,
     description: '',
-    ownerId: '',
+    ownerId: undefined,
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof ILogicalApplicationsPostRequest, string>>>({})
@@ -44,16 +43,7 @@ export const AddLogicalApplicationWorkflow = ({ projectKey, projectId, onComplet
       setErrors({})
       return true
     } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const validationErrors: Partial<Record<keyof ILogicalApplicationsPostRequest, string>> = {}
-        err.inner.forEach((error) => {
-          if (error.path) {
-            validationErrors[error.path as keyof ILogicalApplicationsPostRequest] = error.message
-          }
-        })
-        setErrors(validationErrors)
-      }
-      return false
+      return clientValidationHandler<ILogicalApplicationsPostRequest>(err, setErrors);
     }
   }
 
@@ -78,19 +68,7 @@ export const AddLogicalApplicationWorkflow = ({ projectKey, projectId, onComplet
 
       return true
     } catch (error: unknown) {
-      console.error('Error creating logical application:', error)
-
-      // Handle validation errors from the server
-      if (error instanceof Error && 'status' in error && error.status == 400) {
-        const validationError = error as Error & { status: number; validationErrors: Record<string, string[]> }
-        if (validationError.status === 400 && validationError.validationErrors) {
-          setServerValidationErrors(validationError.validationErrors)
-          return false
-        }
-      }
-
-      // For other errors, re-throw
-      throw error
+      return serverPostValidationHandler(error, setServerValidationErrors)
     }
   }
 
@@ -104,12 +82,20 @@ export const AddLogicalApplicationWorkflow = ({ projectKey, projectId, onComplet
       title: 'Logical Application Details',
       description: 'Basic information about your logical application',
       onNext: step1Next,
-      content: <LogicalApplicationAddStep1 logicalApplicationData={logicalApplicationData} errors={errors} updateLogicalApplicationData={updateLogicalApplicationData} />,
+      content: (
+        <LogicalApplicationAddStep1
+          logicalApplicationData={logicalApplicationData}
+          errors={errors}
+          updateLogicalApplicationData={updateLogicalApplicationData}
+        />
+      ),
     },
     {
       title: 'Review & Summary',
       description: 'Review your logical application details',
-      content: <LogicalApplicationAddStep2 logicalApplicationData={logicalApplicationData} users={fakeUsers} validationErrors={serverValidationErrors} />,
+      content: (
+        <LogicalApplicationAddStep2 logicalApplicationData={logicalApplicationData} users={fakeUsers} validationErrors={serverValidationErrors} />
+      ),
       nextButtonText: 'Create Logical Application',
       onNext: step2Next,
       onPrevious: step2Previous,

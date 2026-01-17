@@ -31,7 +31,12 @@ public class LogicalApplication : ITenantRecord
     /// <summary>
     /// Gets or sets the owner ID of the logical application
     /// </summary>
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid OwnerId { get; set; } = Guid.Empty;
+
+    /// <summary>
+    /// Gets or sets the application type ID
+    /// </summary>
+    public Guid ApplicationTypeId { get; set; } = Guid.Empty;
 
     public Guid TenantId { get; set; }
 }

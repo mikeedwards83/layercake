@@ -23,10 +23,5 @@ public class LogicalApplicationValidator : TenantRecordValidator<LogicalApplicat
             .MaximumLength(500)
             .WithMessage("Description must not exceed 500 characters")
             .When(l => !string.IsNullOrEmpty(l.Description));
-
-        RuleFor(l => l.OwnerId)
-            .MaximumLength(128)
-            .WithMessage("Owner ID must not exceed 128 characters")
-            .When(l => !string.IsNullOrEmpty(l.OwnerId));
     }
 }

@@ -9,7 +9,8 @@ public class LogicalApplicationResponse
     public required string Name { get; init; }
     public required Guid ProjectId { get; init; }
     public required string? Description { get; init; }
-    public required string? OwnerId { get; init; }
+    public Guid? OwnerId { get; init; }
+    public Guid? ApplicationTypeId { get; init; }
     public required DateTime Created { get; init; }
     public required Guid CreatedBy { get; init; }
     public required DateTime Updated { get; init; }
@@ -25,6 +26,7 @@ public class LogicalApplicationResponse
             ProjectId = logicalApplication.ProjectId,
             Description = logicalApplication.Description,
             OwnerId = logicalApplication.OwnerId,
+            ApplicationTypeId = logicalApplication.ApplicationTypeId,
             Created = logicalApplication.Created,
             CreatedBy = logicalApplication.CreatedBy,
             Updated = logicalApplication.Updated,

@@ -11,7 +11,7 @@ public class ProjectResponse
     public required string? Description { get; init; }
     public required string? Icon { get; init; }
     public required string? Color { get; init; }
-    public required string? OwnerId { get; init; }
+    public required Guid? OwnerId { get; init; }
 
     public static ProjectResponse Map(Kernel.Tenants.Projects.Project project)
     {

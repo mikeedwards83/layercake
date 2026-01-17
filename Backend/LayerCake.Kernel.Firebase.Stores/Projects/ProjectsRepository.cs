@@ -20,7 +20,7 @@ public class ProjectsRepository(FirestoreDb firestoreDb, IQueryFactory queryFact
             { "description", record.Description },
             { "icon", record.Icon },
             { "color", record.Color },
-            { "ownerId", record.OwnerId },
+            { "ownerId", record.OwnerId.ToString() },
             { "createdAt", FieldValue.ServerTimestamp },
             { "updatedAt", FieldValue.ServerTimestamp }
         };
@@ -34,7 +34,7 @@ public class ProjectsRepository(FirestoreDb firestoreDb, IQueryFactory queryFact
             { "description", record.Description },
             { "icon", record.Icon },
             { "color", record.Color },
-            { "ownerId", record.OwnerId },
+            { "ownerId", record.OwnerId.ToString() },
             { "updatedAt", FieldValue.ServerTimestamp }
         };
     }
@@ -52,7 +52,7 @@ public class ProjectsRepository(FirestoreDb firestoreDb, IQueryFactory queryFact
             Description = data.GetValueOrDefault("description")?.ToString() ?? string.Empty,
             Icon = data.GetValueOrDefault("icon")?.ToString() ?? string.Empty,
             Color = data.GetValueOrDefault("color")?.ToString() ?? string.Empty,
-            OwnerId = data.GetValueOrDefault("ownerId")?.ToString() ?? string.Empty
+            OwnerId = Guid.Parse(data.GetValueOrDefault("ownerId")?.ToString() ?? Guid.Empty.ToString())
         };
     }
     }

@@ -51,7 +51,8 @@ class ApiClient {
       if (response.status === 400) {
         const error = new Error("Validation failed") as any;
         error.status = 400;
-        error.validationErrors = errorData;
+        error.request = errorData;
+        error.validationErrors = errorData.errors;
         throw error;
       }
 

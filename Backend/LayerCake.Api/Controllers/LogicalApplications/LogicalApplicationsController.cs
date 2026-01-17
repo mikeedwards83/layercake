@@ -3,6 +3,7 @@ using LayerCake.Kernel.Tenants.LogicalApplications;
 using LayerCake.Kernel.Tenants.LogicalApplications.Queries;
 using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Projects.Queries;
+using LayerCake.Kernel.Tenants.Settings.ApplicationTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,15 +16,18 @@ public class LogicalApplicationsController : ControllerBase
 {
     private readonly ILogicalApplicationsStore _logicalApplicationsStore;
     private readonly IProjectsStore _projectsStore;
+    private readonly IApplicationTypesStore _applicationTypesStore;
     private readonly ILogger<LogicalApplicationsController> _logger;
 
     public LogicalApplicationsController(
         ILogicalApplicationsStore logicalApplicationsStore,
         IProjectsStore projectsStore,
+        IApplicationTypesStore applicationTypesStore,
         ILogger<LogicalApplicationsController> logger)
     {
         _logicalApplicationsStore = logicalApplicationsStore ?? throw new ArgumentNullException(nameof(logicalApplicationsStore));
         _projectsStore = projectsStore ?? throw new ArgumentNullException(nameof(projectsStore));
+        _applicationTypesStore = applicationTypesStore ?? throw new ArgumentNullException(nameof(applicationTypesStore));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -51,20 +55,32 @@ public class LogicalApplicationsController : ControllerBase
                 return NotFound(new { message = $"Project with key {key} not found" });
             }
 
-            // Override ProjectId from URL
-            request.ProjectId = project.Id;
-
             if (ModelState.IsValid)
             {
                 _logger.LogInformation("Creating new logical application for project: {ProjectKey}", key);
 
+                // Handle custom type creation if needed
+                Guid? applicationTypeId = request.ApplicationTypeId;
+                if (!string.IsNullOrEmpty(request.CustomApplicationTypeName))
+                {
+                    var customType = await _applicationTypesStore.Add(async (t) =>
+                    {
+                        t.Id = Guid.NewGuid();
+                        t.Name = request.CustomApplicationTypeName;
+                        t.IsCustom = true;
+                        await Task.CompletedTask;
+                    });
+                    applicationTypeId = customType.Id;
+                }
+
                 var logicalApplication = await _logicalApplicationsStore.Add(async (l) =>
                 {
                     l.Id = Guid.NewGuid();
-                    l.Name = request.Name;
-                    l.ProjectId = request.ProjectId;
-                    l.Description = request.Description;
-                    l.OwnerId = request.OwnerId;
+                    l.Name = request.Name!;
+                    l.ProjectId = project.Id;
+                    l.Description = request.Description!;
+                    l.OwnerId = request.OwnerId!.Value;
+                    l.ApplicationTypeId = applicationTypeId.Value;
                     await Task.CompletedTask;
                 });
 

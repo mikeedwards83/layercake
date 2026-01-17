@@ -52,7 +52,7 @@ public class ProjectsController : ControllerBase
                     p.Description = request.Description;
                     p.Icon = request.Icon;
                     p.Color = request.Color;
-                    p.OwnerId = request.OwnerId;
+                    p.OwnerId = request.OwnerId.Value;
                     await Task.CompletedTask;
                 });
 

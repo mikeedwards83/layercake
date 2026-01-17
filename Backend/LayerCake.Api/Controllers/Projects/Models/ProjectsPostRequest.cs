@@ -11,7 +11,7 @@ namespace LayerCake.Api.Controllers.Projects.Models
         public string? Description { get; set; }
         public string? Icon { get; set; }
         public string? Color { get; set; }
-        public string? OwnerId { get; set; }
+        public Guid? OwnerId { get; set; }
         
         public class ProjectsPostRequestValidator : AbstractValidator<ProjectsPostRequest>
         {
@@ -49,9 +49,9 @@ namespace LayerCake.Api.Controllers.Projects.Models
                     .When(x => !string.IsNullOrEmpty(x.Color));
 
                 RuleFor(x => x.OwnerId)
-                    .MaximumLength(128)
-                    .WithMessage("Owner ID must not exceed 128 characters")
-                    .When(x => !string.IsNullOrEmpty(x.OwnerId));
+                    .NotEmpty()
+                    .WithMessage("Owner ID is required")
+                    .When(x => x.OwnerId.HasValue);
             }
 
           

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Row, Col, Card } from 'react-bootstrap'
 import type { User } from '@/types/user'
 import { TextReview } from '@/components/Review/TextReview'
@@ -6,6 +7,7 @@ import { UsersReview } from '@/components/Review/UsersReview/UsersReview'
 import { Notice } from '@/components/Notice'
 import type { ILogicalApplicationsPostRequest } from '@/services/logicalApplications/logicalApplicationsApiClient'
 import { ValidationSummary } from '@/components/Form/ValidationSummary/validationSummary'
+import { ApplicationTypesApiClient, type IApplicationTypeResponse } from '@/services/applicationTypes/applicationTypesApiClient'
 
 interface LogicalApplicationAddStep2Props {
   logicalApplicationData: ILogicalApplicationsPostRequest
@@ -14,6 +16,33 @@ interface LogicalApplicationAddStep2Props {
 }
 
 export const LogicalApplicationAddStep2 = ({ logicalApplicationData, users, validationErrors = {} }: LogicalApplicationAddStep2Props) => {
+  const [applicationTypes, setApplicationTypes] = useState<IApplicationTypeResponse[]>([])
+
+  useEffect(() => {
+    const loadApplicationTypes = async () => {
+      try {
+        const client = new ApplicationTypesApiClient()
+        const data = await client.getAll()
+        setApplicationTypes(data.applicationTypes)
+      } catch (err) {
+        console.error('Error loading application types:', err)
+      }
+    }
+
+    loadApplicationTypes()
+  }, [])
+
+  const getApplicationTypeName = () => {
+    if (logicalApplicationData.customApplicationTypeName) {
+      return logicalApplicationData.customApplicationTypeName
+    }
+    if (logicalApplicationData.applicationTypeId) {
+      const type = applicationTypes.find(t => t.id === logicalApplicationData.applicationTypeId)
+      return type?.name || '-'
+    }
+    return '-'
+  }
+
   return (
     <div>
       <Row className="g-4">
@@ -27,6 +56,7 @@ export const LogicalApplicationAddStep2 = ({ logicalApplicationData, users, vali
               <Row>
                 <Col md={6}>
                   <TextReview label="Name" value={logicalApplicationData.name} />
+                  <TextReview label="Type" value={getApplicationTypeName()} />
                   <RichTextReview label="Description" value={logicalApplicationData.description} />
                 </Col>
                 <Col md={6}>
