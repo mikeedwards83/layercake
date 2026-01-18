@@ -23,9 +23,11 @@ public class UserResponse
             PhotoUrl = userRecord.PhotoUrl,
             EmailVerified = userRecord.EmailVerified,
             Disabled = userRecord.Disabled,
-            CreatedAt = DateTimeOffset.FromUnixTimeMilliseconds(userRecord.UserMetaData.CreationTimestamp ?? 0),
+            CreatedAt = userRecord.UserMetaData.CreationTimestamp.HasValue
+                ? new DateTimeOffset(userRecord.UserMetaData.CreationTimestamp.Value)
+                : null,
             LastSignInAt = userRecord.UserMetaData.LastSignInTimestamp.HasValue
-                ? DateTimeOffset.FromUnixTimeMilliseconds(userRecord.UserMetaData.LastSignInTimestamp.Value)
+                ? new DateTimeOffset(userRecord.UserMetaData.LastSignInTimestamp.Value)
                 : null
         };
     }

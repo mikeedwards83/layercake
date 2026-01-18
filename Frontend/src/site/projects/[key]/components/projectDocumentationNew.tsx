@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import * as Yup from 'yup'
 import { RichTextInput } from '@/components/Form/RichTextInput/RichTextInput'
-import { Card, CardBody, Button, ButtonGroup, Form } from 'react-bootstrap'
+import { Card, CardBody, Button, ButtonGroup } from 'react-bootstrap'
 import { TbDeviceFloppy, TbX } from 'react-icons/tb'
 import { WikiPageApiClient, type IWikiPage } from '@/services/wikipage/wikiPageApiClient'
 import { ValidationSummary } from '@/components/Form/ValidationSummary/validationSummary'

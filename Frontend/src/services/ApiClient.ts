@@ -26,9 +26,9 @@ class ApiClient {
     const { requiresAuth = true, headers = {}, ...fetchOptions } = options;
 
     const url = `${this.baseURL}${endpoint}`;
-    const requestHeaders: HeadersInit = {
+    const requestHeaders: Record<string, string> = {
       "Content-Type": "application/json",
-      ...headers,
+      ...(headers as Record<string, string>),
     };
 
     if (requiresAuth) {

@@ -48,9 +48,6 @@ export function NotificationProvider({ children }: ChildrenType) {
 
 
   const [config, setConfig] = useState<ToastrProps[]>([])
-  const hideNotification = () => {
-    setConfig({ show: false, message: '', title: '' })
-  }
 
   const showNotification = ({ title, message, variant, delay = 2000 }: ShowNotificationType) => {
 

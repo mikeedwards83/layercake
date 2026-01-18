@@ -38,7 +38,7 @@ export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage,
                 key={index}
                 className={`workflow-step mb-3 ${isCurrent ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
                 style={{ cursor: isClickable ? 'pointer' : 'default' }}
-                onClick={() => isClickable && setCurrentStep(step.id)}>
+                onClick={() => isClickable && setCurrentStep(index + 1)}>
                 <div className="d-flex align-items-start">
                   <div
                     className={`step-number me-3 ${

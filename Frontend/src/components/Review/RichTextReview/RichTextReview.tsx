@@ -32,7 +32,7 @@ const markdownToHtml = (markdown: string, wikiPageMap: Map<string, IWikiPage>, p
   let html = markdown
 
   // Handle wiki page links first [text](wiki:pageId)
-  html = html.replace(/\[([^\]]+)\]\(wiki:([^)]+)\)/g, (match, text, pageId) => {
+  html = html.replace(/\[([^\]]+)\]\(wiki:([^)]+)\)/g, (_match, text, pageId) => {
     // Find the wiki page by ID
     const page = wikiPageMap.get(pageId)
     if (page && projectKey) {
