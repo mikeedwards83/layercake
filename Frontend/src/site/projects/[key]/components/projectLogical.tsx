@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Card, CardBody, Button, CardHeader, Table, Spinner, Alert } from 'react-bootstrap'
-import { TbPlus } from 'react-icons/tb'
+import { TbPlus, TbEye } from 'react-icons/tb'
 import type { IProjectGetByKeyResponse } from '@/services/project/projectApiClient'
 import { useNavigate } from 'react-router'
 import { LogicalApplicationsApiClient, type ILogicalApplicationsGetResponse } from '@/services/logicalApplications/logicalApplicationsApiClient'
@@ -50,6 +50,10 @@ export const ProjectLogical = ({ projectResponse, isActive }: IProjectLogicalPro
 
   const handleAddLogical = () => {
     navigate(`/projects/${projectResponse.project.key}/logical/add`)
+  }
+
+  const handleViewLogical = (logicalKey: string) => {
+    navigate(`/projects/${projectResponse.project.key}/logical/${logicalKey}`)
   }
 
   const getOwnerName = (ownerId?: string) => {
@@ -103,18 +107,34 @@ export const ProjectLogical = ({ projectResponse, isActive }: IProjectLogicalPro
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Key</th>
                     <th>Type</th>
                     <th>Description</th>
                     <th>Owner</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {logicalApplicationsResponse.logicalApplications.map((logicalApp) => (
                     <tr key={logicalApp.id}>
                       <td>{logicalApp.name}</td>
+                      <td>
+                        <span className="badge bg-secondary">{logicalApp.key}</span>
+                      </td>
                       <td>{getApplicationTypeName(logicalApp.applicationTypeId)}</td>
                       <td>{logicalApp.description || '-'}</td>
                       <td>{getOwnerName(logicalApp.ownerId)}</td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => handleViewLogical(logicalApp.key)}
+                          title="View logical application"
+                        >
+                          <TbEye className="me-1" />
+                          View
+                        </Button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

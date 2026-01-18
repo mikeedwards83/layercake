@@ -1,6 +1,6 @@
 using LayerCake.Kernel.Tenants.LogicalApplications;
 
-namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications.Models;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplication.Models;
 
 public class LogicalApplicationResponse
 {

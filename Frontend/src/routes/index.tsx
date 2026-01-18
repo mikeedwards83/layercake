@@ -8,6 +8,7 @@ const Projects = lazy(() => import('@/site/projects'));
 const ProjectsAdd = lazy(() => import('@/site/projects/add'));
 const Project = lazy(() => import('@/site/projects/[key]'));
 const LogicalApplicationAdd = lazy(() => import('@/site/projects/logical/add'));
+const LogicalApplication = lazy(() => import('@/site/projects/[key]/logical/[logicalKey]'));
 
 
 const anonRoutes: RouteObject[] =[
@@ -31,6 +32,8 @@ const authRoutes: RouteObject[] = [
       {path:"/projects", element: <Projects />},
       {path:"/projects/add", element: <ProjectsAdd />},
       {path:"/projects/:projectId/logical/add", element: <LogicalApplicationAdd />},
+      {path:"/projects/:key/logical/:logicalKey", element: <LogicalApplication />},
+      {path:"/projects/:key/logical/:logicalKey/:tab", element: <LogicalApplication />},
       {path:"/projects/:key", element: <Project />},
       {path:"/projects/:key/:tab", element: <Project />},
       {path:"/projects/:key/documentation/:wikipage", element: <Project />}

@@ -11,8 +11,8 @@ export class LogicalApplicationsApiClient {
     return createdLogicalApplication
   }
 
-  async get(projectKey: string, id: string): Promise<ILogicalApplicationsPostResponse> {
-    const logicalApplication = await api.get<ILogicalApplicationsPostResponse>(`/api/projects/${projectKey}/logical/${id}`)
+  async getByKey(projectKey: string, logicalKey: string): Promise<ILogicalApplicationResponse> {
+    const logicalApplication = await api.get<ILogicalApplicationResponse>(`/api/projects/${projectKey}/logical/${logicalKey}`)
     return logicalApplication
   }
 }

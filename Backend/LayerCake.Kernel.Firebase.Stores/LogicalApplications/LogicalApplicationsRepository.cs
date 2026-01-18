@@ -16,6 +16,7 @@ public class LogicalApplicationsRepository(FirestoreDb firestoreDb, IQueryFactor
         {
             { "tenantId", record.TenantId.ToString() },
             { "name", record.Name },
+            { "key", record.Key },
             { "projectId", record.ProjectId.ToString() },
             { "description", record.Description },
             { "ownerId", record.OwnerId.ToString() },
@@ -48,6 +49,7 @@ public class LogicalApplicationsRepository(FirestoreDb firestoreDb, IQueryFactor
             Id = Guid.Parse(document.Id),
             TenantId = Guid.Parse(data.GetValueOrDefault("tenantId")?.ToString() ?? Guid.Empty.ToString()),
             Name = data.GetValueOrDefault("name")?.ToString() ?? string.Empty,
+            Key =  data.GetValueOrDefault("key")?.ToString() ?? string.Empty,
             ProjectId = Guid.Parse(data.GetValueOrDefault("projectId")?.ToString() ?? Guid.Empty.ToString()),
             Description = data.GetValueOrDefault("description")?.ToString() ?? string.Empty,
             OwnerId = !string.IsNullOrEmpty(ownerIdStr) && Guid.TryParse(ownerIdStr, out var ownerId) ? ownerId : Guid.Empty,

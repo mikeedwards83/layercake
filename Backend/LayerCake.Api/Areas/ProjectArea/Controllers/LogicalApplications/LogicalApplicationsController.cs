@@ -1,4 +1,5 @@
 using Frontend;
+using LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplication;
 using LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications.Models;
 using LayerCake.Kernel.Tenants.LogicalApplications;
 using LayerCake.Kernel.Tenants.LogicalApplications.Queries;
@@ -12,7 +13,7 @@ namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications;
 
 [Area(ApiConstants.Areas.Projects.Name)]
 [ApiController]
-[Route("api/[area]/{key}/logical")]
+[Route("api/[area]/{projectkey}/logical")]
 [Authorize]
 public class LogicalApplicationsController : ControllerBase
 {
@@ -36,7 +37,7 @@ public class LogicalApplicationsController : ControllerBase
     /// <summary>
     /// Creates a new logical application for a project
     /// </summary>
-    /// <param name="key">The project key</param>
+    /// <param name="projectkey">The project key</param>
     /// <param name="request">The logical application creation request</param>
     /// <returns>The created logical application</returns>
     [HttpPost]
@@ -44,22 +45,22 @@ public class LogicalApplicationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<LogicalApplicationsPostResponse>> Post(string key, [FromBody] LogicalApplicationsPostRequest request)
+    public async Task<ActionResult<LogicalApplicationsPostResponse>> Post(string projectkey, [FromBody] LogicalApplicationsPostRequest request)
     {
         try
         {
             // Verify project exists
-            var projects = await _projectsStore.Find(new ProjectByKeyQuery(key, 0, 1));
+            var projects = await _projectsStore.Find(new ProjectByKeyQuery(projectkey, 0, 1));
             var project = projects.FirstOrDefault();
 
             if (project == null)
             {
-                return NotFound(new { message = $"Project with key {key} not found" });
+                return NotFound(new { message = $"Project with key {projectkey} not found" });
             }
 
             if (ModelState.IsValid)
             {
-                _logger.LogInformation("Creating new logical application for project: {ProjectKey}", key);
+                _logger.LogInformation("Creating new logical application for project: {ProjectKey}", projectkey);
 
                 // Handle custom type creation if needed
                 Guid? applicationTypeId = request.ApplicationTypeId;
@@ -94,7 +95,7 @@ public class LogicalApplicationsController : ControllerBase
 
                 _logger.LogInformation("Successfully created logical application with ID: {LogicalApplicationId}", logicalApplication.Id);
 
-                return CreatedAtAction(nameof(GetLogicalApplication), new { key = key, id = logicalApplication.Id }, response);
+                return CreatedAtAction(nameof(LogicalApplicationController.GetLogicalApplicationByKey), LogicalApplicationController.Name, new { area = ApiConstants.Areas.Projects.Name, projectKey = projectkey, logicalKey = logicalApplication.Key }, response);
             }
             else
             {
@@ -103,7 +104,7 @@ public class LogicalApplicationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating logical application for project: {ProjectKey}", key);
+            _logger.LogError(ex, "Error creating logical application for project: {ProjectKey}", projectkey);
             return StatusCode(500,
                 new { message = "An error occurred while creating the logical application", error = ex.Message });
         }
@@ -112,23 +113,23 @@ public class LogicalApplicationsController : ControllerBase
     /// <summary>
     /// Gets all logical applications for a project
     /// </summary>
-    /// <param name="key">The project key</param>
+    /// <param name="projectkey">The project key</param>
     /// <returns>List of all logical applications for the project</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<LogicalApplicationsGetResponse>> GetAllLogicalApplications(string key)
+    public async Task<ActionResult<LogicalApplicationsGetResponse>> GetAllLogicalApplications(string projectkey)
     {
         try
         {
             // Verify project exists
-            var projects = await _projectsStore.Find(new ProjectByKeyQuery(key, 0, 1));
+            var projects = await _projectsStore.Find(new ProjectByKeyQuery(projectkey, 0, 1));
             var project = projects.FirstOrDefault();
 
             if (project == null)
             {
-                return NotFound(new { message = $"Project with key {key} not found" });
+                return NotFound(new { message = $"Project with key {projectkey} not found" });
             }
 
             var logicalApplications = await _logicalApplicationsStore.Find(new GetLogicalApplicationsByProjectQuery(project.Id, 0, 100));
@@ -142,57 +143,8 @@ public class LogicalApplicationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving logical applications for project: {ProjectKey}", key);
+            _logger.LogError(ex, "Error retrieving logical applications for project: {ProjectKey}", projectkey);
             return StatusCode(500, new { message = "An error occurred while retrieving logical applications" });
-        }
-    }
-
-    /// <summary>
-    /// Gets a logical application by ID
-    /// </summary>
-    /// <param name="key">The project key</param>
-    /// <param name="id">The logical application ID</param>
-    /// <returns>The logical application</returns>
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<LogicalApplicationsPostResponse>> GetLogicalApplication(string key, Guid id)
-    {
-        try
-        {
-            // Verify project exists
-            var projects = await _projectsStore.Find(new ProjectByKeyQuery(key, 0, 1));
-            var project = projects.FirstOrDefault();
-
-            if (project == null)
-            {
-                return NotFound(new { message = $"Project with key {key} not found" });
-            }
-
-            var logicalApplication = await _logicalApplicationsStore.Get(id);
-
-            if (logicalApplication == null)
-            {
-                return NotFound(new { message = $"Logical application with ID {id} not found" });
-            }
-
-            // Verify logical application belongs to this project
-            if (logicalApplication.ProjectId != project.Id)
-            {
-                return NotFound(new { message = $"Logical application with ID {id} not found in project {key}" });
-            }
-
-            var response = new LogicalApplicationsPostResponse
-            {
-                LogicalApplication = LogicalApplicationResponse.Map(logicalApplication)
-            };
-
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving logical application with ID: {LogicalApplicationId}", id);
-            return StatusCode(500, new { message = "An error occurred while retrieving the logical application" });
         }
     }
 }

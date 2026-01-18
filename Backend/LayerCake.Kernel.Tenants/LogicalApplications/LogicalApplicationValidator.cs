@@ -15,6 +15,14 @@ public class LogicalApplicationValidator : TenantRecordValidator<LogicalApplicat
             .MaximumLength(100)
             .WithMessage("Logical application name must not exceed 100 characters");
 
+        RuleFor(l => l.Key)
+            .NotEmpty()
+            .WithMessage("Logical application key is required")
+            .MaximumLength(10)
+            .WithMessage("Key must not exceed 10 characters")
+            .Matches("^[A-Z0-9]+$")
+            .WithMessage("Key must contain only uppercase letters and numbers");
+
         RuleFor(l => l.ProjectId)
             .NotEmpty()
             .WithMessage("Project ID is required");
