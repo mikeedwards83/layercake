@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Table, Spinner, Alert, Badge } from 'react-bootstrap'
-import PageMetaData from '../../../components/PageMetaData'
-import { UsersApiClient, type IUsersGetResponse } from '../../../services/users/usersApiClient'
+import PageBreadcrumb from '@/components/PageBreadcrumb'
+import { UsersTopBar } from './components/usersTopBar'
+import { UsersApiClient, type IUsersGetResponse } from '@/services/users/usersApiClient'
 import { TbUsers, TbMail, TbCalendar, TbClock } from 'react-icons/tb'
 
 const UsersPage = () => {
@@ -35,21 +36,9 @@ const UsersPage = () => {
   }
 
   return (
-    <>
-      <PageMetaData title="Users" />
-
-      <Container fluid>
-        <Row className="mb-4">
-          <Col>
-            <div className="page-title-box">
-              <h4 className="page-title">
-                <TbUsers className="me-2" />
-                User Management
-              </h4>
-              <p className="text-muted">Manage user accounts and permissions</p>
-            </div>
-          </Col>
-        </Row>
+    <Container fluid>
+      <PageBreadcrumb title="User Management" subtitle="Manage user accounts and permissions" />
+      <UsersTopBar />
 
         {loading && (
           <div className="text-center my-5">
@@ -161,8 +150,7 @@ const UsersPage = () => {
             </Col>
           </Row>
         )}
-      </Container>
-    </>
+    </Container>
   )
 }
 
