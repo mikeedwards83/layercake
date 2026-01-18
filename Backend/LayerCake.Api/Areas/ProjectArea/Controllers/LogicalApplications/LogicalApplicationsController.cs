@@ -1,4 +1,5 @@
-using LayerCake.Api.Controllers.LogicalApplications.Models;
+using Frontend;
+using LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications.Models;
 using LayerCake.Kernel.Tenants.LogicalApplications;
 using LayerCake.Kernel.Tenants.LogicalApplications.Queries;
 using LayerCake.Kernel.Tenants.Projects;
@@ -7,10 +8,11 @@ using LayerCake.Kernel.Tenants.Settings.ApplicationTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LayerCake.Api.Controllers.LogicalApplications;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications;
 
+[Area(ApiConstants.Areas.Projects.Name)]
 [ApiController]
-[Route("api/project/{key}/logical")]
+[Route("api/[area]/{key}/logical")]
 [Authorize]
 public class LogicalApplicationsController : ControllerBase
 {
@@ -77,6 +79,7 @@ public class LogicalApplicationsController : ControllerBase
                 {
                     l.Id = Guid.NewGuid();
                     l.Name = request.Name!;
+                    l.Key = request.Key!;
                     l.ProjectId = project.Id;
                     l.Description = request.Description!;
                     l.OwnerId = request.OwnerId!.Value;

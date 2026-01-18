@@ -22,6 +22,7 @@ export const AddLogicalApplicationWorkflow = ({ projectKey, onComplete, onCancel
 
   const [logicalApplicationData, setLogicalApplicationData] = useState<ILogicalApplicationsPostRequest>({
     name: '',
+    key: '',
     description: '',
     ownerId: undefined,
   })

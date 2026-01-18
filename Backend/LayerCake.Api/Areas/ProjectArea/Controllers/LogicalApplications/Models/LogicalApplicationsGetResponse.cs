@@ -1,4 +1,4 @@
-namespace LayerCake.Api.Controllers.LogicalApplications.Models;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications.Models;
 
 public class LogicalApplicationsGetResponse
 {

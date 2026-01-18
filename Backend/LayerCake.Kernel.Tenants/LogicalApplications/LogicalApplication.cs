@@ -19,6 +19,11 @@ public class LogicalApplication : ITenantRecord
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the logical application key (unique identifier)
+    /// </summary>
+    public string Key { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the project ID that this logical application belongs to
     /// </summary>
     public Guid ProjectId { get; set; }

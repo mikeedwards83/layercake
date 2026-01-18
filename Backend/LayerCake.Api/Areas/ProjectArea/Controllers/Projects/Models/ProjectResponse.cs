@@ -1,6 +1,6 @@
 ﻿using LayerCake.Kernel.Tenants.Projects;
 
-namespace LayerCake.Api.Controllers.Projects.Models;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.Projects.Models;
 
 public class ProjectResponse
 {

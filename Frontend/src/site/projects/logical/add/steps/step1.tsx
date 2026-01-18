@@ -64,6 +64,21 @@ export const LogicalApplicationAddStep1 = ({ logicalApplicationData, errors, upd
             />
           </Col>
           <Col md={12}>
+            <TextInput
+              label="Key"
+              placeholder="Enter logical application key (max 10 characters, automatically capitalized)"
+              maxChars={10}
+              onChange={(value) => {
+                const upperValue = value?.toUpperCase().replace(/[^A-Z0-9]/g, '')
+                updateLogicalApplicationData('key', upperValue)
+              }}
+              error={errors.key}
+              hint="Letters and numbers only (automatically capitalized)"
+              value={logicalApplicationData.key}
+              required
+            />
+          </Col>
+          <Col md={12}>
             <Form.Group>
               <Form.Label>
                 Application Type <span className="text-danger">*</span>

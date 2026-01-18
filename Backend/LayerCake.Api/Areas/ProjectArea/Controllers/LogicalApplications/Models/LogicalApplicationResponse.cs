@@ -1,12 +1,13 @@
 using LayerCake.Kernel.Tenants.LogicalApplications;
 
-namespace LayerCake.Api.Controllers.LogicalApplications.Models;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications.Models;
 
 public class LogicalApplicationResponse
 {
     public required Guid Id { get; init; }
     public required Guid TenantId { get; init; }
     public required string Name { get; init; }
+    public required string Key { get; init; }
     public required Guid ProjectId { get; init; }
     public required string? Description { get; init; }
     public Guid? OwnerId { get; init; }
@@ -23,6 +24,7 @@ public class LogicalApplicationResponse
             Id = logicalApplication.Id,
             TenantId = logicalApplication.TenantId,
             Name = logicalApplication.Name,
+            Key = logicalApplication.Key,
             ProjectId = logicalApplication.ProjectId,
             Description = logicalApplication.Description,
             OwnerId = logicalApplication.OwnerId,
