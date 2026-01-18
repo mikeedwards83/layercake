@@ -9,6 +9,7 @@ import type { WorkflowStep } from '@/components/Workflow/types'
 import { Workflow } from '@/components/Workflow/workflow'
 import { useNavigate } from 'react-router'
 import { clientValidationHandler, serverPostValidationHandler } from '@/helpers/form'
+import { createKeyAutoGenerator } from '@/helpers/keyGenerator'
 
 interface AddLogicalApplicationWorkflowProps {
   projectKey: string
@@ -32,25 +33,9 @@ export const AddLogicalApplicationWorkflow = ({ projectKey, onComplete, onCancel
   const [isKeyManuallyEdited, setIsKeyManuallyEdited] = useState(false)
 
   const updateLogicalApplicationData = (field: keyof ILogicalApplicationsPostRequest, value: string | undefined) => {
-    setLogicalApplicationData((prev) => {
-      const newData = { ...prev, [field]: value }
-
-      // Auto-generate key from name if key hasn't been manually edited
-      if (field === 'name' && !isKeyManuallyEdited) {
-        const generatedKey = (value || '')
-          .toUpperCase()
-          .replace(/[^A-Z0-9]/g, '')
-          .substring(0, 10)
-        newData.key = generatedKey
-      }
-
-      return newData
-    })
-
-    // Mark key as manually edited if user changes it
-    if (field === 'key') {
-      setIsKeyManuallyEdited(true)
-    }
+    // Use the key auto-generator helper
+    const keyAutoGenerator = createKeyAutoGenerator(setLogicalApplicationData, isKeyManuallyEdited, setIsKeyManuallyEdited)
+    keyAutoGenerator(field, value)
 
     // Clear error when user starts typing
     if (errors[field]) {

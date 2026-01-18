@@ -9,6 +9,7 @@ import type { WorkflowStep } from '@/components/Workflow/types'
 import { Workflow } from '@/components/Workflow/workflow'
 import { useNavigate } from 'react-router'
 import { clientValidationHandler, serverPostValidationHandler } from '@/helpers/form'
+import { createKeyAutoGenerator } from '@/helpers/keyGenerator'
 
 interface AddProjectWorkflowProps {
   onComplete?: (data: IProjectsPostRequest) => void
@@ -29,9 +30,13 @@ export const AddProjectWorkflow = ({ onComplete, onCancel }: AddProjectWorkflowP
 
   const [errors, setErrors] = useState<Partial<Record<keyof IProjectsPostRequest, string>>>({})
   const [serverValidationErrors, setServerValidationErrors] = useState<Record<string, string[]>>({})
+  const [isKeyManuallyEdited, setIsKeyManuallyEdited] = useState(false)
 
   const updateProjectData = (field: keyof IProjectsPostRequest, value: string | undefined) => {
-    setProjectData((prev) => ({ ...prev, [field]: value }))
+    // Use the key auto-generator helper
+    const keyAutoGenerator = createKeyAutoGenerator(setProjectData, isKeyManuallyEdited, setIsKeyManuallyEdited)
+    keyAutoGenerator(field, value)
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }))
