@@ -8,6 +8,11 @@ public static class ApiConstants
         {
             public const string Name = "Projects";
         }
+
+        public static class Admin
+        {
+            public const string Name = "Admin";
+        }
     }
-    
+
 }

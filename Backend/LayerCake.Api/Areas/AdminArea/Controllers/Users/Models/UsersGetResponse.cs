@@ -1,4 +1,4 @@
-namespace LayerCake.Api.Controllers.Users.Models;
+namespace LayerCake.Api.Areas.AdminArea.Controllers.Users.Models;
 
 public class UsersGetResponse
 {

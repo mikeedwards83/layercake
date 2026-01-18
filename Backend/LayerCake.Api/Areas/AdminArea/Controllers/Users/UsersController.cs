@@ -1,12 +1,14 @@
 using FirebaseAdmin.Auth;
-using LayerCake.Api.Controllers.Users.Models;
+using Frontend;
+using LayerCake.Api.Areas.AdminArea.Controllers.Users.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LayerCake.Api.Controllers.Users;
+namespace LayerCake.Api.Areas.AdminArea.Controllers.Users;
 
+[Area(ApiConstants.Areas.Admin.Name)]
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[area]/[controller]")]
 [Authorize]
 public class UsersController : ControllerBase
 {

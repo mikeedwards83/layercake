@@ -2,12 +2,12 @@ import api from '../api'
 
 export class UsersApiClient {
   async getAll(): Promise<IUsersGetResponse> {
-    const users = await api.get<IUsersGetResponse>('/api/users')
+    const users = await api.get<IUsersGetResponse>('/api/admin/users')
     return users
   }
 
   async getById(id: string): Promise<IUserResponse> {
-    const user = await api.get<IUserResponse>(`/api/users/${id}`)
+    const user = await api.get<IUserResponse>(`/api/admin/users/${id}`)
     return user
   }
 }
