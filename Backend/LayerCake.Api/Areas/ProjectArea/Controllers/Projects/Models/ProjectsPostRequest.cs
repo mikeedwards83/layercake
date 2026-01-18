@@ -2,7 +2,7 @@
 using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Projects.Queries;
 
-namespace LayerCake.Api.Controllers.Projects.Models
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.Projects.Models
 {
     public class ProjectsPostRequest
     {

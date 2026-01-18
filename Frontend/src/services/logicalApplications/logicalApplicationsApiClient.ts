@@ -2,17 +2,17 @@ import api from '../api'
 
 export class LogicalApplicationsApiClient {
   async getAll(projectKey: string): Promise<ILogicalApplicationsGetResponse> {
-    const logicalApplications = await api.get<ILogicalApplicationsGetResponse>(`/api/project/${projectKey}/logical`)
+    const logicalApplications = await api.get<ILogicalApplicationsGetResponse>(`/api/projects/${projectKey}/logical`)
     return logicalApplications
   }
 
   async post(projectKey: string, request: ILogicalApplicationsPostRequest): Promise<ILogicalApplicationsPostResponse> {
-    const createdLogicalApplication = await api.post<ILogicalApplicationsPostResponse>(`/api/project/${projectKey}/logical`, request)
+    const createdLogicalApplication = await api.post<ILogicalApplicationsPostResponse>(`/api/projects/${projectKey}/logical`, request)
     return createdLogicalApplication
   }
 
   async get(projectKey: string, id: string): Promise<ILogicalApplicationsPostResponse> {
-    const logicalApplication = await api.get<ILogicalApplicationsPostResponse>(`/api/project/${projectKey}/logical/${id}`)
+    const logicalApplication = await api.get<ILogicalApplicationsPostResponse>(`/api/projects/${projectKey}/logical/${id}`)
     return logicalApplication
   }
 }

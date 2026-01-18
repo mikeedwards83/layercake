@@ -1,6 +1,6 @@
-using LayerCake.Api.Controllers.Projects.Models;
+using LayerCake.Api.Areas.ProjectArea.Controllers.Projects.Models;
 
-namespace LayerCake.Api.Controllers.Project.Models;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.Project.Models;
 
 public class ProjectGetResponse
 {

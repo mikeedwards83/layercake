@@ -26,8 +26,9 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy.WithOrigins(
-                "http://localhost:5174",      // Vite dev server (HTTP)
-                "https://localhost:5174",     // Vite dev server (HTTPS)
+                "http://localhost:5001",      // Vite dev server (HTTP)
+                "http://localhost:5002",  
+                "https://localhost:5001",     // Vite dev server (HTTPS)
                 "http://localhost:3000",      // Alternative frontend port
                 "https://localhost:7131"     // Backend HTTPS (for same-origin scenarios)
               )

@@ -7,7 +7,9 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd logical application workflow and API endpoints\n\nImplemented a complete workflow for adding logical applications to projects, following the same pattern as the Project Add workflow.\n\nBackend Changes:\n- Created LogicalApplication domain model with properties: Id, TenantId, Name, ProjectId, Description, OwnerId, Created/Updated metadata\n- Added LogicalApplicationValidator with FluentValidation rules\n- Implemented LogicalApplicationsStore and ILogicalApplicationsStore\n- Created LogicalApplicationsRepository for Firebase/Firestore persistence\n- Added LogicalApplicationsController at /api/project/{key}/logical with POST, GET, and GET by ID endpoints\n- Created request/response models with validation\n- Added query builders: GetAllLogicalApplicationsQuery and GetLogicalApplicationsByProjectQuery\n- Registered all services in dependency injection containers\n\nFrontend Changes:\n- Created LogicalApplicationsApiClient service for API communication\n- Implemented 3-step workflow: Details → Review → Success\n- Added form components with validation using Yup\n- Created step components: step1 \\(form inputs\\), step2 \\(review\\), step3 \\(success\\)\n- Added route at /projects/:projectId/logical/add\n- Created ProjectLogical component with \"Add Logical\" button in the logical tab\n- Integrated workflow into project details page\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(ls:*)",
       "Bash(find:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

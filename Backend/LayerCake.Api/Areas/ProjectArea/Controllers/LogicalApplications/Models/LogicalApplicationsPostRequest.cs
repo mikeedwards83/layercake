@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace LayerCake.Api.Controllers.LogicalApplications.Models;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications.Models;
 
 public class LogicalApplicationsPostRequest
 {
@@ -28,11 +28,7 @@ public class LogicalApplicationsPostRequest
             RuleFor(x => x.OwnerId)
                 .NotEmpty()
                 .WithMessage("Owner ID is required");
-            
-            RuleFor(x => x.OwnerId)
-                .Empty()
-                .WithMessage("Owner ID should be empty");
-
+  
             RuleFor(x => x.ApplicationTypeId)
                 .Must((request, applicationTypeId) =>
                 {

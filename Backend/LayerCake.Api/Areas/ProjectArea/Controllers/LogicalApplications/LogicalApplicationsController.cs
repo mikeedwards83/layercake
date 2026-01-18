@@ -1,5 +1,5 @@
 using Frontend;
-using LayerCake.Api.Controllers.LogicalApplications.Models;
+using LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications.Models;
 using LayerCake.Kernel.Tenants.LogicalApplications;
 using LayerCake.Kernel.Tenants.LogicalApplications.Queries;
 using LayerCake.Kernel.Tenants.Projects;
@@ -8,7 +8,7 @@ using LayerCake.Kernel.Tenants.Settings.ApplicationTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LayerCake.Api.Controllers.LogicalApplications;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.LogicalApplications;
 
 [Area(ApiConstants.Areas.Projects.Name)]
 [ApiController]

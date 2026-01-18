@@ -1,12 +1,12 @@
 using Frontend;
-using LayerCake.Api.Controllers.Project.Models;
-using LayerCake.Api.Controllers.Projects.Models;
+using LayerCake.Api.Areas.ProjectArea.Controllers.Project.Models;
+using LayerCake.Api.Areas.ProjectArea.Controllers.Projects.Models;
 using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Projects.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LayerCake.Api.Controllers.Project;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.Project;
 
 [Area(ApiConstants.Areas.Projects.Name)]
 [ApiController]
@@ -16,6 +16,9 @@ public class ProjectController : ControllerBase
 {
     private readonly IProjectsStore _projectsStore;
     private readonly ILogger<ProjectController> _logger;
+
+
+    public const string Name = "Project";
 
     public ProjectController(
         IProjectsStore projectsStore,

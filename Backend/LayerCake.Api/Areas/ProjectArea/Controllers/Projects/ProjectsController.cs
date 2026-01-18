@@ -1,11 +1,12 @@
 using Frontend;
-using LayerCake.Api.Controllers.Projects.Models;
+using LayerCake.Api.Areas.ProjectArea.Controllers.Project;
+using LayerCake.Api.Areas.ProjectArea.Controllers.Projects.Models;
 using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Projects.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LayerCake.Api.Controllers.Projects;
+namespace LayerCake.Api.Areas.ProjectArea.Controllers.Projects;
 
 [Area(ApiConstants.Areas.Projects.Name)]
 [ApiController]
@@ -65,7 +66,7 @@ public class ProjectsController : ControllerBase
 
                 _logger.LogInformation("Successfully created project with ID: {ProjectId}", project.Id);
 
-                return CreatedAtAction(nameof(GetProject), new { id = project.Id }, response);
+                return CreatedAtAction(nameof(ProjectController.GetByKey), ProjectController.Name, new { id = project.Id }, response);
             }
             else
             {
@@ -104,39 +105,6 @@ public class ProjectsController : ControllerBase
         {
             _logger.LogError(ex, "Error retrieving projects");
             return StatusCode(500, new { message = "An error occurred while retrieving projects" });
-        }
-    }
-
-    /// <summary>
-    /// Gets a project by ID
-    /// </summary>
-    /// <param name="id">The project ID</param>
-    /// <returns>The project</returns>
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProjectsPostResponse>> GetProject(Guid id)
-    {
-        try
-        {
-            var project = await _projectsStore.Get(id);
-
-            if (project == null)
-            {
-                return NotFound(new { message = $"Project with ID {id} not found" });
-            }
-
-            var response = new ProjectsPostResponse
-            {
-                Project =  ProjectResponse.Map(project)
-            };
-
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving project with ID: {ProjectId}", id);
-            return StatusCode(500, new { message = "An error occurred while retrieving the project" });
         }
     }
 }
