@@ -29,9 +29,29 @@ export const AddLogicalApplicationWorkflow = ({ projectKey, onComplete, onCancel
 
   const [errors, setErrors] = useState<Partial<Record<keyof ILogicalApplicationsPostRequest, string>>>({})
   const [serverValidationErrors, setServerValidationErrors] = useState<Record<string, string[]>>({})
+  const [isKeyManuallyEdited, setIsKeyManuallyEdited] = useState(false)
 
   const updateLogicalApplicationData = (field: keyof ILogicalApplicationsPostRequest, value: string | undefined) => {
-    setLogicalApplicationData((prev) => ({ ...prev, [field]: value }))
+    setLogicalApplicationData((prev) => {
+      const newData = { ...prev, [field]: value }
+
+      // Auto-generate key from name if key hasn't been manually edited
+      if (field === 'name' && !isKeyManuallyEdited) {
+        const generatedKey = (value || '')
+          .toUpperCase()
+          .replace(/[^A-Z0-9]/g, '')
+          .substring(0, 10)
+        newData.key = generatedKey
+      }
+
+      return newData
+    })
+
+    // Mark key as manually edited if user changes it
+    if (field === 'key') {
+      setIsKeyManuallyEdited(true)
+    }
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }))
