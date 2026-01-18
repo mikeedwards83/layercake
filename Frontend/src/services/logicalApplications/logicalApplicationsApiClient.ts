@@ -19,6 +19,7 @@ export class LogicalApplicationsApiClient {
 
 export interface ILogicalApplicationsPostRequest {
   name: string
+  key: string
   description?: string
   ownerId?: string
   applicationTypeId?: string
@@ -37,6 +38,7 @@ export interface ILogicalApplicationResponse {
   id: string
   tenantId: string
   name: string
+  key: string
   projectId: string
   description?: string
   ownerId?: string

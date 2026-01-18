@@ -56,6 +56,7 @@ export const LogicalApplicationAddStep2 = ({ logicalApplicationData, users, vali
               <Row>
                 <Col md={6}>
                   <TextReview label="Name" value={logicalApplicationData.name} />
+                  <TextReview label="Key" value={logicalApplicationData.key} />
                   <TextReview label="Type" value={getApplicationTypeName()} />
                   <RichTextReview label="Description" value={logicalApplicationData.description} />
                 </Col>

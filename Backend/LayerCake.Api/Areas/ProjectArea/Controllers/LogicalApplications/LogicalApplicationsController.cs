@@ -79,6 +79,7 @@ public class LogicalApplicationsController : ControllerBase
                 {
                     l.Id = Guid.NewGuid();
                     l.Name = request.Name!;
+                    l.Key = request.Key!;
                     l.ProjectId = project.Id;
                     l.Description = request.Description!;
                     l.OwnerId = request.OwnerId!.Value;
