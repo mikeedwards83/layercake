@@ -4,6 +4,7 @@ import { AuthenticatedLayout } from '@/layouts/AuthenticatedLayout';
 
 const Signin = lazy(() => import('@/site/signin'));
 const AdminDashboard = lazy(() => import('@/site/admin/dashboard'));
+const AdminUsers = lazy(() => import('@/site/admin/users'));
 const Projects = lazy(() => import('@/site/projects'));
 const ProjectsAdd = lazy(() => import('@/site/projects/add'));
 const Project = lazy(() => import('@/site/projects/[key]'));
@@ -28,6 +29,7 @@ const authRoutes: RouteObject[] = [
         element: <Navigate to="/admin/dashboard" replace />,
       },
       {path:"/admin/dashboard", element: <AdminDashboard />},
+      {path:"/admin/users", element: <AdminUsers />},
       {path:"/projects", element: <Projects />},
       {path:"/projects/add", element: <ProjectsAdd />},
       {path:"/projects/:projectId/logical/add", element: <LogicalApplicationAdd />},
