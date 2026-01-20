@@ -8,6 +8,13 @@ public class GetLogicalApplicationsByProjectFirebaseQueryBuilder : TenantFiresto
 {
     protected override Query InternalBuildQuery(Query query, GetLogicalApplicationsByProjectQuery parameters)
     {
-        return query.WhereEqualTo("projectId", parameters.ProjectId.ToString());
+        query = query.WhereEqualTo("projectId", parameters.ProjectId.ToString());
+
+        if (!string.IsNullOrEmpty(parameters.Key))
+        {
+            query = query.WhereEqualTo("key", parameters.Key);
+        }
+
+        return query;
     }
 }

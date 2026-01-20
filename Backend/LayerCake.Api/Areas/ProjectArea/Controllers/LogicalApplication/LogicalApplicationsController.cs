@@ -57,9 +57,9 @@ public class LogicalApplicationController : ControllerBase
                 return NotFound(new { message = $"Project with key {projectKey} not found" });
             }
 
-            // Get all logical applications for the project and find by key
-            var logicalApplications = await _logicalApplicationsStore.Find(new GetLogicalApplicationsByProjectQuery(project.Id, 0, 100));
-            var logicalApplication = logicalApplications.FirstOrDefault(la => la.Key == logicalKey);
+            // Get the logical application by project ID and key
+            var logicalApplications = await _logicalApplicationsStore.Find(new GetLogicalApplicationsByProjectQuery(project.Id, 0, 1, logicalKey));
+            var logicalApplication = logicalApplications.FirstOrDefault();
 
             if (logicalApplication == null)
             {
