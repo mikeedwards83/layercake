@@ -24,9 +24,9 @@ public class ProjectValidator : TenantRecordValidator<Project>
             .WithMessage(ProjectValidationMessages.KeyMaxLength)
             .Matches(@"^[A-Z0-9]+$")
             .WithMessage(ProjectValidationMessages.KeyInvalidFormat)
-            .WhenAsync(async (x, cancellationToken) =>
-                !(await IsUniqueKey(serviceProvider.GetRequiredService<IProjectsStore>(), x.Key!)))
-            .WithMessage("Project key must be unique");
+            .MustAsync(async (project, key, cancellationToken) =>
+                await IsUniqueKey(serviceProvider.GetRequiredService<IProjectsStore>(), project))
+            .WithMessage("A project with this key already exists");
 
         RuleFor(p => p.Description)
             .NotEmpty()
@@ -49,9 +49,9 @@ public class ProjectValidator : TenantRecordValidator<Project>
             .WithMessage(ProjectValidationMessages.OwnerIdRequired);
     }
 
-    public static async Task<bool> IsUniqueKey(IProjectsStore projectsService, Project project)
+    public static async Task<bool> IsUniqueKey(IProjectsStore projectsStore, Project project)
     {
-        var existing = await GetExisting(projectsService, project.Key);
+        var existing = await GetExistingByKey(projectsStore, project.Key);
 
         if (existing == null)
         {
@@ -61,24 +61,14 @@ public class ProjectValidator : TenantRecordValidator<Project>
         return existing.Id == project.Id;
     }
 
-    public static async Task<bool> IsUniqueKey(IProjectsStore projectsService, string? key)
-    {
-        if (string.IsNullOrEmpty(key))
-        {
-            return false;
-        }
-        var existing =  await GetExisting(projectsService, key);
-        return existing == null;
-    }
-
-    private static async Task<Project?> GetExisting(IProjectsStore projectsService, string key)
+    private static async Task<Project?> GetExistingByKey(IProjectsStore projectsStore, string key)
     {
         if (string.IsNullOrEmpty(key))
         {
             return null;
         }
 
-        var results = await projectsService.Find(new ProjectByKeyQuery(key, 0, 1));
+        var results = await projectsStore.Find(new ProjectByKeyQuery(key, 0, 1));
         return results.FirstOrDefault();
     }
 }
