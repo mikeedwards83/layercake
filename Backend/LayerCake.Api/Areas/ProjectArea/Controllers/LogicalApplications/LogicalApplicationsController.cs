@@ -93,14 +93,30 @@ public class LogicalApplicationsController : ControllerBase
                     LogicalApplication = LogicalApplicationResponse.Map(logicalApplication)
                 };
 
-                _logger.LogInformation("Successfully created logical application with ID: {LogicalApplicationId}", logicalApplication.Id);
+                _logger.LogInformation("Successfully created logical application with ID: {LogicalApplicationId}",
+                    logicalApplication.Id);
 
-                return CreatedAtAction(nameof(LogicalApplicationController.GetLogicalApplicationByKey), LogicalApplicationController.Name, new { area = ApiConstants.Areas.Projects.Name, projectKey = projectkey, logicalKey = logicalApplication.Key }, response);
+                return CreatedAtAction(nameof(LogicalApplicationController.GetLogicalApplicationByKey),
+                    LogicalApplicationController.Name,
+                    new
+                    {
+                        area = ApiConstants.Areas.Projects.Name, projectKey = projectkey,
+                        logicalKey = logicalApplication.Key
+                    }, response);
             }
             else
             {
                 return BadRequest(ModelState);
             }
+        }
+        catch (FluentValidation.ValidationException ex)
+        {
+            foreach (var error in ex.Errors)
+            {
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);   
+            }
+            
+            return BadRequest(ModelState);
         }
         catch (Exception ex)
         {

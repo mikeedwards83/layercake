@@ -33,23 +33,23 @@ public class ProjectController : ControllerBase
     /// </summary>
     /// <param name="key">The project key</param>
     /// <returns>The project</returns>
-    [HttpGet("{key}")]
+    [HttpGet("{projectKey}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ProjectGetResponse>> GetByKey(string key)
+    public async Task<ActionResult<ProjectGetResponse>> GetByKey(string projectKey)
     {
         try
         {
-            _logger.LogInformation("Retrieving project with key: {ProjectKey}", key);
+            _logger.LogInformation("Retrieving project with key: {ProjectKey}", projectKey);
 
-            var projects = await _projectsStore.Find(new ProjectByKeyQuery(key, 0, 1));
+            var projects = await _projectsStore.Find(new ProjectByKeyQuery(projectKey, 0, 1));
             var project = projects.FirstOrDefault();
 
             if (project == null)
             {
-                _logger.LogWarning("Project with key {ProjectKey} not found", key);
-                return NotFound(new { message = $"Project with key '{key}' not found" });
+                _logger.LogWarning("Project with key {ProjectKey} not found", projectKey);
+                return NotFound(new { message = $"Project with key '{projectKey}' not found" });
             }
 
             var response = new ProjectGetResponse
@@ -61,7 +61,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving project with key: {ProjectKey}", key);
+            _logger.LogError(ex, "Error retrieving project with key: {ProjectKey}", projectKey);
             return StatusCode(500, new { message = "An error occurred while retrieving the project" });
         }
     }

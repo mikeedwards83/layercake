@@ -33,7 +33,7 @@ The Project entity is a core domain object in the LayerCake system that represen
 | `Contents` | string | Yes | The contents of the wiki page to display. (max 20000 characters) |
 | `ReferenceId` | Guid | Yes | The ID of the component/container/element in the system that "owns" this wiki page |
 | `ParentId` | Guid | Yes | The ID of the parent wiki page. If the Guid is an empty Guid then the page is the root page |
-| `Updated | DateTime | Yes | The date and time the page was last updated |
+| `Updated` | DateTime | Yes | The date and time the page was last updated |
 | `UpdatedBy` | Guid | Yes | The ID of the user who last updated the page. |
 | `Created` | DateTime | Yes | THe date and time the page was created. |
 | `CreatedBy` | Guid | Yes | The ID of the user who created the page. |

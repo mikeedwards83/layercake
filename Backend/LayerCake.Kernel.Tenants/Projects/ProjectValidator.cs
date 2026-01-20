@@ -61,6 +61,12 @@ public class ProjectValidator : TenantRecordValidator<Project>
         return existing.Id == project.Id;
     }
 
+    public static async Task<bool> IsUniqueKey(IProjectsStore projectsStore, string projectKey)
+    {
+        var existing = await GetExistingByKey(projectsStore, projectKey);
+        return existing == null;
+    }
+
     private static async Task<Project?> GetExistingByKey(IProjectsStore projectsStore, string key)
     {
         if (string.IsNullOrEmpty(key))

@@ -66,7 +66,7 @@ public class ProjectsController : ControllerBase
 
                 _logger.LogInformation("Successfully created project with ID: {ProjectId}", project.Id);
 
-                return CreatedAtAction(nameof(ProjectController.GetByKey), ProjectController.Name, new { id = project.Id }, response);
+                return CreatedAtAction(nameof(ProjectController.GetByKey), ProjectController.Name, new { area = ApiConstants.Areas.Projects.Name, projectKey = project.Key }, response);
             }
             else
             {

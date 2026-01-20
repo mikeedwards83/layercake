@@ -50,9 +50,16 @@ class ApiClient {
       // For validation errors (400), create an error with the validation details
       if (response.status === 400) {
         const error = new Error("Validation failed") as any;
+
+        if(errorData.errors){
+          error.validationErrors = errorData.errors;
+        }
+        else{
+          error.validationErrors = errorData;
+        }
+        console.log(errorData,"here");
         error.status = 400;
         error.request = errorData;
-        error.validationErrors = errorData.errors;
         throw error;
       }
 
