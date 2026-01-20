@@ -3,6 +3,7 @@ using LayerCake.Kernel.Tenants.Projects;
 using LayerCake.Kernel.Tenants.Wikis;
 using LayerCake.Kernel.Tenants.LogicalApplications;
 using LayerCake.Kernel.Tenants.Settings.ApplicationTypes;
+using LayerCake.Kernel.Tenants.Users;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IWikiPageStore, WikiPageStore>();
         services.AddTransient<ILogicalApplicationsStore, LogicalApplicationsStore>();
         services.AddTransient<IApplicationTypesStore, ApplicationTypesStore>();
+        services.AddTransient<IUsersStore, UsersStore>();
         services.AddSingleton<ITenantContext, FakeTenantContext>();
 
         AddValidators(services);
