@@ -59,6 +59,14 @@ The User entity represents a user in the system. Users are stored in both Fireba
 
 **Location:** `Backend/LayerCake.Kernel.Tenants/Users/User.cs`
 
+### Password Requirements
+
+When creating a new user account, the password must meet the following requirements:
+- **Minimum Length**: 8 characters
+- **Lowercase Letter**: At least 1 lowercase letter (a-z)
+- **Uppercase Letter**: At least 1 uppercase letter (A-Z)
+- **Special Character**: At least 1 special character (!@#$%^&*(),.?":{}|<>)
+
 ### Properties
 
 | Property | Type | Required | Description |

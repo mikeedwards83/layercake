@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using LayerCake.Kernel.Firebase.Authentication;
 using LayerCake.Kernel.Firebase;
+using LayerCake.Kernel.Firebase.Authentication;
 using LayerCake.Kernel.Firebase.Stores;
 using LayerCake.Kernel.Tenants;
 using FluentValidation;
@@ -64,6 +64,7 @@ app.UseHttpsRedirection();
 app.UseCors();
 
 app.UseAuthentication();
+app.UseAnonymousUser();
 app.UseAuthorization();
 
 app.MapControllers();

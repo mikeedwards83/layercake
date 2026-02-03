@@ -13,6 +13,11 @@ public static class ApiConstants
         {
             public const string Name = "Admin";
         }
+
+        public static class Authentication
+        {
+            public const string Name = "Authentication";
+        }
     }
 
 }

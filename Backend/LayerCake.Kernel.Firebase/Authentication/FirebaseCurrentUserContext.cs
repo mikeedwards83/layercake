@@ -13,4 +13,11 @@ public class FirebaseCurrentUserContext : ICurrentUserContext
         User = new AuthenticatedUser(userId, principal);
         IsAuthenticated = true;
     }
+
+    public void Authenticate(Guid userId)
+    {
+        var identity = new ClaimsIdentity("Authenticated");
+        var principal = new ClaimsPrincipal(identity);
+        SetUser(principal, userId);
+    }
 }
