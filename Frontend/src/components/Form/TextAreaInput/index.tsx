@@ -26,7 +26,7 @@ export const TextAreaInput = ({ error, label, placeholder, required = false, val
 
   return (
     <Form.Group>
-      <Form.Label for={id}>
+      <Form.Label htmlFor={id}>
         {label} {required && <span className="text-danger">*</span>}
       </Form.Label>
       <Form.Control

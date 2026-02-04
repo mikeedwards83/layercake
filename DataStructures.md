@@ -53,3 +53,57 @@ The Project entity is a core domain object in the LayerCake system that represen
 | `Created` | DateTime | Yes | THe date and time the page was created. |
 | `CreatedBy` | Guid | Yes | The ID of the user who created the page. |
 
+## Container Application
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `Id` | `Guid` | Yes | Unique identifier for the project. |
+| `TenantId` | `Guid` | Yes | Identifier for the tenant that owns this project. |
+| `Name` | string | Yes | The name of the logical application. (max 100 characters) |
+| `ProjectId` | Guid | Yes | The ID of the project that this logical application belongs to. |
+| `Description` | `string` | No | Detailed description of the project (max 500 characters, supports markdown) |
+| `Type` | `int` | Yes | An enum that defines the type of container. See Container Type list. |
+| `Updated` | DateTime | Yes | The date and time the page was last updated |
+| `UpdatedBy` | Guid | Yes | The ID of the user who last updated the page. |
+| `Created` | DateTime | Yes | THe date and time the page was created. |
+| `CreatedBy` | Guid | Yes | The ID of the user who created the page. |
+| `Icon` | `string` | No | Icon name from the icon library (max 100 characters) |
+
+
+## Container to Logical Application Link
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `Id` | `Guid` | Yes | Unique identifier for the project. |
+| `TenantId` | `Guid` | Yes | Identifier for the tenant that owns this project. |
+| `LogicalApplicationId` | `Guid` | Yes | Identifier for the logical application that contains the Container. |
+| `Containr` | `Guid` | Yes | Identifier for the container linked to the logical application. |
+
+
+
+# Lists
+
+## Container Type
+| Name | Description |
+|---|----|
+| Relational DB | A relational database system (SQL Server, PostgreSQL, MySQL, Oracle) that stores structured data in tables with relationships |
+| Document DB | A NoSQL document database (MongoDB, Firestore, Cosmos DB) that stores data as JSON-like documents |
+| Key-Value Store | A simple NoSQL database (Redis, DynamoDB) that stores data as key-value pairs for fast lookups |
+| Web App | A web application that runs in a browser, typically built with frameworks like React, Angular, or Vue |
+| Mobile App | A native or hybrid mobile application for iOS, Android, or cross-platform frameworks |
+| Desktop App | A desktop application for Windows, macOS, or Linux platforms |
+| Cache | An in-memory caching layer (Redis, Memcached) for improving performance and reducing database load |
+| Message Queue | A message broker or queue system (RabbitMQ, Kafka, Azure Service Bus) for asynchronous communication |
+| Internal API | A REST or GraphQL API used internally within the organization, not exposed to external consumers |
+| External API | A public or partner-facing API that provides services to external consumers |
+| SaaS | A third-party Software-as-a-Service platform integrated into the system (Stripe, Auth0, SendGrid) |
+| File Storage | A file or blob storage service (AWS S3, Azure Blob Storage, Google Cloud Storage) for storing unstructured data |
+| Serverless Function | A function-as-a-service component (AWS Lambda, Azure Functions, Google Cloud Functions) that runs code on demand |
+| Container Runtime | A containerized application running on Docker, Kubernetes, or similar orchestration platforms |
+| Event Stream | A streaming data platform (Kafka, EventHub, Kinesis) for real-time event processing |
+| Search Engine | A dedicated search service (Elasticsearch, Azure Cognitive Search, Algolia) for full-text search capabilities |
+| Analytics DB | A data warehouse or analytics database (Snowflake, BigQuery, Redshift) optimized for analytical queries |
+| CDN | A Content Delivery Network that caches and serves static assets globally |
+| Gateway | An API gateway or reverse proxy (Kong, Nginx, Azure API Management) that routes and manages API traffic |
+| Authentication Service | A dedicated authentication and authorization service (Firebase Auth, Auth0, Keycloak) |
+

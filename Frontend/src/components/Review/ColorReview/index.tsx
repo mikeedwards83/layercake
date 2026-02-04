@@ -11,7 +11,7 @@ export const ColorReview = ({ label, value }: ColorReviewProps) => {
 
   return (
     <div className="mb-3">
-      <Form.Label for={id} className="text-muted">
+      <Form.Label htmlFor={id} className="text-muted">
         {label}
       </Form.Label>
       <div className="d-flex align-items-center gap-2">

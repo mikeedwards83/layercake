@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev1": "vite --port 5001",
-    "dev2": "vite --port 5002",
+    "dev1": "vite --port 5001 --mode dev1",
+    "dev2": "vite --port 5002 --mode dev2",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

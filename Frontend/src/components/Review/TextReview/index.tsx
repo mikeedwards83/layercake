@@ -10,7 +10,7 @@ export const TextReview = ({ label, value }: TextReviewProps) => {
   const id = generateId(label)
   return (
     <div className="mb-3">
-      <Form.Label for={id} className='text-muted'>{label}</Form.Label>
+      <Form.Label htmlFor={id} className='text-muted'>{label}</Form.Label>
       <div id={id}>{value}</div>
     </div>
   )

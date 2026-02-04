@@ -30,7 +30,6 @@ export const UserSelectorInput = ({ value, onChange, error, users }: TeamSelecto
 
   return (
     <div>
-      <Form>
         <Row className="g-3">
           <Col md={12}>
             <Form.Group>
@@ -64,7 +63,6 @@ export const UserSelectorInput = ({ value, onChange, error, users }: TeamSelecto
             </Col>
           )}
         </Row>
-      </Form>
     </div>
   );
 };

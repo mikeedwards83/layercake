@@ -25,7 +25,7 @@ export const TextInput = ({ error, label, placeholder, required = false, value, 
 
   return (
     <Form.Group>
-      <Form.Label for={id}>
+      <Form.Label htmlFor={id}>
         {label} {required && <span className="text-danger">*</span>}
       </Form.Label>
       <Form.Control

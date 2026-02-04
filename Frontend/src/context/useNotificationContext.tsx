@@ -78,10 +78,10 @@ export function NotificationProvider({ children }: ChildrenType) {
 
   return (
     <NotificationContext.Provider value={{ showNotification }}>
+      {children}
       <ToastContainer className="m-3 position-fixed" position="top-end">
        {config.map(notification =><Toastr {...notification} />)}
       </ToastContainer>
-      {children}
     </NotificationContext.Provider>
   )
 }
