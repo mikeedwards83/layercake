@@ -1,3 +1,4 @@
+using FirebaseAdmin.Auth;
 using Frontend;
 using LayerCake.Api.Areas.AdminArea.Controllers.Users.Models;
 using LayerCake.Kernel.Tenants.Users;
@@ -112,5 +113,125 @@ public class UsersController : ControllerBase
             _logger.LogError(ex, "Error retrieving user with ID: {UserId}", id);
             return StatusCode(500, new { message = "An error occurred while retrieving the user" });
         }
+    }
+
+    /// <summary>
+    /// Creates a new user (admin-initiated)
+    /// </summary>
+    /// <param name="request">User creation details</param>
+    /// <returns>The created user</returns>
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<UserResponse>> CreateUser([FromBody] UserCreateRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("Admin creating new user with email: {Email}", request.Email);
+
+            // Generate a temporary password for the new user
+            var temporaryPassword = GenerateTemporaryPassword();
+
+            // Step 1: Create user in Firebase Authentication
+            var userArgs = new UserRecordArgs
+            {
+                Email = request.Email,
+                Password = temporaryPassword,
+                DisplayName = $"{request.FirstName} {request.LastName}",
+                EmailVerified = false,
+                Disabled = false
+            };
+
+            UserRecord firebaseUser;
+            try
+            {
+                firebaseUser = await FirebaseAuth.DefaultInstance.CreateUserAsync(userArgs);
+                _logger.LogInformation("Created Firebase Auth user with UID: {Uid}", firebaseUser.Uid);
+            }
+            catch (FirebaseAuthException ex)
+            {
+                var errorMessage = GetFirebaseErrorMessage(ex);
+                _logger.LogError(ex, "Failed to create Firebase Auth user: {ErrorMessage}", errorMessage);
+                return BadRequest(new { message = errorMessage });
+            }
+
+            try
+            {
+                // Step 2: Create user in database
+                var user = await _usersStore.Add(u =>
+                {
+                    u.Email = request.Email;
+                    u.FirstName = request.FirstName;
+                    u.LastName = request.LastName;
+                    u.DisplayName = $"{request.FirstName} {request.LastName}";
+                    u.Initials = GetInitials(request.FirstName, request.LastName);
+                    u.TenantIds = Array.Empty<Guid>();
+                    return Task.CompletedTask;
+                });
+
+                _logger.LogInformation("Created database user with ID: {UserId}", user.Id);
+
+                // Step 3: Send password reset email so user can set their own password
+                try
+                {
+                    var resetLink = await FirebaseAuth.DefaultInstance.GeneratePasswordResetLinkAsync(request.Email);
+                    _logger.LogInformation("Generated password reset link for user: {Email}", request.Email);
+                }
+                catch (Exception emailEx)
+                {
+                    _logger.LogWarning(emailEx, "Failed to generate password reset link, user can use 'forgot password' flow");
+                }
+
+                var response = UserResponse.Map(user);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, response);
+            }
+            catch (Exception dbEx)
+            {
+                // Rollback: Delete the Firebase user if database creation fails
+                _logger.LogError(dbEx, "Failed to create database user, rolling back Firebase user");
+                try
+                {
+                    await FirebaseAuth.DefaultInstance.DeleteUserAsync(firebaseUser.Uid);
+                    _logger.LogInformation("Rolled back Firebase user creation");
+                }
+                catch (Exception rollbackEx)
+                {
+                    _logger.LogError(rollbackEx, "Failed to rollback Firebase user creation");
+                }
+
+                return StatusCode(500, new { message = "Failed to create user account. Please try again." });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error during user creation");
+            return StatusCode(500, new { message = "An unexpected error occurred during user creation" });
+        }
+    }
+
+    private static string GenerateTemporaryPassword()
+    {
+        // Generate a secure temporary password
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, 16)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+    private static string GetInitials(string firstName, string lastName)
+    {
+        var firstInitial = string.IsNullOrWhiteSpace(firstName) ? "" : firstName.Substring(0, 1).ToUpper();
+        var lastInitial = string.IsNullOrWhiteSpace(lastName) ? "" : lastName.Substring(0, 1).ToUpper();
+        return $"{firstInitial}{lastInitial}";
+    }
+
+    private static string GetFirebaseErrorMessage(FirebaseAuthException ex)
+    {
+        return ex.AuthErrorCode switch
+        {
+            AuthErrorCode.EmailAlreadyExists => "An account with this email already exists",
+            _ => "Failed to create account. Please try again"
+        };
     }
 }

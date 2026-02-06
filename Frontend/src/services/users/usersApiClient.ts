@@ -27,6 +27,17 @@ export class UsersApiClient {
     const user = await api.get<IUserResponse>(`/api/admin/users/${id}`)
     return user
   }
+
+  async create(data: IUserCreateRequest): Promise<IUserResponse> {
+    const user = await api.post<IUserResponse>('/api/admin/users', data)
+    return user
+  }
+}
+
+export interface IUserCreateRequest {
+  email: string
+  firstName: string
+  lastName: string
 }
 
 export interface IUsersGetResponse {
