@@ -11,6 +11,7 @@ public class UserResponse
     public string LastName { get; set; } = string.Empty;
     public string Initials { get; set; } = string.Empty;
     public Guid[] TenantIds { get; set; } = Array.Empty<Guid>();
+    public UserStatus Status { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
@@ -25,6 +26,7 @@ public class UserResponse
             LastName = user.LastName,
             Initials = user.Initials,
             TenantIds = user.TenantIds,
+            Status = user.Status,
             CreatedAt = new DateTimeOffset(user.Created),
             UpdatedAt = new DateTimeOffset(user.Updated)
         };

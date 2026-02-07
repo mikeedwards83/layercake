@@ -64,7 +64,7 @@ public class UsersController : ControllerBase
 
             try
             {
-                // Step 2: Create user in database
+                // Step 2: Create user in database with EmailPending status
                 var user = await _usersStore.Add(u =>
                 {
                     u.Email = request.Email;
@@ -73,6 +73,7 @@ public class UsersController : ControllerBase
                     u.DisplayName = $"{request.FirstName} {request.LastName}";
                     u.Initials = GetInitials(request.FirstName, request.LastName);
                     u.TenantIds = Array.Empty<Guid>(); // Will be assigned when user joins a tenant
+                    u.Status = UserStatus.EmailPending;
                     return Task.CompletedTask;
                 });
 

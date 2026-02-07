@@ -43,5 +43,10 @@ public class User : ITenantRecord
     /// </summary>
     public string Email { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Gets or sets the user's account status
+    /// </summary>
+    public UserStatus Status { get; set; } = UserStatus.InvitePending;
+
     public Guid TenantId { get; set; }
 }

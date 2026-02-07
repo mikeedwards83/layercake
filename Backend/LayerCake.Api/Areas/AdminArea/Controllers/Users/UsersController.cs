@@ -158,7 +158,7 @@ public class UsersController : ControllerBase
 
             try
             {
-                // Step 2: Create user in database
+                // Step 2: Create user in database with InvitePending status
                 var user = await _usersStore.Add(u =>
                 {
                     u.Email = request.Email;
@@ -167,6 +167,7 @@ public class UsersController : ControllerBase
                     u.DisplayName = $"{request.FirstName} {request.LastName}";
                     u.Initials = GetInitials(request.FirstName, request.LastName);
                     u.TenantIds = Array.Empty<Guid>();
+                    u.Status = UserStatus.InvitePending;
                     return Task.CompletedTask;
                 });
 

@@ -40,6 +40,13 @@ export interface IUserCreateRequest {
   lastName: string
 }
 
+export enum UserStatus {
+  InvitePending = 0,
+  EmailPending = 1,
+  Completed = 2,
+  Disabled = 3
+}
+
 export interface IUsersGetResponse {
   users: IUserResponse[]
   totalCount: number
@@ -56,6 +63,7 @@ export interface IUserResponse {
   lastName: string
   initials: string
   tenantIds: string[]
+  status: UserStatus
   createdAt: string
   updatedAt: string
 }

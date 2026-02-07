@@ -20,6 +20,7 @@ public class UsersRepository(FirestoreDb firestoreDb, IQueryFactory queryFactory
             { "firstName", record.FirstName },
             { "lastName", record.LastName },
             { "email", record.Email },
+            { "status", (int)record.Status },
             { "tenantId", record.TenantId.ToString() },
             { "createdAt", FieldValue.ServerTimestamp },
             { "updatedAt", FieldValue.ServerTimestamp }
@@ -36,6 +37,7 @@ public class UsersRepository(FirestoreDb firestoreDb, IQueryFactory queryFactory
             { "firstName", record.FirstName },
             { "lastName", record.LastName },
             { "email", record.Email },
+            { "status", (int)record.Status },
             { "updatedAt", FieldValue.ServerTimestamp }
         };
     }
@@ -49,6 +51,11 @@ public class UsersRepository(FirestoreDb firestoreDb, IQueryFactory queryFactory
             .Select(t => Guid.Parse(t.ToString() ?? Guid.Empty.ToString()))
             .ToArray() ?? Array.Empty<Guid>();
 
+        var statusValue = data.GetValueOrDefault("status");
+        var status = statusValue != null
+            ? (UserStatus)Convert.ToInt32(statusValue)
+            : UserStatus.InvitePending;
+
         return new User
         {
             Id = Guid.Parse(document.Id),
@@ -58,6 +65,7 @@ public class UsersRepository(FirestoreDb firestoreDb, IQueryFactory queryFactory
             FirstName = data.GetValueOrDefault("firstName")?.ToString() ?? string.Empty,
             LastName = data.GetValueOrDefault("lastName")?.ToString() ?? string.Empty,
             Email = data.GetValueOrDefault("email")?.ToString() ?? string.Empty,
+            Status = status,
             TenantId = Guid.Parse(data.GetValueOrDefault("tenantId")?.ToString() ?? Guid.Empty.ToString())
         };
     }
