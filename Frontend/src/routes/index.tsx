@@ -4,6 +4,7 @@ import { AuthenticatedLayout } from '@/layouts/AuthenticatedLayout';
 
 const Signin = lazy(() => import('@/site/signin'));
 const Signup = lazy(() => import('@/site/signup'));
+const Invite = lazy(() => import('@/site/invite'));
 const AdminDashboard = lazy(() => import('@/site/admin/dashboard'));
 const AdminUsers = lazy(() => import('@/site/admin/users'));
 const AdminUsersAdd = lazy(() => import('@/site/admin/users/add'));
@@ -17,7 +18,8 @@ const anonRoutes: RouteObject[] =[
   {
     children:[
       {path:"/signin", element: <Signin />},
-      {path:"/signup", element: <Signup />}
+      {path:"/signup", element: <Signup />},
+      {path:"/invite", element: <Invite />}
     ]
   }
 ]

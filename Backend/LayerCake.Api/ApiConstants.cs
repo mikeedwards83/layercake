@@ -18,6 +18,11 @@ public static class ApiConstants
         {
             public const string Name = "Authentication";
         }
+
+        public static class Public
+        {
+            public const string Name = "Public";
+        }
     }
 
 }
