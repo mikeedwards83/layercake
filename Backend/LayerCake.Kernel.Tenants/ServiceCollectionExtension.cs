@@ -4,6 +4,7 @@ using LayerCake.Kernel.Tenants.Wikis;
 using LayerCake.Kernel.Tenants.LogicalApplications;
 using LayerCake.Kernel.Tenants.Settings.ApplicationTypes;
 using LayerCake.Kernel.Tenants.Users;
+using LayerCake.Kernel.Tenants.Invites;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -18,6 +19,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<ILogicalApplicationsStore, LogicalApplicationsStore>();
         services.AddTransient<IApplicationTypesStore, ApplicationTypesStore>();
         services.AddTransient<IUsersStore, UsersStore>();
+        services.AddTransient<IInvitesStore, InvitesStore>();
         services.AddSingleton<ITenantContext, FakeTenantContext>();
 
         AddValidators(services);

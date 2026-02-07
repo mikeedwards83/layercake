@@ -4,6 +4,9 @@ using LayerCake.Kernel.Firebase;
 using LayerCake.Kernel.Firebase.Authentication;
 using LayerCake.Kernel.Firebase.Stores;
 using LayerCake.Kernel.Tenants;
+using LayerCake.Kernel.Email;
+using LayerCake.Kernel.Queues.Emails;
+using LayerCake.Kernel.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
@@ -48,6 +51,17 @@ builder.Services.AddAuthorization();
 builder.Services.AddFirebase(builder.Environment.IsDevelopment());
 builder.Services.AddTenantStores();
 builder.Services.AddFirestoreStores();
+
+// Configure settings
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection(SmtpSettings.SectionName));
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(AppSettings.SectionName));
+
+// Configure email services
+builder.Services.AddSingleton<EmailQueueService>();
+builder.Services.AddSingleton<IEmailQueueService>(sp => sp.GetRequiredService<EmailQueueService>());
+builder.Services.AddTransient<IEmailService, SmtpEmailService>();
+builder.Services.AddTransient<InviteEmailBuilder>();
+builder.Services.AddHostedService<EmailBackgroundService>();
 
 
 var app = builder.Build();

@@ -1,6 +1,10 @@
 using FirebaseAdmin.Auth;
 using Frontend;
 using LayerCake.Api.Areas.AdminArea.Controllers.Users.Models;
+using LayerCake.Kernel.Authentication;
+using LayerCake.Kernel.Email;
+using LayerCake.Kernel.Queues.Emails;
+using LayerCake.Kernel.Tenants.Invites;
 using LayerCake.Kernel.Tenants.Users;
 using LayerCake.Kernel.Tenants.Users.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +20,25 @@ public class UsersController : ControllerBase
 {
     private readonly ILogger<UsersController> _logger;
     private readonly IUsersStore _usersStore;
+    private readonly IInvitesStore _invitesStore;
+    private readonly IEmailQueueService _emailQueueService;
+    private readonly InviteEmailBuilder _inviteEmailBuilder;
+    private readonly ICurrentUserContext _currentUserContext;
 
-    public UsersController(ILogger<UsersController> logger, IUsersStore usersStore)
+    public UsersController(
+        ILogger<UsersController> logger,
+        IUsersStore usersStore,
+        IInvitesStore invitesStore,
+        IEmailQueueService emailQueueService,
+        InviteEmailBuilder inviteEmailBuilder,
+        ICurrentUserContext currentUserContext)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _usersStore = usersStore ?? throw new ArgumentNullException(nameof(usersStore));
+        _invitesStore = invitesStore ?? throw new ArgumentNullException(nameof(invitesStore));
+        _emailQueueService = emailQueueService ?? throw new ArgumentNullException(nameof(emailQueueService));
+        _inviteEmailBuilder = inviteEmailBuilder ?? throw new ArgumentNullException(nameof(inviteEmailBuilder));
+        _currentUserContext = currentUserContext ?? throw new ArgumentNullException(nameof(currentUserContext));
     }
 
     /// <summary>
@@ -173,16 +191,30 @@ public class UsersController : ControllerBase
 
                 _logger.LogInformation("Created database user with ID: {UserId}", user.Id);
 
-                // Step 3: Send password reset email so user can set their own password
-                try
+                // Step 3: Get the current user's name for the invite
+                var currentUser = await _usersStore.Get(_currentUserContext.UserId);
+                var invitedByName = currentUser?.DisplayName ?? "An administrator";
+
+                // Step 4: Create an invite record
+                var inviteToken = GenerateInviteToken();
+                var invite = await _invitesStore.Add(i =>
                 {
-                    var resetLink = await FirebaseAuth.DefaultInstance.GeneratePasswordResetLinkAsync(request.Email);
-                    _logger.LogInformation("Generated password reset link for user: {Email}", request.Email);
-                }
-                catch (Exception emailEx)
-                {
-                    _logger.LogWarning(emailEx, "Failed to generate password reset link, user can use 'forgot password' flow");
-                }
+                    i.UserId = user.Id;
+                    i.Email = request.Email;
+                    i.Token = inviteToken;
+                    i.ExpiresAt = DateTime.UtcNow.AddDays(14); // Valid for 2 weeks
+                    i.IsAccepted = false;
+                    i.InvitedByName = invitedByName;
+                    return Task.CompletedTask;
+                });
+
+                _logger.LogInformation("Created invite with ID: {InviteId} for user: {UserId}", invite.Id, user.Id);
+
+                // Step 5: Queue the invite email to be sent in the background
+                var emailMessage = _inviteEmailBuilder.BuildInviteEmail(request.Email, inviteToken, invitedByName);
+                await _emailQueueService.QueueEmailAsync(emailMessage);
+
+                _logger.LogInformation("Queued invite email for user: {Email}", request.Email);
 
                 var response = UserResponse.Map(user);
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id }, response);
@@ -218,6 +250,15 @@ public class UsersController : ControllerBase
         var random = new Random();
         return new string(Enumerable.Repeat(chars, 16)
             .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+    private static string GenerateInviteToken()
+    {
+        // Generate a secure random token for the invite link
+        return Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+            .Replace("/", "_")
+            .Replace("+", "-")
+            .TrimEnd('=');
     }
 
     private static string GetInitials(string firstName, string lastName)
