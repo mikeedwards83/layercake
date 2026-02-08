@@ -83,3 +83,41 @@ When creating a new user account, the password must meet the following requireme
 | `UpdatedBy` | `Guid` | Yes | The ID of the user who last updated this user record. |
 | `Created` | `DateTime` | Yes | The date and time the user was created. |
 | `CreatedBy` | `Guid` | Yes | The ID of the user who created this user record. |
+| `Status` | `UserStatus` | Yes | The current status of the user (InvitePending=0, EmailPending=1, Completed=2, Disabled=3). |
+
+## Invite
+
+The Invite entity represents a user invitation in the system. Invites are created when an administrator invites a new user to the system and are used to track the invitation lifecycle.
+
+**Location:** `Backend/LayerCake.Kernel.Tenants/Invites/Invite.cs`
+
+### Invitation Lifecycle
+
+1. **Created**: Admin creates an invite for a new user
+2. **Sent**: Email with invitation link is sent to the user
+3. **Pending**: User has not yet accepted (invitation valid for 2 weeks)
+4. **Accepted**: User completes the invitation workflow and sets their password
+5. **Expired**: Invitation token expires after 2 weeks
+
+### Properties
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `Id` | `Guid` | Yes | Unique identifier for the invitation. |
+| `UserId` | `Guid` | Yes | The ID of the user being invited. Links to the User entity. |
+| `Email` | `String` | Yes | The email address the invitation was sent to. Must be a valid email address. |
+| `Token` | `String` | Yes | Unique token for the invitation link. Used in the invitation URL. |
+| `ExpiresAt` | `DateTime` | Yes | When the invitation expires. Set to 2 weeks from creation date. Must be in the future. |
+| `IsAccepted` | `Boolean` | Yes | Whether the invitation has been accepted. Default: false. |
+| `AcceptedAt` | `DateTime?` | No | When the invitation was accepted. Null if not yet accepted. |
+| `InvitedByName` | `String` | Yes | Display name of the user who created the invitation. Used in the invitation email. |
+| `Updated` | `DateTime` | Yes | The date and time the invitation was last updated. |
+| `UpdatedBy` | `Guid` | Yes | The ID of the user who last updated this invitation record. |
+| `Created` | `DateTime` | Yes | The date and time the invitation was created. |
+| `CreatedBy` | `Guid` | Yes | The ID of the user who created this invitation. |
+
+### Related Workflows
+
+- **Admin Creates User**: Admin fills out form with email, first name, last name → User record created with Status=InvitePending → Invite record created → Email sent with invitation link
+- **User Accepts Invite**: User clicks link in email → Views invitation details → Sets password → Account activated → User Status changes to Completed → Invite.IsAccepted set to true
+- **Invitation Expiry**: Invitations automatically expire after 2 weeks (ExpiresAt) → Expired invitations cannot be accepted → Admin must create a new invitation

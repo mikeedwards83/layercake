@@ -192,7 +192,7 @@ public class UsersController : ControllerBase
                 _logger.LogInformation("Created database user with ID: {UserId}", user.Id);
 
                 // Step 3: Get the current user's name for the invite
-                var currentUser = await _usersStore.Get(_currentUserContext.UserId);
+                var currentUser = await _usersStore.Get(_currentUserContext.User.UserId);
                 var invitedByName = currentUser?.DisplayName ?? "An administrator";
 
                 // Step 4: Create an invite record

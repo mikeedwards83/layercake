@@ -1,20 +1,13 @@
 using Google.Cloud.Firestore;
 using LayerCake.Kernel.Firebase.Stores.Queries;
-using LayerCake.Kernel.Store;
 using LayerCake.Kernel.Tenants.Invites;
 
 namespace LayerCake.Kernel.Firebase.Stores.Invites.Queries;
 
-public class GetInviteByIdFirebaseQueryBuilder : FirestoreQueryBuilderBase
+public class GetInviteByIdFirebaseQueryBuilder : FirestoreQueryBuilder<GetInviteByIdQuery>
 {
-    public override bool CanHandle(QueryParameters queryParameters)
+    protected override Query InternalBuildQuery(CollectionReference collection, GetInviteByIdQuery parameters)
     {
-        return queryParameters is GetInviteByIdQuery;
-    }
-
-    public override Query Build(CollectionReference collection, QueryParameters queryParameters)
-    {
-        var query = (GetInviteByIdQuery)queryParameters;
-        return collection.WhereEqualTo(FieldPath.DocumentId, query.Id.ToString());
+        return collection.WhereEqualTo(FieldPath.DocumentId, parameters.Id.ToString());
     }
 }

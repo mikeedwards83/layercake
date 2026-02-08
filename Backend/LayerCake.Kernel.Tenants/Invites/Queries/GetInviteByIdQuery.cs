@@ -6,7 +6,7 @@ public class GetInviteByIdQuery : QueryParameters
 {
     public Guid Id { get; }
 
-    public GetInviteByIdQuery(Guid id)
+    public GetInviteByIdQuery(Guid id) : base(0, 1)
     {
         Id = id;
     }

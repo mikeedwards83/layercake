@@ -7,10 +7,11 @@ import { WorkflowSidebar } from './workflowSidebar'
 type WorkflowProps = {
   title: string
   steps: WorkflowStep[]
+  showLogo?: boolean  
   onCancel: () => void
 }
 
-export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
+export const Workflow = ({ title, steps, onCancel, showLogo }: WorkflowProps) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [isValidating, setIsValidating] = useState(false)
 
@@ -53,6 +54,7 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
     <Row className="g-0">
       <Col xl={3}>
         <WorkflowSidebar
+          showLogo={showLogo}
           title={title}
           steps={steps}
           currentStep={currentStepIndex}
@@ -63,13 +65,15 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
       <Col xl={9}>
         <Card className="card-h-100 rounded-0 rounded-end">
           <CardBody className="p-4">
-            <div className="mb-4">
-              <h3>{currentStep.title}</h3>
-              <p className="text-muted">{currentStep.description}</p>
-            </div>
+            {!currentStep.hideHeading && (
+              <div className="mb-4">
+                <h3>{currentStep.title}</h3>
+                <p className="text-muted">{currentStep.description}</p>
+              </div>
+            )}
             <div style={{ minHeight: '500px' }}>{currentStep?.content}</div>
           </CardBody>
-          <CardFooter>
+          {(currentStep.onNext || currentStep.onPrevious) && <CardFooter>
             <div className="d-flex justify-content-between align-items-center">
               {currentStepIndex != steps.length - 1 && (
                 <button className="btn btn-outline-secondary" onClick={onCancel} disabled={isValidating}>
@@ -84,7 +88,7 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
                     Previous
                   </button>
                 )}
-                <button className="btn btn-primary" onClick={handleNext} disabled={isValidating}>
+                {currentStep.onNext && <button className="btn btn-primary" onClick={handleNext} disabled={isValidating}>
                   {isValidating ? (
                     <>
                       <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
@@ -96,10 +100,10 @@ export const Workflow = ({ title, steps, onCancel }: WorkflowProps) => {
                       <TbChevronRight className="ms-1" />
                     </>
                   )}
-                </button>
+                </button>}
               </div>
             </div>
-          </CardFooter>
+          </CardFooter>}
         </Card>
       </Col>
     </Row>

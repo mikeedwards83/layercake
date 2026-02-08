@@ -1,6 +1,7 @@
-import { Card, CardBody, ProgressBar } from "react-bootstrap"
+import { Card, CardBody, CardFooter, ProgressBar } from "react-bootstrap"
 import { TbCheck } from "react-icons/tb"
 import type { WorkflowStep } from "./types"
+import AppLogo from "../AppLogo"
 
 type WorkflowSidebarProps = {
   title: string
@@ -8,9 +9,10 @@ type WorkflowSidebarProps = {
   currentStep: number
   progressPercentage: number
   setCurrentStep: (step: number) => void
+  showLogo?: boolean
 }
 
-export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage, setCurrentStep }: WorkflowSidebarProps) => {
+export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage, setCurrentStep, showLogo }: WorkflowSidebarProps) => {
 
   console.log(steps, currentStep)
   return (
@@ -29,7 +31,7 @@ export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage,
 
         <div className="workflow-steps">
           {steps.map((step, index) => {
-            const isCompleted = index < currentStep 
+            const isCompleted = index < currentStep
             const isCurrent = index === currentStep
             const isClickable = index < currentStep - 1
 
@@ -55,7 +57,7 @@ export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage,
                       fontSize: '14px',
                       fontWeight: '600',
                     }}>
-                    {isCompleted ? <TbCheck size={18} /> : index+1}
+                    {isCompleted ? <TbCheck size={18} /> : index + 1}
                   </div>
                   <div>
                     <h4 className={`mb-0 ${isCurrent ? 'text-primary' : ''}`}>{step.title}</h4>
@@ -67,6 +69,9 @@ export const WorkflowSidebar = ({ title, steps, currentStep, progressPercentage,
           })}
         </div>
       </CardBody>
+      <CardFooter className="text-center">
+        {showLogo && <AppLogo />}
+      </CardFooter>
     </Card>
   )
 }

@@ -1,6 +1,6 @@
 import Loader from '@/components/Loader'
 import { useLayoutContext } from '@/context/useLayoutContext'
-import VerticalLayout from './VerticalLayout'
+import AuthenticatedVerticalLayout from './AuthenticatedVerticalLayout'
 import { Fragment, useEffect, useState } from 'react'
 import { Outlet } from 'react-router'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
@@ -19,11 +19,11 @@ const MainLayout = () => {
   return (
     <Fragment>
       {orientation === 'vertical' && (
-        <VerticalLayout>
+        <AuthenticatedVerticalLayout>
           <ErrorBoundary>
           <Outlet />
           </ErrorBoundary>
-        </VerticalLayout>
+        </AuthenticatedVerticalLayout>
       )}
     </Fragment>
   )

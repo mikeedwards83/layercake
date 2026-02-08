@@ -30,8 +30,8 @@ public class InvitesStore : IInvitesStore
             Id = Guid.NewGuid(),
             Created = DateTime.UtcNow,
             Updated = DateTime.UtcNow,
-            CreatedBy = _currentUserContext.UserId,
-            UpdatedBy = _currentUserContext.UserId
+            CreatedBy = _currentUserContext.User?.UserId ?? Guid.Empty,
+            UpdatedBy = _currentUserContext.User?.UserId ?? Guid.Empty
         };
 
         await create(invite);
@@ -57,11 +57,13 @@ public class InvitesStore : IInvitesStore
         return await _repository.Find(query);
     }
 
-    public async Task Update(Invite invite)
+    public async Task<Invite> Update(Invite invite, Func<Invite, Task> update)
     {
+        await update(invite);
         invite.Updated = DateTime.UtcNow;
-        invite.UpdatedBy = _currentUserContext.UserId;
+        invite.UpdatedBy = _currentUserContext.User?.UserId ?? Guid.Empty;
         await _repository.Update(invite);
+        return invite;
     }
 
     public async Task Delete(Invite invite)

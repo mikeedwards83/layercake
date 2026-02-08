@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Table, Spinner, Alert, Button } from 'react-bootstrap'
+import { Container, Row, Col, Card, Table, Spinner, Alert, Button, Badge } from 'react-bootstrap'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
 import { UsersTopBar } from './components/usersTopBar'
 import { UsersApiClient, type IUsersGetResponse } from '@/services/users/usersApiClient'
 import { TbUsers, TbMail, TbCalendar, TbClock } from 'react-icons/tb'
+import { getStatusBadge } from '@/helpers/user'
 
 const ITEMS_PER_PAGE = 20
 
@@ -118,11 +119,12 @@ const UsersPage = () => {
                     <>
                       <div className="table-responsive">
                         <Table className="mb-0" hover>
-                          <thead className="table-light">
+                          <thead>
                             <tr>
                               <th>User</th>
                               <th>Email</th>
                               <th>Name</th>
+                              <th>Status</th>
                               <th>Created</th>
                               <th>Updated</th>
                             </tr>
@@ -156,6 +158,18 @@ const UsersPage = () => {
                                 <div>
                                   {user.firstName} {user.lastName}
                                 </div>
+                              </td>
+                              <td>
+                                {(() => {
+                                  const statusInfo = getStatusBadge(user.status)
+                                  const StatusIcon = statusInfo.icon
+                                  return (
+                                    <Badge bg={statusInfo.variant} className="d-inline-flex align-items-center">
+                                      <StatusIcon size={14} className="me-1" />
+                                      {statusInfo.label}
+                                    </Badge>
+                                  )
+                                })()}
                               </td>
                               <td>
                                 <div className="d-flex align-items-center text-muted">

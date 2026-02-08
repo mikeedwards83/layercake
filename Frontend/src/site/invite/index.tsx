@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router'
-import { Container, Row, Col, Card, Spinner, Alert, Button } from 'react-bootstrap'
+import { Container, Row, Col, Card, Spinner, Button, Image } from 'react-bootstrap'
 import { TbAlertCircle, TbCheck, TbClock } from 'react-icons/tb'
 import PageMetaData from '@/components/PageMetaData'
-import AppLogo from '@/components/AppLogo'
 import { InvitesApiClient, type IInviteDetailsResponse } from '@/services/invites/invitesApiClient'
 import { InviteWorkflow } from './InviteWorkflow'
+import logo from '@/assets/images/logo-rectangle.png'
+import AppLogo from '@/components/AppLogo'
 
 const InvitePage = () => {
   const [searchParams] = useSearchParams()
@@ -60,6 +61,9 @@ const InvitePage = () => {
           <Row className="justify-content-center">
             <Col md={6}>
               <Card className="border-0 shadow-sm">
+                <Card.Header>
+                  <AppLogo />
+                </Card.Header>
                 <Card.Body className="p-5 text-center">
                   <div
                     className="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4"
@@ -90,6 +94,9 @@ const InvitePage = () => {
           <Row className="justify-content-center">
             <Col md={6}>
               <Card className="border-0 shadow-sm">
+                <Card.Header>
+                  <AppLogo />
+                </Card.Header>
                 <Card.Body className="p-5 text-center">
                   <div
                     className="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4"
@@ -149,15 +156,6 @@ const InvitePage = () => {
   return (
     <div className="min-vh-100 bg-light">
       <PageMetaData title="Accept Invitation" />
-
-      {/* Simple header with logo */}
-      <div className="bg-white border-bottom py-3">
-        <Container>
-          <AppLogo />
-        </Container>
-      </div>
-
-      {/* Workflow content */}
       <Container className="py-4">
         <InviteWorkflow token={token!} inviteDetails={inviteDetails} />
       </Container>

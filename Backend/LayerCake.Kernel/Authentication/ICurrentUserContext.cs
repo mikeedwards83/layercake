@@ -2,7 +2,7 @@
 
 public interface ICurrentUserContext
 {
-    public AuthenticatedUser? User { get; }
+    public AuthenticatedUser User { get; }
 
     public bool IsAuthenticated { get; }
 

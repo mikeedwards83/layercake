@@ -72,11 +72,6 @@ export const InviteWorkflow = ({ token, inviteDetails }: InviteWorkflowProps) =>
     }
   }
 
-  const step4Next = async () => {
-    navigate('/projects')
-    return true
-  }
-
   const handleCancel = () => {
     navigate('/signin')
   }
@@ -86,6 +81,7 @@ export const InviteWorkflow = ({ token, inviteDetails }: InviteWorkflowProps) =>
       title: 'Welcome',
       description: 'You have been invited to join Layer Cake',
       content: <Step1Welcome inviteDetails={inviteDetails} />,
+      hideHeading: true
     },
     {
       title: 'Create Password',
@@ -118,10 +114,9 @@ export const InviteWorkflow = ({ token, inviteDetails }: InviteWorkflowProps) =>
       title: 'Complete',
       description: 'Registration successful',
       content: <Step4Success displayName={displayName || `${inviteDetails.firstName} ${inviteDetails.lastName}`} />,
-      nextButtonText: 'Go to Projects',
-      onNext: step4Next,
+      hideHeading:true
     },
   ]
 
-  return <Workflow title="Accept Invitation" steps={steps} onCancel={handleCancel} />
+  return <Workflow title="Accept Invitation" steps={steps} onCancel={handleCancel} showLogo />
 }

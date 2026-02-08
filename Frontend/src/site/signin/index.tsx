@@ -65,7 +65,7 @@ const Page = () => {
                   <div className="card-body">
                     <div className="auth-brand text-center mb-4">
                       <AppLogo />
-                      <h4 className="fw-bold mt-4">Welcome to IN+</h4>
+                      <h4 className="fw-bold mt-4">Welcome to ArcFlow</h4>
                       <p className="text-muted w-lg-75 mx-auto">Let's get you signed in. Choose your preferred method to continue.</p>
                     </div>
 
