@@ -9,6 +9,7 @@ import { Step1Welcome } from './steps/step1Welcome'
 import { Step2Password } from './steps/step2Password'
 import { Step3Confirm } from './steps/step3Confirm'
 import { Step4Success } from './steps/step4Success'
+import { ValidationErrors } from '@/constants'
 
 interface InviteWorkflowProps {
   token: string
@@ -27,21 +28,21 @@ export const InviteWorkflow = ({ token, inviteDetails }: InviteWorkflowProps) =>
     const newErrors: { password?: string; confirmPassword?: string } = {}
 
     if (!password) {
-      newErrors.password = 'Password is required'
+      newErrors.password = ValidationErrors.PASSWORD.REQUIRED
     } else if (password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters'
+      newErrors.password = ValidationErrors.PASSWORD.MIN_LENGTH
     } else if (!/(?=.*[a-z])/.test(password)) {
-      newErrors.password = 'Password must include at least one lowercase letter'
+      newErrors.password = ValidationErrors.PASSWORD.LOWERCASE
     } else if (!/(?=.*[A-Z])/.test(password)) {
-      newErrors.password = 'Password must include at least one uppercase letter'
+      newErrors.password = ValidationErrors.PASSWORD.UPPERCASE
     } else if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(password)) {
-      newErrors.password = 'Password must include at least one special character'
+      newErrors.password = ValidationErrors.PASSWORD.SPECIAL_CHAR
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password'
+      newErrors.confirmPassword = ValidationErrors.PASSWORD.CONFIRM_REQUIRED
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match'
+      newErrors.confirmPassword = ValidationErrors.PASSWORD.MISMATCH
     }
 
     setErrors(newErrors)

@@ -1,17 +1,18 @@
 import * as Yup from 'yup'
+import { ValidationErrors } from '@/constants'
 
 export const step1Schema = Yup.object().shape({
-  name: Yup.string().trim().required('Logical application name is required').max(100, 'Logical application name must be 100 characters or less'),
+  name: Yup.string().trim().required(ValidationErrors.LOGICAL_APP.NAME.REQUIRED).max(100, ValidationErrors.LOGICAL_APP.NAME.MAX_LENGTH),
   key: Yup.string()
     .trim()
-    .required('Logical application key is required')
+    .required(ValidationErrors.LOGICAL_APP.KEY.REQUIRED)
     .max(10, 'Key must be 10 characters or less')
     .matches(/^[A-Z0-9]+$/, 'Key must contain only uppercase letters and numbers'),
-  description: Yup.string().trim().max(500, 'Description must be 500 characters or less'),
-  ownerId: Yup.string().required('Owner is required'),
+  description: Yup.string().trim().max(500, ValidationErrors.LOGICAL_APP.DESCRIPTION.MAX_LENGTH),
+  ownerId: Yup.string().required(ValidationErrors.LOGICAL_APP.OWNER.REQUIRED),
   applicationTypeId: Yup.string().test(
     'application-type-required',
-    'Application type is required',
+    ValidationErrors.LOGICAL_APP.APPLICATION_TYPE.REQUIRED,
     function (value) {
       const { customApplicationTypeName } = this.parent
       // Valid if either applicationTypeId OR customApplicationTypeName is provided

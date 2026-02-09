@@ -7,6 +7,7 @@ import { InvitesApiClient, type IInviteDetailsResponse } from '@/services/invite
 import { InviteWorkflow } from './InviteWorkflow'
 import logo from '@/assets/images/logo-rectangle.png'
 import AppLogo from '@/components/AppLogo'
+import { DataLoadingErrors } from '@/constants'
 
 const InvitePage = () => {
   const [searchParams] = useSearchParams()
@@ -19,7 +20,7 @@ const InvitePage = () => {
   useEffect(() => {
     const loadInviteDetails = async () => {
       if (!token) {
-        setError('Invalid invitation link. Please check the link in your email.')
+        setError(DataLoadingErrors.INVITE.VALIDATION_FAILED)
         setLoading(false)
         return
       }
@@ -30,7 +31,7 @@ const InvitePage = () => {
         setInviteDetails(details)
       } catch (err: any) {
         console.error('Error loading invite:', err)
-        setError(err.response?.data?.message || 'Failed to load invitation. The link may be invalid or expired.')
+        setError(err.response?.data?.message || DataLoadingErrors.INVITE.LOAD_FAILED)
       } finally {
         setLoading(false)
       }

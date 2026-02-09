@@ -1,4 +1,5 @@
 import { auth } from "@/firebase";
+import { ApiErrors } from "@/constants";
 
 interface RequestOptions extends RequestInit {
   requiresAuth?: boolean;
@@ -34,7 +35,7 @@ class ApiClient {
     if (requiresAuth) {
       const token = await this.getAuthToken();
       if (!token) {
-        throw new Error("Authentication required but no user is logged in");
+        throw new Error(ApiErrors.AUTH.REQUIRED);
       }
       requestHeaders["Authorization"] = `Bearer ${token}`;
     }

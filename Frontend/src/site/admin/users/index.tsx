@@ -5,6 +5,7 @@ import { UsersTopBar } from './components/usersTopBar'
 import { UsersApiClient, type IUsersGetResponse } from '@/services/users/usersApiClient'
 import { TbUsers, TbMail, TbCalendar, TbClock } from 'react-icons/tb'
 import { getStatusBadge } from '@/helpers/user'
+import { DataLoadingErrors } from '@/constants'
 
 const ITEMS_PER_PAGE = 20
 
@@ -43,7 +44,7 @@ const UsersPage = () => {
       setError(null)
     } catch (err) {
       console.error('Error loading users:', err)
-      setError('Failed to load users. Please try again later.')
+      setError(DataLoadingErrors.USER.LIST_FAILED)
     } finally {
       setLoading(false)
       setLoadingMore(false)

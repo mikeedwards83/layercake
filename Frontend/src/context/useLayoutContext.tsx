@@ -17,6 +17,7 @@ import {
   type SideNavType,
   type TopBarType,
 } from '@/types/layout'
+import { ContextErrors } from '@/constants'
 
 const INIT_STATE: LayoutState = {
   skin: 'classic',
@@ -40,7 +41,7 @@ const LayoutContext = createContext<LayoutType | undefined>(undefined)
 const useLayoutContext = () => {
   const context = use(LayoutContext)
   if (!context) {
-    throw new Error('useLayoutContext can only be used within LayoutProvider')
+    throw new Error(ContextErrors.LAYOUT.MISSING_PROVIDER)
   }
   return context
 }

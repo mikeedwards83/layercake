@@ -3,6 +3,7 @@ import { createContext, use, useState } from 'react'
 import { ToastBody, ToastHeader } from 'react-bootstrap'
 import Toast, { type ToastProps } from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { ContextErrors } from '@/constants'
 
 type ShowNotificationType = {
   title?: string
@@ -39,7 +40,7 @@ function Toastr({ show, title, message, onClose, variant = 'light', delay }: Rea
 export function useNotificationContext() {
   const context = use(NotificationContext)
   if (!context) {
-    throw new Error('useNotificationContext must be used within an NotificationProvider')
+    throw new Error(ContextErrors.NOTIFICATION.MISSING_PROVIDER)
   }
   return context
 }

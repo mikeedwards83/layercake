@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useCallback } from 'react'
 import type { ReactNode } from 'react'
 import { useNotificationContext } from './useNotificationContext'
+import { ContextErrors } from '@/constants'
 
 interface ErrorContextType {
     showError: (error: Error | string) => void
@@ -11,7 +12,7 @@ const ErrorContext = createContext<ErrorContextType | undefined>(undefined)
 export const useError = () => {
     const context = useContext(ErrorContext)
     if (!context) {
-        throw new Error('useError must be used within ErrorProvider')
+        throw new Error(ContextErrors.ERROR.MISSING_PROVIDER)
     }
     return context
 }

@@ -9,6 +9,7 @@ import { useNotificationContext } from '@/context/useNotificationContext'
 import { signInWithCustomToken } from 'firebase/auth'
 import { auth } from '@/firebase'
 import { Settings } from '@/Settings'
+import { ValidationErrors, SuccessMessages } from '@/constants'
 
 const Page = () => {
   const navigate = useNavigate()
@@ -30,33 +31,33 @@ const Page = () => {
     const errors: {[key: string]: string} = {}
 
     if (!formData.firstName.trim()) {
-      errors.firstName = 'First name is required'
+      errors.firstName = ValidationErrors.USER.FIRST_NAME.REQUIRED
     }
 
     if (!formData.lastName.trim()) {
-      errors.lastName = 'Last name is required'
+      errors.lastName = ValidationErrors.USER.LAST_NAME.REQUIRED
     }
 
     if (!formData.email.trim()) {
-      errors.email = 'Email is required'
+      errors.email = ValidationErrors.USER.EMAIL.REQUIRED
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address'
+      errors.email = ValidationErrors.USER.EMAIL.INVALID_FORMAT
     }
 
     if (!formData.password) {
-      errors.password = 'Password is required'
+      errors.password = ValidationErrors.PASSWORD.REQUIRED
     } else if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters'
+      errors.password = ValidationErrors.PASSWORD.MIN_LENGTH
     } else if (!/(?=.*[a-z])/.test(formData.password)) {
-      errors.password = 'Password must include at least one lowercase letter'
+      errors.password = ValidationErrors.PASSWORD.LOWERCASE
     } else if (!/(?=.*[A-Z])/.test(formData.password)) {
-      errors.password = 'Password must include at least one uppercase letter'
+      errors.password = ValidationErrors.PASSWORD.UPPERCASE
     } else if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(formData.password)) {
-      errors.password = 'Password must include at least one special character'
+      errors.password = ValidationErrors.PASSWORD.SPECIAL_CHAR
     }
 
     if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match'
+      errors.confirmPassword = ValidationErrors.PASSWORD.MISMATCH
     }
 
     setValidationErrors(errors)
@@ -83,7 +84,7 @@ const Page = () => {
       })
 
       await signInWithCustomToken(auth, result.customToken)
-      showNotification({ message: 'Account created successfully!', variant: 'success' })
+      showNotification({ message: SuccessMessages.USER.ACCOUNT_CREATED, variant: 'success' })
       navigate(Settings.signIn.successUrl)
     } catch (err: any) {
       console.error('Registration error:', err)

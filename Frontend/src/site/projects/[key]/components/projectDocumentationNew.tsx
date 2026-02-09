@@ -6,9 +6,10 @@ import { TbDeviceFloppy, TbX } from 'react-icons/tb'
 import { WikiPageApiClient, type IWikiPage } from '@/services/wikipage/wikiPageApiClient'
 import { ValidationSummary } from '@/components/Form/ValidationSummary/validationSummary'
 import { TextInput } from '@/components/Form/TextInput'
+import { ValidationErrors } from '@/constants'
 
 const wikiPageSchema = Yup.object().shape({
-  title: Yup.string().trim().required('Page title is required').max(100, 'Page title must be 100 characters or less'),
+  title: Yup.string().trim().required(ValidationErrors.WIKI_PAGE.TITLE.REQUIRED).max(100, ValidationErrors.WIKI_PAGE.TITLE.MAX_LENGTH),
   contents: Yup.string(),
 })
 

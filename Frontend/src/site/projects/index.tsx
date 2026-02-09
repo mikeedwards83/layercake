@@ -5,6 +5,7 @@ import { ProjectsTopBar } from './components/projectsTopBar'
 import { ProjectCard } from '@/components/Projects/Card/ProjectCard'
 import { ProjectsApiClient, type IProjectsGetResponse } from '@/services/projects/projectsApiClient'
 import { Notice } from '@/components/Notice'
+import { DataLoadingErrors } from '@/constants'
 
 const Page = () => {
   const [projectsResponse, setProjectsResponse] = useState<IProjectsGetResponse|undefined>(undefined)
@@ -21,7 +22,7 @@ const Page = () => {
         setError(null)
       } catch (err) {
         console.error('Error loading projects:', err)
-        setError('Failed to load projects. Please try again later.')
+        setError(DataLoadingErrors.PROJECT.LIST_FAILED)
       } finally {
         setLoading(false)
       }

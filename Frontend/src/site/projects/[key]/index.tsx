@@ -7,6 +7,7 @@ import { TbHome } from 'react-icons/tb'
 import { ProjectOverview } from './components/projectOverview'
 import { ProjectDocumentation } from './components/projectDocumentation'
 import { ProjectLogical } from './components/projectLogical'
+import { DataLoadingErrors } from '@/constants'
 
 const ProjectPage = () => {
   const { key } = useParams<{ key: string }>()
@@ -33,7 +34,7 @@ const ProjectPage = () => {
         setError(null)
       } catch (err) {
         console.error('Error loading project:', err)
-        setError('Failed to load project. Please try again later.')
+        setError(DataLoadingErrors.PROJECT.LOAD_FAILED)
       } finally {
         setLoading(false)
       }

@@ -7,6 +7,7 @@ import { LogicalApplicationsApiClient, type ILogicalApplicationsGetResponse } fr
 import { ApplicationTypesApiClient, type IApplicationTypeResponse } from '@/services/applicationTypes/applicationTypesApiClient'
 import { fakeUsers } from '@/components/Form/UserSelectorInput/data'
 import { Notice } from '@/components/Notice'
+import { DataLoadingErrors } from '@/constants'
 
 interface IProjectLogicalProps {
   projectResponse: IProjectGetByKeyResponse
@@ -39,7 +40,7 @@ export const ProjectLogical = ({ projectResponse, isActive }: IProjectLogicalPro
         setError(null)
       } catch (err) {
         console.error('Error loading logical applications:', err)
-        setError('Failed to load logical applications. Please try again later.')
+        setError(DataLoadingErrors.LOGICAL_APP.LOAD_FAILED)
       } finally {
         setLoading(false)
       }
